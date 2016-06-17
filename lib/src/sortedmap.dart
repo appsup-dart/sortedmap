@@ -49,7 +49,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   /**
    * Creates a [SortedMap] that contains all key/value pairs of [other].
    */
-  factory SortedMap.from(Map other, [int compare(Pair<K,V> a, Pair<K,V> b)]) {
+  factory SortedMap.from(Map<K,V> other, [int compare(Pair<K,V> a, Pair<K,V> b)]) {
     return new SortedMap(compare)..addAll(other);
   }
 
@@ -72,8 +72,8 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
       int compare(Pair<K,V> a, Pair<K,V> b)}) {
     SortedMap<K, V> map = new SortedMap<K, V>(compare);
 
-    if (key == null) key = (v)=>v;
-    if (value == null) value = (v)=>v;
+    if (key == null) key = (K v)=>v;
+    if (value == null) value = (V v)=>v;
     for (var element in iterable) {
       map[key(element)] = value(element);
     }
@@ -95,8 +95,8 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   factory SortedMap.fromIterables(Iterable<K> keys, Iterable<V> values,
       [int compare(Pair<K,V> a, Pair<K,V> b)]) {
     SortedMap<K, V> map = new SortedMap<K, V>(compare);
-    Iterator keyIterator = keys.iterator;
-    Iterator valueIterator = values.iterator;
+    Iterator<K> keyIterator = keys.iterator;
+    Iterator<V> valueIterator = values.iterator;
 
     bool hasNextKey = keyIterator.moveNext();
     bool hasNextValue = valueIterator.moveNext();
@@ -146,7 +146,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   }
 
   @override
-  Iterable<K> get keys => pairs.map((p)=>p.key);
+  Iterable<K> get keys => pairs.map((p)=>p.key) as Iterable<K>;
 
   @override
   V remove(Object key) {
@@ -167,7 +167,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     var pair = new Pair(key, _map[key]);
     return pairs.takeWhile((p)=>p!=pair)
         .map((p)=>p.key)
-        .lastWhere((_)=>true, orElse: ()=>null);
+        .lastWhere((_)=>true, orElse: ()=>null) as K;
   }
 
   /**
@@ -181,7 +181,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     var pair = new Pair(key, _map[key]);
     return pairs.skipWhile((p)=>p!=pair).skip(1)
         .map((p)=>p.key)
-        .firstWhere((_)=>true, orElse: ()=>null);
+        .firstWhere((_)=>true, orElse: ()=>null) as K;
   }
 
 }
