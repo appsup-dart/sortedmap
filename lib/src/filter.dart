@@ -17,7 +17,10 @@ class Filter<T> {
   int compare(T a, T b) => _compare==null ? Comparable.compare(a as Comparable,b as Comparable) : _compare(a,b);
   bool isValid(T v) => (_isValid ?? (_)=>true)(v);
 
+  @override
   int get hashCode => quiver.hash4(compare, isValid, limit, reverse);
+
+  @override
   bool operator==(other) => other is Filter&&other.compare==compare
       &&other.isValid==isValid&&other.limit==limit&&other.reverse==reverse;
 }
@@ -33,7 +36,10 @@ class Range<T> extends Function {
   bool call(T value) => (start==null || comparator(start, value) <= 0)
       && (end==null || comparator(value, end) <=0);
 
+  @override
   int get hashCode => quiver.hash3(start,end,comparator);
+
+  @override
   bool operator==(other) => other is Range&&other.start==start
       &&other.end==end&&other.comparator==comparator;
 }

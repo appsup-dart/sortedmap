@@ -29,6 +29,7 @@ class FilteredMap<K,V> extends SortedMap<K,V> {
   FilteredMap([Filter<Pair<K,V>> filter]) : filter = filter,
         super(filter.compare);
 
+  @override
   FilteredMap<K,V> clone() => new FilteredMap._(this.filter, _sortedPairs.toSet(), new Map.from(_map));
 
 

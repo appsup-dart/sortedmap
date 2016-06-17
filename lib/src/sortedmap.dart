@@ -13,7 +13,10 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
 
   const Pair(this.key,this.value);
 
+  @override
   int get hashCode => quiver.hash2(key,value);
+
+  @override
   bool operator==(other) => other is Pair && other.key==key && other.value == value;
 
   @override
