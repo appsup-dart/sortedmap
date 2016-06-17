@@ -45,7 +45,7 @@ class Filter<T> {
   int get hashCode => quiver.hash4(compare, isValid, limit, reverse);
 
   @override
-  bool operator==(other) => other is Filter&&other.compare==compare
+  bool operator==(dynamic other) => other is Filter&&other.compare==compare
       &&other.isValid==isValid&&other.limit==limit&&other.reverse==reverse;
 }
 
@@ -76,7 +76,7 @@ class Range<T> extends Function {
   int get hashCode => quiver.hash3(start,end,comparator);
 
   @override
-  bool operator==(other) => other is Range&&other.start==start
+  bool operator==(dynamic other) => other is Range&&other.start==start
       &&other.end==end&&other.comparator==comparator;
 }
 

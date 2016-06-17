@@ -20,7 +20,7 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
   int get hashCode => quiver.hash2(key,value);
 
   @override
-  bool operator==(other) => other is Pair && other.key==key && other.value == value;
+  bool operator==(dynamic other) => other is Pair && other.key==key && other.value == value;
 
   @override
   int compareTo(Pair<K, V> other) => Comparable.compare(key as Comparable,
