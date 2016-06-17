@@ -8,9 +8,19 @@ part of sortedmap;
  * A [Pair] represents a key/value pair.
  */
 class Pair<K,V> implements Comparable<Pair<K,V>> {
+  /**
+   * The key.
+   */
   final K key;
+
+  /**
+   * The value.
+   */
   final V value;
 
+  /**
+   * Creates a new key/value pair.
+   */
   const Pair(this.key,this.value);
 
   @override
@@ -39,6 +49,9 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
  */
 class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<K,V>>*/ {
 
+  /**
+   * A [Comparator] function that defines the ordering.
+   */
   final Comparator<Pair<K,V>> comparator;
 
   SplayTreeSet<Pair<K,V>> _sortedPairs;
@@ -46,6 +59,11 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
 
   SortedMap._(this.comparator, this._sortedPairs, this._map);
 
+  /**
+   * Creates a new [SortedMap] instance with an optional [compare] function,
+   * defining the ordering.
+   *
+   */
   SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) :
         _sortedPairs = new SplayTreeSet(compare), comparator = compare;
 

@@ -20,12 +20,19 @@ part of sortedmap;
  */
 class FilteredMap<K,V> extends SortedMap<K,V> {
 
+  /**
+   * The filter to be used to order and filter items.
+   */
   final Filter<Pair<K,V>> filter;
 
   FilteredMap._(Filter<Pair<K,V>> filter, SplayTreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
         filter = filter, super._(filter.compare, sortedPairs, map);
 
 
+  /**
+   * Creates a new [FilteredMap] instance with an optional [Filter] definition
+   * [filter].
+   */
   FilteredMap([Filter<Pair<K,V>> filter]) : filter = filter,
         super(filter.compare);
 
