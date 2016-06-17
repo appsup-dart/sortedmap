@@ -7,7 +7,7 @@
 /// Unlike [SplayTreeMap] the objects can be ordered on both key and value or a
 /// combination of both.
 ///
-/// The [FilteredMap] also allows to specify an [isValid] function on key/value
+/// The [FilteredMap] also allows to specify an isValid function on key/value
 /// pairs and limit the number of objects allowed in the map.
 ///
 library sortedmap;
