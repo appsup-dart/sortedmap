@@ -45,12 +45,12 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   SplayTreeSet<Pair<K,V>> _sortedPairs;
   Map<K,V> _map = {};
 
-  SortedMap._(this.comparator, this._sortedPairs, this._map);
-
   /// Creates a new [SortedMap] instance with an optional [compare] function,
   /// defining the ordering.
   SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) :
         _sortedPairs = new SplayTreeSet(compare), comparator = compare;
+
+  SortedMap._(this.comparator, this._sortedPairs, this._map);
 
   /// Creates a [SortedMap] that contains all key/value pairs of [other].
   factory SortedMap.from(Map<K,V> other, [int compare(Pair<K,V> a, Pair<K,V> b)]) {
