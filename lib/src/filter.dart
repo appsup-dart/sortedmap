@@ -6,12 +6,16 @@ part of sortedmap;
 typedef bool Predicate<T>(T v);
 class Filter<T> {
 
-  final Comparator<T> compare;
-  final Predicate<T> isValid;
+  final Comparator<T> _compare;
+  final Predicate<T> _isValid;
   final int limit;
   final bool reverse;
 
-  const Filter({this.compare, this.isValid, this.limit, this.reverse: false});
+  const Filter({Comparator<T> compare, Predicate<T> isValid, this.limit,
+  this.reverse: false}) : _compare = compare, _isValid = isValid;
+
+  int compare(T a, T b) => (_compare ?? Comparable.compare)(a,b);
+  bool isValid(T v) => (_isValid ?? (_)=>true)(v);
 
   int get hashCode => quiver.hash4(compare, isValid, limit, reverse);
   bool operator==(other) => other is Filter&&other.compare==compare
