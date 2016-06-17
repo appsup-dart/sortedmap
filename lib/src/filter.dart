@@ -14,7 +14,7 @@ class Filter<T> {
   const Filter({Comparator<T> compare, Predicate<T> isValid, this.limit,
   this.reverse: false}) : _compare = compare, _isValid = isValid;
 
-  int compare(T a, T b) => (_compare ?? Comparable.compare)(a,b);
+  int compare(T a, T b) => _compare==null ? Comparable.compare(a as Comparable,b as Comparable) : _compare(a,b);
   bool isValid(T v) => (_isValid ?? (_)=>true)(v);
 
   int get hashCode => quiver.hash4(compare, isValid, limit, reverse);
