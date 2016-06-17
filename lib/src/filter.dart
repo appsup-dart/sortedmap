@@ -61,12 +61,12 @@ class Range<T> extends Function {
 
   final Comparator<T> _comparator;
 
-  /// The [Comparator] function that defines the ordering.
-  Comparator<T> get comparator => (_comparator ?? Comparable.compare as Comparator<T>);
-
   /// Creates a new range wit lower limit [start] and upper limit [end].
   /// An optional [comparator] function defines the ordering.
   Range(this.start, this.end, [this._comparator]);
+
+  /// The [Comparator] function that defines the ordering.
+  Comparator<T> get comparator => (_comparator ?? Comparable.compare as Comparator<T>);
 
   /// Checks if a [value] is between the lower and upper limit.
   bool call(T value) => (start==null || comparator(start, value) <= 0)
