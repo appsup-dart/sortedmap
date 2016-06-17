@@ -4,23 +4,16 @@
 part of sortedmap;
 
 
-/**
- * A [Pair] represents a key/value pair.
- */
+/// A [Pair] represents a key/value pair.
 class Pair<K,V> implements Comparable<Pair<K,V>> {
-  /**
-   * The key.
-   */
+
+  /// The key.
   final K key;
 
-  /**
-   * The value.
-   */
+  /// The value.
   final V value;
 
-  /**
-   * Creates a new key/value pair.
-   */
+  /// Creates a new key/value pair.
   const Pair(this.key,this.value);
 
   @override
@@ -34,24 +27,19 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
       other.key as Comparable);
 }
 
-/**
- * A [Map] of objects that can be ordered relative to each other.
- *
- * Key/value pairs of the map are compared using the `compare` function
- * passed in the constructor.
- *
- * If the compare function is omitted, the objects are ordered by key which
- * is assumed to be [Comparable], and are compared using their
- * [Comparable.compareTo] method.
- * Non-comparable objects (including `null`) will not work as keys
- * in that case.
- *
- */
+/// A [Map] of objects that can be ordered relative to each other.
+///
+/// Key/value pairs of the map are compared using the `compare` function
+/// passed in the constructor.
+///
+/// If the compare function is omitted, the objects are ordered by key which
+/// is assumed to be [Comparable], and are compared using their
+/// [Comparable.compareTo] method.
+/// Non-comparable objects (including `null`) will not work as keys
+/// in that case.
 class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<K,V>>*/ {
 
-  /**
-   * A [Comparator] function that defines the ordering.
-   */
+  /// A [Comparator] function that defines the ordering.
   final Comparator<Pair<K,V>> comparator;
 
   SplayTreeSet<Pair<K,V>> _sortedPairs;
@@ -59,34 +47,27 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
 
   SortedMap._(this.comparator, this._sortedPairs, this._map);
 
-  /**
-   * Creates a new [SortedMap] instance with an optional [compare] function,
-   * defining the ordering.
-   *
-   */
+  /// Creates a new [SortedMap] instance with an optional [compare] function,
+  /// defining the ordering.
   SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) :
         _sortedPairs = new SplayTreeSet(compare), comparator = compare;
 
-  /**
-   * Creates a [SortedMap] that contains all key/value pairs of [other].
-   */
+  /// Creates a [SortedMap] that contains all key/value pairs of [other].
   factory SortedMap.from(Map<K,V> other, [int compare(Pair<K,V> a, Pair<K,V> b)]) {
     return new SortedMap(compare)..addAll(other);
   }
 
-  /**
-   * Creates a [SortedMap] where the keys and values are computed from the
-   * [iterable].
-   *
-   * For each element of the [iterable] this constructor computes a key/value
-   * pair, by applying [key] and [value] respectively.
-   *
-   * The keys of the key/value pairs do not need to be unique. The last
-   * occurrence of a key will simply overwrite any previous value.
-   *
-   * If no functions are specified for [key] and [value] the default is to
-   * use the iterable value itself.
-   */
+  /// Creates a [SortedMap] where the keys and values are computed from the
+  /// [iterable].
+  ///
+  /// For each element of the [iterable] this constructor computes a key/value
+  /// pair, by applying [key] and [value] respectively.
+  ///
+  /// The keys of the key/value pairs do not need to be unique. The last
+  /// occurrence of a key will simply overwrite any previous value.
+  ///
+  /// If no functions are specified for [key] and [value] the default is to
+  /// use the iterable value itself.
   factory SortedMap.fromIterable(Iterable iterable,
       {K key(element),
       V value(element),
@@ -102,17 +83,15 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
 
   }
 
-  /**
-   * Creates a [SortedMap] associating the given [keys] to [values].
-   *
-   * This constructor iterates over [keys] and [values] and maps each element of
-   * [keys] to the corresponding element of [values].
-   *
-   * If [keys] contains the same object multiple times, the last occurrence
-   * overwrites the previous value.
-   *
-   * It is an error if the two [Iterable]s don't have the same length.
-   */
+  /// Creates a [SortedMap] associating the given [keys] to [values].
+  ///
+  /// This constructor iterates over [keys] and [values] and maps each element of
+  /// [keys] to the corresponding element of [values].
+  ///
+  /// If [keys] contains the same object multiple times, the last occurrence
+  /// overwrites the previous value.
+  ///
+  /// It is an error if the two [Iterable]s don't have the same length.
   factory SortedMap.fromIterables(Iterable<K> keys, Iterable<V> values,
       [int compare(Pair<K,V> a, Pair<K,V> b)]) {
     SortedMap<K, V> map = new SortedMap<K, V>(compare);
@@ -134,14 +113,10 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     return map;
   }
 
-  /**
-   * Makes a copy of this map. The key/value pairs in the map are not cloned.
-   */
+  /// Makes a copy of this map. The key/value pairs in the map are not cloned.
   SortedMap<K,V> clone() => new SortedMap._(this.comparator, _sortedPairs.toSet(), new Map.from(_map));
 
-  /**
-   * Gets the key/value pairs as an iterable
-   */
+  /// Gets the key/value pairs as an iterable
   Iterable<Pair<K,V>> get pairs => _sortedPairs.toSet();
 
   @override
@@ -177,10 +152,8 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     return _map.remove(key);
   }
 
-  /**
-   * Get the last key in the map for which the key/value pair is strictly
-   * smaller than that of [key]. Returns [:null:] if no key was not found.
-   */
+  /// Get the last key in the map for which the key/value pair is strictly
+  /// smaller than that of [key]. Returns [:null:] if no key was not found.
   K lastKeyBefore(K key) {
     if (!_map.containsKey(key)) {
       throw new StateError("No such key $key in collection");
@@ -191,10 +164,8 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
         .lastWhere((_)=>true, orElse: ()=>null);
   }
 
-  /**
-   * Get the first key in the map for which the key/value pair is strictly
-   * larger than that of [key]. Returns [:null:] if no key was not found.
-   */
+  /// Get the first key in the map for which the key/value pair is strictly
+  /// larger than that of [key]. Returns [:null:] if no key was not found.
   K firstKeyAfter(K key) {
     if (!_map.containsKey(key)) {
       throw new StateError("No such key $key in collection");

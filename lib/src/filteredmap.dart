@@ -3,36 +3,28 @@
 
 part of sortedmap;
 
-/**
- * A [Map] of objects that can be ordered relative to each other and where
- * key/value pairs are filtered before adding them to the map.
- *
- * Key/value pairs of the map are compared using the `compare` function
- * passed in the constructor.
- *
- * If the compare function is omitted, the objects are ordered by key which
- * is assumed to be [Comparable], and are compared using their
- * [Comparable.compareTo] method.
- * Non-comparable objects (including `null`) will not work as keys
- * in that case.
- *
- *
- */
+/// A [Map] of objects that can be ordered relative to each other and where
+/// key/value pairs are filtered before adding them to the map.
+///
+/// Key/value pairs of the map are compared using the `compare` function
+/// passed in the constructor.
+///
+/// If the compare function is omitted, the objects are ordered by key which
+/// is assumed to be [Comparable], and are compared using their
+/// [Comparable.compareTo] method.
+/// Non-comparable objects (including `null`) will not work as keys
+/// in that case.
 class FilteredMap<K,V> extends SortedMap<K,V> {
 
-  /**
-   * The filter to be used to order and filter items.
-   */
+  /// The filter to be used to order and filter items.
   final Filter<Pair<K,V>> filter;
 
   FilteredMap._(Filter<Pair<K,V>> filter, SplayTreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
         filter = filter, super._(filter.compare, sortedPairs, map);
 
 
-  /**
-   * Creates a new [FilteredMap] instance with an optional [Filter] definition
-   * [filter].
-   */
+  /// Creates a new [FilteredMap] instance with an optional [Filter] definition
+  /// [filter].
   FilteredMap([Filter<Pair<K,V>> filter]) : filter = filter,
         super(filter.compare);
 
