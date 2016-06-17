@@ -127,14 +127,14 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   V operator [](Object key) => _map[key];
 
   @override
-  operator []=(K key, V value) {
+  void operator []=(K key, V value) {
     if (_map.containsKey(key)) {
       _sortedPairs.remove(new Pair(key, _map[key]));
     }
     _addPair(new Pair(key,value));
   }
 
-  _addPair(Pair<K,V> p) {
+  void _addPair(Pair<K,V> p) {
     _map[p.key] = p.value;
     _sortedPairs.add(p);
   }
@@ -146,7 +146,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   }
 
   @override
-  Iterable<K> get keys => pairs.map((p)=>p.key) as Iterable<K>;
+  Iterable<K> get keys => pairs.map((p)=>p.key);
 
   @override
   V remove(Object key) {
@@ -167,7 +167,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     var pair = new Pair(key, _map[key]);
     return pairs.takeWhile((p)=>p!=pair)
         .map((p)=>p.key)
-        .lastWhere((_)=>true, orElse: ()=>null) as K;
+        .lastWhere((_)=>true, orElse: ()=>null);
   }
 
   /**
@@ -181,7 +181,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     var pair = new Pair(key, _map[key]);
     return pairs.skipWhile((p)=>p!=pair).skip(1)
         .map((p)=>p.key)
-        .firstWhere((_)=>true, orElse: ()=>null) as K;
+        .firstWhere((_)=>true, orElse: ()=>null);
   }
 
 }

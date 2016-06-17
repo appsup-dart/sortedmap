@@ -33,7 +33,7 @@ class FilteredMap<K,V> extends SortedMap<K,V> {
 
 
   @override
-  _addPair(Pair<K,V> p) {
+  void _addPair(Pair<K,V> p) {
     if (filter.isValid!=null&&!filter.isValid(p)) return;
     super._addPair(p);
     if (filter.limit!=null&&length>filter.limit) {
