@@ -95,6 +95,9 @@ void main() {
       });
 
       expect(map.keys, ["a","b","c"]);
+
+      map.remove("b");
+      expect(map.keys, ["a","c","d"]);
     });
     test('limit reverse', () {
       var map = new FilteredMap(new Filter(
@@ -112,6 +115,9 @@ void main() {
       });
 
       expect(map.keys, ["a","c","d"]);
+
+      map.remove("c");
+      expect(map.keys, ["e","a","d"]);
     });
 
   });
