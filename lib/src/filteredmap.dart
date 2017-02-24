@@ -24,7 +24,7 @@ class FilteredMap<K,V> extends SortedMap<K,V> {
   FilteredMap([Filter<Pair<K,V>> filter]) : filter = filter,
         super(filter.compare);
 
-  FilteredMap._(Filter<Pair<K,V>> filter, SplayTreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
+  FilteredMap._(Filter<Pair<K,V>> filter, TreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
         filter = filter, super._(filter.compare, sortedPairs, map);
 
 

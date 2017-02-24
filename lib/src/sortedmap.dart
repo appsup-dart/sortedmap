@@ -42,13 +42,13 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   /// A [Comparator] function that defines the ordering.
   final Comparator<Pair<K,V>> comparator;
 
-  SplayTreeSet<Pair<K,V>> _sortedPairs;
+  TreeSet<Pair<K,V>> _sortedPairs;
   Map<K,V> _map = {};
 
   /// Creates a new [SortedMap] instance with an optional [compare] function,
   /// defining the ordering.
   SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) :
-        _sortedPairs = new SplayTreeSet(compare), comparator = compare;
+        _sortedPairs = new TreeSet(comparator: compare), comparator = compare;
 
   SortedMap._(this.comparator, this._sortedPairs, this._map);
 
