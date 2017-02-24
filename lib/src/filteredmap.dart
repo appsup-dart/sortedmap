@@ -30,7 +30,7 @@ abstract class FilteredMap<K,V> implements SortedMap<K,V> {
 }
 
 
-class _FilteredMap<K,V> extends _SortedMap<K,V> with FilteredMap<K,V> {
+class _FilteredMap<K,V> extends _SortedMap<K,V> implements FilteredMap<K,V> {
 
   @override
   final Filter<Pair<K,V>> filter;

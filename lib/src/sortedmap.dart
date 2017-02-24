@@ -130,7 +130,7 @@ abstract class SortedMap<K,V> implements Map<K,V> {
 }
 
 
-class _SortedMap<K,V> extends MapBase<K,V> with SortedMap<K,V> {
+class _SortedMap<K,V> extends MapBase<K,V> implements SortedMap<K,V> {
 
   @override
   final Comparator<Pair<K,V>> comparator;
