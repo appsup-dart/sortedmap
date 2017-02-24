@@ -25,6 +25,9 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
   @override
   int compareTo(Pair<K, V> other) => Comparable.compare(key as Comparable,
       other.key as Comparable);
+
+  @override
+  String toString() => "Pair[$key,$value]";
 }
 
 /// A [Map] of objects that can be ordered relative to each other.
@@ -37,20 +40,13 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
 /// [Comparable.compareTo] method.
 /// Non-comparable objects (including `null`) will not work as keys
 /// in that case.
-class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<K,V>>*/ {
-
-  /// A [Comparator] function that defines the ordering.
-  final Comparator<Pair<K,V>> comparator;
-
-  TreeSet<Pair<K,V>> _sortedPairs;
-  Map<K,V> _map = {};
+abstract class SortedMap<K,V> implements Map<K,V> {
 
   /// Creates a new [SortedMap] instance with an optional [compare] function,
   /// defining the ordering.
-  SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) :
-        _sortedPairs = new TreeSet(comparator: compare), comparator = compare;
+  factory SortedMap([int compare(Pair<K,V> a, Pair<K,V> b)]) =>
+      new _SortedMap._(compare, null, null);
 
-  SortedMap._(this.comparator, this._sortedPairs, this._map);
 
   /// Creates a [SortedMap] that contains all key/value pairs of [other].
   factory SortedMap.from(Map<K,V> other, [int compare(Pair<K,V> a, Pair<K,V> b)]) {
@@ -70,8 +66,8 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
   /// use the iterable value itself.
   factory SortedMap.fromIterable(Iterable iterable,
       {K key(element),
-      V value(element),
-      int compare(Pair<K,V> a, Pair<K,V> b)}) {
+        V value(element),
+        int compare(Pair<K,V> a, Pair<K,V> b)}) {
     SortedMap<K, V> map = new SortedMap<K, V>(compare);
 
     if (key == null) key = (K v)=>v;
@@ -113,10 +109,44 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     return map;
   }
 
+  /// A [Comparator] function that defines the ordering.
+  Comparator<Pair<K,V>> get comparator;
+
   /// Makes a copy of this map. The key/value pairs in the map are not cloned.
-  SortedMap<K,V> clone() => new SortedMap._(this.comparator, _sortedPairs.toSet(), new Map.from(_map));
+  SortedMap<K,V> clone();
 
   /// Gets the key/value pairs as an iterable
+  Iterable<Pair<K,V>> get pairs;
+
+
+  /// Get the last key in the map for which the key/value pair is strictly
+  /// smaller than that of [key]. Returns [:null:] if no key was not found.
+  K lastKeyBefore(K key);
+
+  /// Get the first key in the map for which the key/value pair is strictly
+  /// larger than that of [key]. Returns [:null:] if no key was not found.
+  K firstKeyAfter(K key);
+
+}
+
+
+class _SortedMap<K,V> extends MapBase<K,V> with SortedMap<K,V> {
+
+  @override
+  final Comparator<Pair<K,V>> comparator;
+
+  TreeSet<Pair<K,V>> _sortedPairs;
+  Map<K,V> _map;
+
+  _SortedMap._(this.comparator, this._sortedPairs, this._map) {
+    _sortedPairs ??= new TreeSet(comparator: comparator);
+    _map ??= {};
+  }
+
+  @override
+  SortedMap<K,V> clone() => new _SortedMap._(this.comparator, _sortedPairs.toSet(), new Map.from(_map));
+
+  @override
   Iterable<Pair<K,V>> get pairs => _sortedPairs.toSet();
 
   @override
@@ -152,8 +182,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
     return _map.remove(key);
   }
 
-  /// Get the last key in the map for which the key/value pair is strictly
-  /// smaller than that of [key]. Returns [:null:] if no key was not found.
+  @override
   K lastKeyBefore(K key) {
     if (!_map.containsKey(key)) {
       throw new StateError("No such key $key in collection");
@@ -164,8 +193,7 @@ class SortedMap<K,V> extends MapBase<K,V> /*implements Differentiable<SortedMap<
         .lastWhere((_)=>true, orElse: ()=>null);
   }
 
-  /// Get the first key in the map for which the key/value pair is strictly
-  /// larger than that of [key]. Returns [:null:] if no key was not found.
+  @override
   K firstKeyAfter(K key) {
     if (!_map.containsKey(key)) {
       throw new StateError("No such key $key in collection");

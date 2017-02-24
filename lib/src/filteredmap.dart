@@ -14,22 +14,33 @@ part of sortedmap;
 /// [Comparable.compareTo] method.
 /// Non-comparable objects (including `null`) will not work as keys
 /// in that case.
-class FilteredMap<K,V> extends SortedMap<K,V> {
-
-  /// The filter to be used to order and filter items.
-  final Filter<Pair<K,V>> filter;
+abstract class FilteredMap<K,V> implements SortedMap<K,V> {
 
   /// Creates a new [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
-  FilteredMap([Filter<Pair<K,V>> filter]) : filter = filter,
-        super(filter.compare);
+  factory FilteredMap([Filter<Pair<K,V>> filter]) =>
+      new _FilteredMap._(filter, null, null);
 
-  FilteredMap._(Filter<Pair<K,V>> filter, TreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
+
+
+  /// The filter to be used to order and filter items.
+  Filter<Pair<K,V>> get filter;
+
+
+}
+
+
+class _FilteredMap<K,V> extends _SortedMap<K,V> with FilteredMap<K,V> {
+
+  @override
+  final Filter<Pair<K,V>> filter;
+
+  _FilteredMap._(Filter<Pair<K,V>> filter, TreeSet<Pair<K,V>> sortedPairs, Map<K,V> map) :
         filter = filter, super._(filter.compare, sortedPairs, map);
 
 
   @override
-  FilteredMap<K,V> clone() => new FilteredMap._(this.filter, _sortedPairs.toSet(), new Map.from(_map));
+  FilteredMap<K,V> clone() => new _FilteredMap._(this.filter, _sortedPairs.toSet(), new Map.from(_map));
 
 
   @override
@@ -42,6 +53,5 @@ class FilteredMap<K,V> extends SortedMap<K,V> {
       toDel.toList().forEach((p)=>remove(p.key));
     }
   }
-
 
 }
