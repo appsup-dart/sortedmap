@@ -36,21 +36,12 @@ class FilteredMap<K,V> extends SortedMap<K,V> {
   void _addPair(Pair<K,V> p) {
     if (filter.isValid!=null&&!filter.isValid(p)) return;
     super._addPair(p);
-  }
-
-
-  @override
-  Iterable<Pair<K,V>> get pairs {
-    if (filter.limit==null) return super.pairs;
-    if (filter.reverse) {
-      var skip = _sortedPairs.length - filter.limit;
-      return _sortedPairs.skip(skip>0 ? skip : 0);
-    } else {
-      return _sortedPairs.take(filter.limit);
+    if (filter.limit!=null&&length>filter.limit) {
+      var toDel = filter.reverse ? _sortedPairs.take(length-filter.limit)
+          : _sortedPairs.skip(filter.limit);
+      toDel.toList().forEach((p)=>remove(p.key));
     }
   }
 
-  @override
-  V operator [](Object key) => containsKey(key) ? _map[key] : null;
 
 }
