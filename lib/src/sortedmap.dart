@@ -188,9 +188,9 @@ class _SortedMap<K,V> extends MapBase<K,V> with SortedMap<K,V> {
       throw new StateError("No such key $key in collection");
     }
     var pair = new Pair(key, _map[key]);
-    return pairs.takeWhile((p)=>p!=pair)
-        .map((p)=>p.key)
-        .lastWhere((_)=>true, orElse: ()=>null);
+    var it = _sortedPairs.fromIterator(pair, reversed: true);
+    while (it.moveNext()&&it.current==pair);
+    return it.current?.key;
   }
 
   @override
@@ -199,9 +199,9 @@ class _SortedMap<K,V> extends MapBase<K,V> with SortedMap<K,V> {
       throw new StateError("No such key $key in collection");
     }
     var pair = new Pair(key, _map[key]);
-    return pairs.skipWhile((p)=>p!=pair).skip(1)
-        .map((p)=>p.key)
-        .firstWhere((_)=>true, orElse: ()=>null);
+    var it = _sortedPairs.fromIterator(pair);
+    while (it.moveNext()&&it.current==pair);
+    return it.current?.key;
   }
 
 }
