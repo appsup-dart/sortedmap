@@ -43,7 +43,7 @@ void main() {
     });
 
     test('Order by value', () {
-      var map = new SortedMap((a,b)=>Comparable.compare(a.value, b.value));
+      var map = new SortedMap(const Ordering.byValue());
 
       map.addAll({
         "b": 1,
@@ -67,9 +67,8 @@ void main() {
 
   group('FilteredMap', () {
     test('isValid', () {
-      var map = new FilteredMap(new Filter(
-          isValid: (v)=>v.value>=2&&v.value<=3
-      ));
+      var map = new FilteredMap(new Filter(ordering: const Ordering.byValue(), validInterval: new KeyValueInterval(
+      new Pair<Comparable,Comparable>(null,2),new Pair<Comparable,Comparable>(null,3))));
 
       map.addAll({
         "b": 1,
@@ -79,7 +78,7 @@ void main() {
         "d": 5
       });
 
-      expect(map.keys, ["a","e"]);
+      expect(map.keys, ["e","a"]);
     });
     test('limit', () {
       var map = new FilteredMap(new Filter(
@@ -99,8 +98,8 @@ void main() {
     test('limit reverse', () {
       var map = new FilteredMap(new Filter(
           limit: 3,
-          reverse: true,
-          compare: (a,b)=>Comparable.compare(a.value,b.value)
+          reversed: true,
+          ordering: const Ordering.byValue()
       ));
 
       map.addAll({
@@ -114,5 +113,136 @@ void main() {
       expect(map.keys, ["a","c","d"]);
     });
 
+  });
+
+  group('FilteredMapView', ()
+  {
+    test('completeInterval', () {
+      var map = new SortedMap(const Ordering.byValue());
+      map.addAll({
+        "b": 1,
+        "e": 2,
+        "a": 3,
+        "c": 4,
+        "d": 5
+      });
+
+      var filteredMap = map.filteredMap(
+          start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.completeInterval.start, new Pair("a", 2));
+      expect(filteredMap.completeInterval.end, new Pair("z", 4));
+
+      filteredMap = map.filteredMap(
+          start: new Pair("a", 2), end: new Pair("z", 4), limit: 2);
+      expect(filteredMap.completeInterval.start, new Pair("a", 2));
+      expect(filteredMap.completeInterval.end, new Pair("a", 3));
+
+      filteredMap = map.filteredMap(start: new Pair("a", 2),
+          end: new Pair("z", 4),
+          limit: 2,
+          reversed: true);
+      expect(filteredMap.completeInterval.start, new Pair("a", 3));
+      expect(filteredMap.completeInterval.end, new Pair("z", 4));
+
+      filteredMap =
+          map.filteredMapView(start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.completeInterval.start, new Pair("a", 2));
+      expect(filteredMap.completeInterval.end, new Pair("z", 4));
+
+      filteredMap = map.filteredMapView(
+          start: new Pair("a", 2), end: new Pair("z", 4), limit: 2);
+      expect(filteredMap.completeInterval.start, new Pair("a", 2));
+      expect(filteredMap.completeInterval.end, new Pair("a", 3));
+
+      filteredMap = map.filteredMapView(start: new Pair("a", 2),
+          end: new Pair("z", 4),
+          limit: 2,
+          reversed: true);
+      expect(filteredMap.completeInterval.start, new Pair("a", 3));
+      expect(filteredMap.completeInterval.end, new Pair("z", 4));
+    });
+
+
+    test('isComplete', () {
+      var map = new SortedMap(const Ordering.byValue());
+      map.addAll({
+        "b": 1,
+        "e": 2,
+        "a": 3,
+        "c": 4,
+        "d": 5
+      });
+
+      var filteredMap = map.filteredMapView(
+          start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, true);
+
+      filteredMap =
+          map.filteredMap(start: new Pair("a", 2), end: new Pair("z", 4))
+              .filteredMapView(start: new Pair("a", 1), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, false);
+
+      filteredMap =
+          map.filteredMap(start: new Pair("a", 2), end: new Pair("z", 4))
+              .filteredMapView(start: new Pair("a", 3), end: new Pair("z", 5));
+      expect(filteredMap.isComplete, false);
+
+      filteredMap = map.filteredMap(
+          start: new Pair("a", 2), end: new Pair("z", 4), limit: 1)
+          .filteredMapView(start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, false);
+
+      filteredMap = map.filteredMap(
+          start: new Pair("a", 2), end: new Pair("z", 4), limit: 5)
+          .filteredMapView(start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, true);
+
+      filteredMap = map.filteredMap(start: new Pair("a", 2),
+          end: new Pair("z", 4),
+          limit: 1,
+          reversed: true)
+          .filteredMapView(start: new Pair("a", 2), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, false);
+
+      filteredMap = map.filteredMap(start: new Pair("a", 2),
+          end: new Pair("z", 4),
+          limit: 2,
+          reversed: true)
+          .filteredMapView(start: new Pair("a", 4), end: new Pair("z", 4));
+      expect(filteredMap.isComplete, true);
+
+      filteredMap = map.filteredMap(start: new Pair("a", 2),
+          end: new Pair("z", 4),
+          limit: 2,
+          reversed: true)
+          .filteredMapView(start: new Pair("a", 4),
+          end: new Pair("a", 3),
+          limit: 1,
+          reversed: true);
+      expect(filteredMap.isComplete, true);
+    });
+
+    test('view', () {
+      var map = new SortedMap(const Ordering.byValue());
+      map.addAll({
+        "b": 1,
+        "e": 2,
+        "a": 3,
+        "c": 4,
+        "d": 5
+      });
+
+      var view = map.filteredMapView(start: new Pair("a",2), end: new Pair("z",4), limit: 3, reversed: true);
+
+      expect(view, {"e": 2, "a": 3, "c": 4});
+
+      map["f"] = 4;
+      expect(view, {"a": 3, "c": 4, "f": 4});
+      map["ac"] = 4;
+      expect(view, {"ac": 4, "c": 4, "f": 4});
+
+      map.remove("c");
+      expect(view, {"a": 3, "ac": 4, "f": 4});
+    });
   });
 }
