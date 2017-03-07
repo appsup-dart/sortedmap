@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- new FilteredMapView class
+- some api changes
+
 ## 0.1.2
 
 - keep elements after limit in FilteredMap
