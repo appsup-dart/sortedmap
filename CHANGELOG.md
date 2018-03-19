@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+- resolve strong mode analysis warnings
+
 ## 0.2.0
 
 - new FilteredMapView class

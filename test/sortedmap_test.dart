@@ -67,8 +67,9 @@ void main() {
 
   group('FilteredMap', () {
     test('isValid', () {
-      var map = new FilteredMap(new Filter(ordering: const Ordering.byValue(), validInterval: new KeyValueInterval(
-      new Pair<Comparable,Comparable>(null,2),new Pair<Comparable,Comparable>(null,3))));
+      var map = new FilteredMap(new Filter(
+          ordering: const Ordering.byValue(),
+          validInterval: new KeyValueInterval(null,2, null,3)));
 
       map.addAll({
         "b": 1,

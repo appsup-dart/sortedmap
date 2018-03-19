@@ -1,11 +1,11 @@
 name: sortedmap
 description: A map of objects which can be sorted and filtered on both their key and value
-version: 0.2.0
+version: 0.3.0
 author: Rik Bellens <rik.bellens@appsup.be>
 homepage: https://github.com/appsup-dart/sortedmap
 
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=1.14.0 <2.0.0'
 
 dependencies:
   quiver: '>=0.22.0 <0.23.0'

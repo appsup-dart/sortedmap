@@ -20,6 +20,7 @@ linter:
     - iterable_contains_unrelated_type
     - library_names
     - library_prefixes
+    - list_remove_unrelated_type
     - non_constant_identifier_names
     - one_member_abstracts
     - overridden_fields
@@ -27,7 +28,7 @@ linter:
     - package_names
     - package_prefixed_library_names
     - prefer_is_not_empty
-    - public_member_api_docs
+#    - public_member_api_docs
     - slash_for_doc_comments
     - sort_constructors_first
     - sort_unnamed_constructors_first
@@ -40,3 +41,4 @@ linter:
     - unnecessary_brace_in_string_interp
     - unnecessary_getters_setters
     - unrelated_type_equality_checks
+    - valid_regexps

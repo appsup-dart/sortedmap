@@ -35,8 +35,8 @@ abstract class SortedMap<K extends Comparable,V> implements Map<K,V> {
         Ordering<K,V> ordering: const Ordering.byKey()}) {
     SortedMap<K, V> map = new SortedMap<K, V>(ordering);
 
-    if (key == null) key = (K v)=>v;
-    if (value == null) value = (V v)=>v;
+    if (key == null) key = (v)=>v;
+    if (value == null) value = (v)=>v;
     for (var element in iterable) {
       map[key(element)] = value(element);
     }

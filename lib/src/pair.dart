@@ -25,11 +25,11 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
 
   /// Creates a new key/value pair, with null values for key and/or value
   /// interpreted as the maximum possible value.
-  const Pair.max([this.key, this.value]) : isMax = true, isMin = false;
+  Pair.max([this.key, this.value]) : isMax = key==null||value==null, isMin = false;
 
   /// Creates a new key/value pair, with null values for key and/or value
   /// interpreted as the minimum possible value.
-  const Pair.min([this.key, this.value]) : isMax = false, isMin = true;
+  Pair.min([this.key, this.value]) : isMax = false, isMin = key==null||value==null;
 
 
 
