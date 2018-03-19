@@ -3,9 +3,7 @@
 part of sortedmap;
 
 /// A [Pair] represents a key/value pair.
-class Pair<K,V> implements Comparable<Pair<K,V>> {
-
-
+class Pair<K, V> implements Comparable<Pair<K, V>> {
   /// The key.
   final K key;
 
@@ -21,28 +19,36 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
   final bool isMin;
 
   /// Creates a new key/value pair.
-  const Pair(this.key,this.value) : isMax = false, isMin = false;
+  const Pair(this.key, this.value)
+      : isMax = false,
+        isMin = false;
 
   /// Creates a new key/value pair, with null values for key and/or value
   /// interpreted as the maximum possible value.
-  Pair.max([this.key, this.value]) : isMax = key==null||value==null, isMin = false;
+  Pair.max([this.key, this.value])
+      : isMax = key == null || value == null,
+        isMin = false;
 
   /// Creates a new key/value pair, with null values for key and/or value
   /// interpreted as the minimum possible value.
-  Pair.min([this.key, this.value]) : isMax = false, isMin = key==null||value==null;
-
-
-
-  @override
-  int get hashCode => quiver.hash4(key,value,isMax,isMin);
+  Pair.min([this.key, this.value])
+      : isMax = false,
+        isMin = key == null || value == null;
 
   @override
-  bool operator==(dynamic other) => other is Pair && other.key==key &&
-  other.value == value && other.isMax==isMax && other.isMin==isMin;
+  int get hashCode => quiver.hash4(key, value, isMax, isMin);
 
-  int _compareValue(Pair<K,V> other) {
-    if (value==null) {
-      if (other.value==null) {
+  @override
+  bool operator ==(dynamic other) =>
+      other is Pair &&
+      other.key == key &&
+      other.value == value &&
+      other.isMax == isMax &&
+      other.isMin == isMin;
+
+  int _compareValue(Pair<K, V> other) {
+    if (value == null) {
+      if (other.value == null) {
         if (isMax) return other.isMax ? 0 : 1;
         if (isMin) return other.isMin ? 0 : -1;
         if (other.isMax) return -1;
@@ -51,15 +57,15 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
       }
       return isMax ? 1 : isMin ? -1 : throw new ArgumentError.notNull();
     }
-    if (other.value==null) {
+    if (other.value == null) {
       return -other._compareValue(this);
     }
     return Comparable.compare(value as Comparable, other.value as Comparable);
   }
 
-  int _compareKey(Pair<K,V> other) {
-    if (key==null) {
-      if (other.key==null) {
+  int _compareKey(Pair<K, V> other) {
+    if (key == null) {
+      if (other.key == null) {
         if (isMax) return other.isMax ? 0 : 1;
         if (isMin) return other.isMin ? 0 : -1;
         if (other.isMax) return -1;
@@ -68,7 +74,7 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
       }
       return isMax ? 1 : isMin ? -1 : throw new ArgumentError.notNull();
     }
-    if (other.key==null) {
+    if (other.key == null) {
       return -other._compareKey(this);
     }
     return Comparable.compare(key as Comparable, other.key as Comparable);
@@ -77,12 +83,10 @@ class Pair<K,V> implements Comparable<Pair<K,V>> {
   @override
   int compareTo(Pair<K, V> other) {
     var cmp = _compareValue(other);
-    if (cmp!=0) return cmp;
+    if (cmp != 0) return cmp;
     return _compareKey(other);
   }
 
   @override
   String toString() => "Pair[$key,$value]";
 }
-
-
