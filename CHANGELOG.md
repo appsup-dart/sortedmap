@@ -3,6 +3,7 @@
 ## 0.3.0
 
 - resolve strong mode analysis warnings
+- change dependency on quiver to <0.28.0
 
 ## 0.2.0
 
