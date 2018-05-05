@@ -145,7 +145,8 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   void operator []=(K key, V value) {
-    _sortedPairs.remove(_pairForKey(key));
+    var pair = _pairForKey(key);
+    if (pair!=null) _sortedPairs.remove(pair);
     _addPair(key, value);
   }
 
