@@ -123,11 +123,11 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   final Ordering<K, V> ordering;
 
   TreeSet<Pair<K, Comparable>> _sortedPairs;
-  Map<K, V> _map;
+  TreeMap<K, V> _map;
 
   _SortedMap._(this.ordering, this._sortedPairs, this._map) {
     _sortedPairs ??= new TreeSet();
-    _map ??= {};
+    _map ??= new TreeMap();
   }
 
   @override
@@ -138,7 +138,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   SortedMap<K, V> clone() => new _SortedMap<K, V>._(this.ordering,
-      new TreeSet()..addAll(_sortedPairs), new Map<K, V>.from(_map));
+      new TreeSet()..addAll(_sortedPairs), new TreeMap<K, V>.from(_map));
 
   @override
   V operator [](Object key) => _map[key];
@@ -149,6 +149,9 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     if (pair!=null) _sortedPairs.remove(pair);
     _addPair(key, value);
   }
+
+  @override
+  bool get isEmpty => _map.isEmpty;
 
   void _addPair(K key, V value) {
     _map[key] = value;

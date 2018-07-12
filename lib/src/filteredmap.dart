@@ -39,13 +39,13 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   final Filter<K, V> filter;
 
   _FilteredMap._(Filter<K, V> filter, TreeSet<Pair<K, Comparable>> sortedPairs,
-      Map<K, V> map)
+      TreeMap<K, V> map)
       : filter = filter,
         super._(filter.ordering, sortedPairs, map);
 
   @override
   FilteredMap<K, V> clone() => new _FilteredMap<K, V>._(
-      this.filter, new TreeSet()..addAll(_sortedPairs), new Map.from(_map));
+      this.filter, new TreeSet()..addAll(_sortedPairs), new TreeMap.from(_map));
 
   @override
   void _addPair(K key, V value) {
