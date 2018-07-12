@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- performance improvements
+
 ## 0.3.0
 
 - resolve strong mode analysis warnings
