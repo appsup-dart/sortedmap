@@ -14,7 +14,7 @@ library sortedmap;
 
 import 'dart:collection';
 import 'package:quiver/core.dart' as quiver;
-import 'package:quiver/collection.dart' show TreeSet;
+import 'src/treeset.dart';
 
 part 'src/filter.dart';
 part 'src/filteredmap.dart';
