@@ -8,15 +8,15 @@ part of sortedmap;
 abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// Creates a new [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
-  factory FilteredMap([Filter<K, V> filter = const Filter()]) =>
-      new _FilteredMap._(filter, null, null);
+  factory FilteredMap([Filter<K, V> filter]) =>
+      new _FilteredMap._(filter ?? new Filter(), null, null);
 
   /// The filter to be used to order and filter items.
   Filter<K, V> get filter;
 
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
-  KeyValueInterval<K, Comparable> get completeInterval {
+  KeyValueInterval get completeInterval {
     var keys = this.keys;
     var filterInterval = filter.validInterval;
     if (filter.limit == null || keys.length < filter.limit)
@@ -38,7 +38,7 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   final Filter<K, V> filter;
 
-  _FilteredMap._(Filter<K, V> filter, TreeSet<Pair<K, Comparable>> sortedPairs,
+  _FilteredMap._(Filter<K, V> filter, TreeSet<Pair<Comparable, Comparable>> sortedPairs,
       TreeMap<K, V> map)
       : filter = filter,
         super._(filter.ordering, sortedPairs, map);
@@ -97,7 +97,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   bool _containsPair(Pair<K, Comparable> pair) =>
       _effectiveInterval.containsPoint(pair);
 
-  KeyValueInterval<K, Comparable> get _effectiveInterval {
+  KeyValueInterval get _effectiveInterval {
     var keys = this.keys;
     return new KeyValueInterval.fromPairs(
         _pairForKey(keys.first, false), _pairForKey(keys.last, false));
@@ -129,7 +129,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   }
 
   @override
-  Ordering<K, V> get ordering => _baseMap.ordering;
+  Ordering get ordering => _baseMap.ordering;
 
   @override
   Iterable<K> subkeys(

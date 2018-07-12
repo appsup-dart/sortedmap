@@ -16,7 +16,7 @@ part of sortedmap;
 ///
 class Filter<K extends Comparable, V> {
   /// The ordering.
-  final Ordering<K, V> ordering;
+  final Ordering ordering;
 
   /// The number of elements allowed in a set.
   final int limit;
@@ -25,7 +25,7 @@ class Filter<K extends Comparable, V> {
   final bool reversed;
 
   /// The interval of acceptable values.
-  final KeyValueInterval<K, Comparable> validInterval;
+  final KeyValueInterval validInterval;
 
   /// Creates a new [Filter] instance.
   const Filter(
@@ -47,25 +47,25 @@ class Filter<K extends Comparable, V> {
 }
 
 /// Defines an interval.
-class KeyValueInterval<K extends Comparable, V extends Comparable> {
-  final K _startKey;
-  final V _startValue;
-  final K _endKey;
-  final V _endValue;
+class KeyValueInterval {
+  final Comparable _startKey;
+  final Comparable _startValue;
+  final Comparable _endKey;
+  final Comparable _endValue;
 
   /// Creates a new interval from individual keys and values.
   const KeyValueInterval(
       [this._startKey, this._startValue, this._endKey, this._endValue]);
 
   /// Creates a new interval from key/value pairs.
-  factory KeyValueInterval.fromPairs(Pair<K, V> start, Pair<K, V> end) =>
+  factory KeyValueInterval.fromPairs(Pair start, Pair end) =>
       new KeyValueInterval(start.key, start.value, end.key, end.value);
 
   /// The lower limit.
-  Pair<K, V> get start => new Pair.min(_startKey, _startValue);
+  Pair<Comparable,Comparable> get start => new Pair.min(_startKey, _startValue);
 
   /// The upper limit.
-  Pair<K, V> get end => new Pair.max(_endKey, _endValue);
+  Pair<Comparable,Comparable> get end => new Pair.max(_endKey, _endValue);
 
   /// Returns true if this interval is unbounded.
   bool get isUnlimited =>
@@ -75,18 +75,18 @@ class KeyValueInterval<K extends Comparable, V extends Comparable> {
       end.value == null;
 
   /// Creates a new interval replacing the lower limit.
-  KeyValueInterval<K, V> startAt(K key, V value) =>
+  KeyValueInterval startAt(Comparable key, Comparable value) =>
       new KeyValueInterval(key, value, _endKey, _endValue);
 
   /// Creates a new interval replacing the upper limit.
-  KeyValueInterval<K, V> endAt(K key, V value) =>
+  KeyValueInterval endAt(Comparable key, Comparable value) =>
       new KeyValueInterval(_startKey, _startValue, key, value);
 
   /// Returns true if `point` is within the bounds (inclusive) of this interval.
-  bool containsPoint(Pair<K, V> p) =>
+  bool containsPoint(Pair p) =>
       _isAfterStart(p.key, p.value) && _isBeforeEnd(p.key, p.value);
 
-  bool _isAfterStart(K key, V value) {
+  bool _isAfterStart(Comparable key, Comparable value) {
     if (start.value == null) {
       if (value != null) return true;
     } else {
@@ -100,7 +100,7 @@ class KeyValueInterval<K extends Comparable, V extends Comparable> {
     return (Comparable.compare(start.key, key)) <= 0;
   }
 
-  bool _isBeforeEnd(K key, V value) {
+  bool _isBeforeEnd(Comparable key, Comparable value) {
     if (end.value == null) {
       if (value != null) return true;
     } else {
@@ -115,7 +115,7 @@ class KeyValueInterval<K extends Comparable, V extends Comparable> {
   }
 
   /// Returns true if this interval contains the interval `other`.
-  bool contains(KeyValueInterval<K, V> other) =>
+  bool contains(KeyValueInterval other) =>
       containsPoint(other.start) && containsPoint(other.end);
 
   @override

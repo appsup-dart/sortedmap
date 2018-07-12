@@ -6,12 +6,12 @@ part of sortedmap;
 /// A [Map] of objects that can be ordered relative to each other.
 abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   /// Creates a new [SortedMap] instance with an optional ordering.
-  factory SortedMap([Ordering<K, V> ordering = const Ordering.byKey()]) =>
+  factory SortedMap([Ordering ordering = const Ordering.byKey()]) =>
       new _SortedMap._(ordering, null, null);
 
   /// Creates a [SortedMap] that contains all key/value pairs of [other].
   factory SortedMap.from(Map<K, V> other,
-      [Ordering<K, V> ordering = const Ordering.byKey()]) {
+      [Ordering ordering = const Ordering.byKey()]) {
     return new SortedMap(ordering)..addAll(other);
   }
 
@@ -29,7 +29,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   factory SortedMap.fromIterable(Iterable iterable,
       {K key(element),
       V value(element),
-      Ordering<K, V> ordering: const Ordering.byKey()}) {
+      Ordering ordering: const Ordering.byKey()}) {
     SortedMap<K, V> map = new SortedMap<K, V>(ordering);
 
     if (key == null) key = (v) => v;
@@ -50,7 +50,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   ///
   /// It is an error if the two [Iterable]s don't have the same length.
   factory SortedMap.fromIterables(Iterable<K> keys, Iterable<V> values,
-      [Ordering<K, V> ordering = const Ordering.byKey()]) {
+      [Ordering ordering = const Ordering.byKey()]) {
     SortedMap<K, V> map = new SortedMap<K, V>(ordering);
     Iterator<K> keyIterator = keys.iterator;
     Iterator<V> valueIterator = values.iterator;
@@ -71,7 +71,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   }
 
   /// The ordering.
-  Ordering<K, V> get ordering;
+  Ordering get ordering;
 
   /// Makes a copy of this map. The key/value pairs in the map are not cloned.
   SortedMap<K, V> clone();
@@ -120,9 +120,9 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     with SortedMap<K, V> {
   @override
-  final Ordering<K, V> ordering;
+  final Ordering ordering;
 
-  TreeSet<Pair<K, Comparable>> _sortedPairs;
+  TreeSet<Pair<Comparable, Comparable>> _sortedPairs;
   TreeMap<K, V> _map;
 
   _SortedMap._(this.ordering, this._sortedPairs, this._map) {
@@ -134,7 +134,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   bool containsKey(Object key) => _map.containsKey(key);
 
   @override
-  Iterable<K> get keys => _sortedPairs.map((p) => p.key);
+  Iterable<K> get keys => _sortedPairs.map((p) => p.key as K);
 
   @override
   SortedMap<K, V> clone() => new _SortedMap<K, V>._(this.ordering,

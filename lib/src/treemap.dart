@@ -15,10 +15,10 @@ class TreeMap<K extends Comparable,V> extends MapBase<K,V> {
   bool get isEmpty => _tree.isEmpty;
 
   @override
-  bool containsKey(Object key) => _tree.lookup(new Pair(key,null))!=null;
+  bool containsKey(Object key) => _tree.lookup(new Pair<K,V>(key,null))!=null;
 
   @override
-  V operator [](Object key) => _tree.lookup(new Pair(key,null))?.value;
+  V operator [](Object key) => _tree.lookup(new Pair<K,V>(key,null))?.value;
 
   @override
   void operator []=(K key, V value) {
