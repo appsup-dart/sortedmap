@@ -22,7 +22,7 @@ class TreeMap<K extends Comparable,V> extends MapBase<K,V> {
 
   @override
   void operator []=(K key, V value) {
-    var p = new Pair(key,value);
+    var p = new Pair<K,V>(key,value);
     _tree.remove(p); // first remove otherwise not overwritten, could be improved?
     _tree.add(p);
   }
@@ -37,7 +37,7 @@ class TreeMap<K extends Comparable,V> extends MapBase<K,V> {
 
   @override
   V remove(Object key) {
-    var p = _tree.lookup(new Pair(key,null));
+    var p = _tree.lookup(new Pair<K,V>(key,null));
     if (p!=null) _tree.remove(p);
     return p?.value;
   }

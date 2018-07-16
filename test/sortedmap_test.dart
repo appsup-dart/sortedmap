@@ -9,6 +9,28 @@ import 'dart:math';
 void main() {
   group('SortedMap', () {
 
+    test('Add/remove', () {
+      var map = new SortedMap();
+
+      map.addAll({
+        "b": 1,
+        "e": 2,
+        "a": 3,
+        "c": 4
+      });
+
+
+      expect(map.containsKey("b"), isTrue);
+
+      expect(map.containsKey("d"), isFalse);
+      map["d"] = 5;
+      expect(map.containsKey("d"), isTrue);
+      map.remove("d");
+      expect(map.containsKey("d"), isFalse);
+
+    });
+
+
     test('Order by key', () {
       var map = new SortedMap();
 
