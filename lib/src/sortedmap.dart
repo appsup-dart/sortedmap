@@ -86,15 +86,15 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 
   /// Gets the keys within the desired bounds and limit.
   Iterable<K> subkeys(
-      {Pair<K, Comparable> start,
-      Pair<K, Comparable> end,
+      {Pair<Comparable, Comparable> start,
+      Pair<Comparable, Comparable> end,
       int limit,
       bool reversed: false});
 
   /// Creates a filtered view of this map.
   FilteredMapView<K, V> filteredMapView(
-          {Pair<K, Comparable> start,
-          Pair<K, Comparable> end,
+          {Pair<Comparable, Comparable> start,
+          Pair<Comparable, Comparable> end,
           int limit,
           bool reversed: false}) =>
       new FilteredMapView(this,
@@ -113,7 +113,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
           reversed: reversed))
         ..addAll(this);
 
-  Pair<K, Comparable> _pairForKey(K key) =>
+  Pair<Comparable, Comparable> _pairForKey(K key) =>
       containsKey(key) ? ordering.mapKeyValue(key, this[key]) : null;
 }
 
@@ -195,8 +195,8 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<K> subkeys(
-      {Pair<K, Comparable> start,
-      Pair<K, Comparable> end,
+      {Pair<Comparable, Comparable> start,
+      Pair<Comparable, Comparable> end,
       int limit,
       bool reversed: false}) {
     var it = _subkeys(start, end, limit, reversed);
@@ -204,7 +204,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     return it;
   }
 
-  Iterable<K> _subkeys(Pair<K, Comparable> start, Pair<K, Comparable> end,
+  Iterable<K> _subkeys(Pair<Comparable, Comparable> start, Pair<Comparable, Comparable> end,
       int limit, bool reversed) sync* {
     var from = reversed ? end : start;
     Iterator it = _sortedPairs.fromIterator(from, reversed: reversed);

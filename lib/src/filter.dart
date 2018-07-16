@@ -58,7 +58,7 @@ class KeyValueInterval {
       [this._startKey, this._startValue, this._endKey, this._endValue]);
 
   /// Creates a new interval from key/value pairs.
-  factory KeyValueInterval.fromPairs(Pair start, Pair end) =>
+  factory KeyValueInterval.fromPairs(Pair<Comparable,Comparable> start, Pair<Comparable,Comparable> end) =>
       new KeyValueInterval(start.key, start.value, end.key, end.value);
 
   /// The lower limit.

@@ -71,8 +71,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   /// Creates a new FilteredMapView from a SortedMap.
   FilteredMapView(this._baseMap,
-      {Pair<K, Comparable> start,
-      Pair<K, Comparable> end,
+      {Pair<Comparable, Comparable> start,
+      Pair<Comparable, Comparable> end,
       int limit,
       bool reversed})
       : filter = new Filter(
@@ -87,14 +87,14 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   V operator [](Object key) => _baseMap[_pairForKey(key)?.key];
 
   @override
-  Pair<K, Comparable> _pairForKey(Object key, [bool checked = true]) {
+  Pair<Comparable, Comparable> _pairForKey(Object key, [bool checked = true]) {
     var value = _baseMap[key];
     var p = ordering.mapKeyValue(key as K, value);
     if (checked && !_containsPair(p)) return null;
     return p;
   }
 
-  bool _containsPair(Pair<K, Comparable> pair) =>
+  bool _containsPair(Pair<Comparable, Comparable> pair) =>
       _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
@@ -133,8 +133,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<K> subkeys(
-      {Pair<K, Comparable> start,
-      Pair<K, Comparable> end,
+      {Pair<Comparable, Comparable> start,
+      Pair<Comparable, Comparable> end,
       int limit,
       bool reversed: false}) {
     throw new UnimplementedError();
