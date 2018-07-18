@@ -5,8 +5,6 @@ import 'dart:math';
 abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
   final Comparator<V> comparator;
 
-  static int _defaultCompare<V>(V a, V b) => (a as dynamic).compareTo(b);
-
   /// Create a new [TreeSet] with an ordering defined by [comparator] or the
   /// default `(a, b) => a.compareTo(b)`.
   factory TreeSet({Comparator<V> comparator}) {
@@ -15,9 +13,12 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 
   TreeSet._(this.comparator);
 
+  static int _defaultCompare<V>(V a, V b) => (a as dynamic).compareTo(b);
+
   BidirectionalIterator<V> fromIterator(V anchor,
       {bool reversed: false, bool inclusive: true});
 
+  @override
   BidirectionalIterator<V> get iterator;
 
   BidirectionalIterator<V> get reverseIterator;

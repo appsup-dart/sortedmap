@@ -11,12 +11,15 @@ class TemplateBenchmark extends BenchmarkBase {
     void teardown()}) : _setup = setup, _teardown = teardown, super(name, emitter: const _Emitter());
 
 
+  @override
   void run() => _run();
 
   // Not measured setup code executed prior to the benchmark runs.
+  @override
   void setup() => _setup==null ? null : _setup();
 
   // Not measures teardown code executed after the benchark runs.
+  @override
   void teardown() => _teardown==null ? null : _teardown();
 }
 
