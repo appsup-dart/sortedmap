@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- fixes on Dart 2 compatibility
+
 ## 0.4.0 
 
 - Dart 2 pre-release compatibility
