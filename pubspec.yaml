@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   quiver: '>=0.22.0 <0.29.0'
-  benchmark_harness: '^1.0.4'
 
 dev_dependencies:
   test: '>=0.12.0 <0.13.0'
+  benchmark_harness: '^1.0.4'
