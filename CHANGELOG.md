@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+
+- Support Dart 2 in `pubspec.yaml`
+
 ## 0.4.1
 
 - fixes on Dart 2 compatibility
