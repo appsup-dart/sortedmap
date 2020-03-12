@@ -14,7 +14,7 @@ A simple usage example:
     import 'package:sortedmap/sortedmap.dart';
 
     main() {
-      var map = new SortedMap((Pair a, Pair b)=>Comparable.compare(a.value, b.value));
+      var map = new SortedMap(Ordering.byValue());
       
       map.addAll({
         "a": 3,
