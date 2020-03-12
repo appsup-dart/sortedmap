@@ -6,10 +6,10 @@ part of sortedmap;
 /// A [Map] of objects that can be ordered relative to each other and where
 /// key/value pairs are filtered before adding them to the map.
 abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
-  /// Creates a new [FilteredMap] instance with an optional [Filter] definition
+  /// Creates a [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
   factory FilteredMap([Filter<K, V> filter]) =>
-      new _FilteredMap._(filter ?? new Filter(), null, null);
+      _FilteredMap._(filter ?? Filter(), null, null);
 
   /// The filter to be used to order and filter items.
   Filter<K, V> get filter;
@@ -19,15 +19,16 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   KeyValueInterval get completeInterval {
     var keys = this.keys;
     var filterInterval = filter.validInterval;
-    if (filter.limit == null || keys.length < filter.limit)
+    if (filter.limit == null || keys.length < filter.limit) {
       return filterInterval;
+    }
     if (filter.limit == 0) return null;
 
     if (filter.reversed) {
-      return new KeyValueInterval.fromPairs(
+      return KeyValueInterval.fromPairs(
           _pairForKey(keys.first), filterInterval.end);
     } else {
-      return new KeyValueInterval.fromPairs(
+      return KeyValueInterval.fromPairs(
           filterInterval.start, _pairForKey(keys.last));
     }
   }
@@ -38,19 +39,20 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   final Filter<K, V> filter;
 
-  _FilteredMap._(Filter<K, V> filter, TreeSet<Pair<Comparable, Comparable>> sortedPairs,
-      TreeMap<K, V> map)
+  _FilteredMap._(Filter<K, V> filter,
+      TreeSet<Pair<Comparable, Comparable>> sortedPairs, TreeMap<K, V> map)
       : filter = filter,
         super._(filter.ordering, sortedPairs, map);
 
   @override
-  FilteredMap<K, V> clone() => new _FilteredMap<K, V>._(
-      this.filter, new TreeSet()..addAll(_sortedPairs), new TreeMap.from(_map));
+  FilteredMap<K, V> clone() => _FilteredMap<K, V>._(
+      filter, TreeSet()..addAll(_sortedPairs), TreeMap.from(_map));
 
   @override
   void _addPair(K key, V value) {
-    if (!filter.validInterval.containsPoint(ordering.mapKeyValue(key, value)))
+    if (!filter.validInterval.containsPoint(ordering.mapKeyValue(key, value))) {
       return;
+    }
     super._addPair(key, value);
     if (filter.limit != null && length > filter.limit) {
       var toDel = filter.reversed
@@ -69,19 +71,17 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Filter<K, V> filter;
 
-  /// Creates a new FilteredMapView from a SortedMap.
+  /// Creates a FilteredMapView from a SortedMap.
   FilteredMapView(this._baseMap,
       {Pair<Comparable, Comparable> start,
       Pair<Comparable, Comparable> end,
       int limit,
       bool reversed})
-      : filter = new Filter(
-            validInterval: new KeyValueInterval.fromPairs(start, end),
+      : filter = Filter(
+            validInterval: KeyValueInterval.fromPairs(start, end),
             limit: limit,
             reversed: reversed,
             ordering: _baseMap.ordering);
-
-  FilteredMapView._(this._baseMap, this.filter);
 
   @override
   V operator [](Object key) => _baseMap[_pairForKey(key)?.key];
@@ -99,12 +99,12 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   KeyValueInterval get _effectiveInterval {
     var keys = this.keys;
-    return new KeyValueInterval.fromPairs(
+    return KeyValueInterval.fromPairs(
         _pairForKey(keys.first, false), _pairForKey(keys.last, false));
   }
 
   @override
-  SortedMap<K, V> clone() => new FilteredMap(filter)..addAll(_baseMap);
+  SortedMap<K, V> clone() => FilteredMap(filter)..addAll(_baseMap);
 
   @override
   K firstKeyAfter(K key) => _pairForKey(_baseMap.firstKeyAfter(key))?.key;
@@ -136,7 +136,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       {Pair<Comparable, Comparable> start,
       Pair<Comparable, Comparable> end,
       int limit,
-      bool reversed: false}) {
-    throw new UnimplementedError();
+      bool reversed = false}) {
+    throw UnimplementedError();
   }
 }

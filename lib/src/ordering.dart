@@ -11,15 +11,16 @@ class Ordering {
   const Ordering.byValue();
 
   /// Creates an ordering by mapped values.
-  factory Ordering.byMappedValue(Comparable mapper(dynamic v)) =>
-      new _OrderingByMappedValue(mapper);
+  factory Ordering.byMappedValue(Comparable Function(dynamic v) mapper) =>
+      _OrderingByMappedValue(mapper);
 
   /// Maps a key and value to a pair with the desired natural order.
   ///
   /// Pairs will be ordered according to their `compareTo` method, i.e. first on
   /// value, then on key.
-  Pair<Comparable,Comparable> mapKeyValue<K,V>(Comparable key, dynamic value) =>
-      new Pair(key, mapValue(value));
+  Pair<Comparable, Comparable> mapKeyValue<K, V>(
+          Comparable key, dynamic value) =>
+      Pair(key, mapValue(value));
 
   /// Maps a value to a Comparable defining the desired order.
   ///
@@ -27,7 +28,7 @@ class Ordering {
   Comparable mapValue(dynamic value) => value as Comparable;
 }
 
-typedef Comparable _Mapper<V>(V v);
+typedef _Mapper<V> = Comparable Function(V v);
 
 class _OrderingByMappedValue<K extends Comparable, V> extends Ordering {
   final _Mapper<V> mapper;

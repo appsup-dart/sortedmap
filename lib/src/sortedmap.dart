@@ -5,14 +5,14 @@ part of sortedmap;
 
 /// A [Map] of objects that can be ordered relative to each other.
 abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
-  /// Creates a new [SortedMap] instance with an optional ordering.
+  /// Creates a [SortedMap] instance with an optional ordering.
   factory SortedMap([Ordering ordering = const Ordering.byKey()]) =>
-      new _SortedMap._(ordering, null, null);
+      _SortedMap._(ordering, null, null);
 
   /// Creates a [SortedMap] that contains all key/value pairs of [other].
   factory SortedMap.from(Map<K, V> other,
       [Ordering ordering = const Ordering.byKey()]) {
-    return new SortedMap(ordering)..addAll(other);
+    return SortedMap(ordering)..addAll(other);
   }
 
   /// Creates a [SortedMap] where the keys and values are computed from the
@@ -27,13 +27,13 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   /// If no functions are specified for [key] and [value] the default is to
   /// use the iterable value itself.
   factory SortedMap.fromIterable(Iterable iterable,
-      {K key(element),
-      V value(element),
-      Ordering ordering: const Ordering.byKey()}) {
-    SortedMap<K, V> map = new SortedMap<K, V>(ordering);
+      {K Function(dynamic) key,
+      V Function(dynamic) value,
+      Ordering ordering = const Ordering.byKey()}) {
+    var map = SortedMap<K, V>(ordering);
 
-    if (key == null) key = (v) => v;
-    if (value == null) value = (v) => v;
+    key ??= (v) => v;
+    value ??= (v) => v;
     for (var element in iterable) {
       map[key(element)] = value(element);
     }
@@ -51,12 +51,12 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   /// It is an error if the two [Iterable]s don't have the same length.
   factory SortedMap.fromIterables(Iterable<K> keys, Iterable<V> values,
       [Ordering ordering = const Ordering.byKey()]) {
-    SortedMap<K, V> map = new SortedMap<K, V>(ordering);
-    Iterator<K> keyIterator = keys.iterator;
-    Iterator<V> valueIterator = values.iterator;
+    var map = SortedMap<K, V>(ordering);
+    var keyIterator = keys.iterator;
+    var valueIterator = values.iterator;
 
-    bool hasNextKey = keyIterator.moveNext();
-    bool hasNextValue = valueIterator.moveNext();
+    var hasNextKey = keyIterator.moveNext();
+    var hasNextValue = valueIterator.moveNext();
 
     while (hasNextKey && hasNextValue) {
       map[keyIterator.current] = valueIterator.current;
@@ -65,7 +65,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
     }
 
     if (hasNextKey || hasNextValue) {
-      throw new ArgumentError("Iterables do not have same length.");
+      throw ArgumentError('Iterables do not have same length.');
     }
     return map;
   }
@@ -89,25 +89,25 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
       {Pair<Comparable, Comparable> start,
       Pair<Comparable, Comparable> end,
       int limit,
-      bool reversed: false});
+      bool reversed = false});
 
   /// Creates a filtered view of this map.
   FilteredMapView<K, V> filteredMapView(
           {Pair<Comparable, Comparable> start,
           Pair<Comparable, Comparable> end,
           int limit,
-          bool reversed: false}) =>
-      new FilteredMapView(this,
+          bool reversed = false}) =>
+      FilteredMapView(this,
           start: start, end: end, limit: limit, reversed: reversed);
 
-  /// Creates a new filtered map based on this map.
+  /// Creates a filtered map based on this map.
   FilteredMap<K, V> filteredMap(
           {Pair<K, Comparable> start,
           Pair<K, Comparable> end,
           int limit,
-          bool reversed: false}) =>
-      new FilteredMap(new Filter(
-          validInterval: new KeyValueInterval.fromPairs(start, end),
+          bool reversed = false}) =>
+      FilteredMap(Filter(
+          validInterval: KeyValueInterval.fromPairs(start, end),
           ordering: ordering,
           limit: limit,
           reversed: reversed))
@@ -126,8 +126,8 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   TreeMap<K, V> _map;
 
   _SortedMap._(this.ordering, this._sortedPairs, this._map) {
-    _sortedPairs ??= new TreeSet();
-    _map ??= new TreeMap();
+    _sortedPairs ??= TreeSet();
+    _map ??= TreeMap();
   }
 
   @override
@@ -137,8 +137,8 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   Iterable<K> get keys => _sortedPairs.map((p) => p.key as K);
 
   @override
-  SortedMap<K, V> clone() => new _SortedMap<K, V>._(this.ordering,
-      new TreeSet()..addAll(_sortedPairs), new TreeMap<K, V>.from(_map));
+  SortedMap<K, V> clone() => _SortedMap<K, V>._(
+      ordering, TreeSet()..addAll(_sortedPairs), TreeMap<K, V>.from(_map));
 
   @override
   V operator [](Object key) => _map[key];
@@ -146,7 +146,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   void operator []=(K key, V value) {
     var pair = _pairForKey(key);
-    if (pair!=null) _sortedPairs.remove(pair);
+    if (pair != null) _sortedPairs.remove(pair);
     _addPair(key, value);
   }
 
@@ -174,22 +174,22 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   K lastKeyBefore(K key) {
     if (!_map.containsKey(key)) {
-      throw new StateError("No such key $key in collection");
+      throw StateError('No such key $key in collection');
     }
     var pair = _pairForKey(key);
     var it = _sortedPairs.fromIterator(pair, reversed: true);
-    while (it.moveNext() && it.current == pair);
+    while (it.moveNext() && it.current == pair) {}
     return it.current?.key;
   }
 
   @override
   K firstKeyAfter(K key) {
     if (!_map.containsKey(key)) {
-      throw new StateError("No such key $key in collection");
+      throw StateError('No such key $key in collection');
     }
     var pair = _pairForKey(key);
     var it = _sortedPairs.fromIterator(pair);
-    while (it.moveNext() && it.current == pair);
+    while (it.moveNext() && it.current == pair) {}
     return it.current?.key;
   }
 
@@ -198,17 +198,17 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
       {Pair<Comparable, Comparable> start,
       Pair<Comparable, Comparable> end,
       int limit,
-      bool reversed: false}) {
+      bool reversed = false}) {
     var it = _subkeys(start, end, limit, reversed);
     if (reversed) return it.toList().reversed;
     return it;
   }
 
-  Iterable<K> _subkeys(Pair<Comparable, Comparable> start, Pair<Comparable, Comparable> end,
-      int limit, bool reversed) sync* {
+  Iterable<K> _subkeys(Pair<Comparable, Comparable> start,
+      Pair<Comparable, Comparable> end, int limit, bool reversed) sync* {
     var from = reversed ? end : start;
     Iterator it = _sortedPairs.fromIterator(from, reversed: reversed);
-    int count = 0;
+    var count = 0;
     while (it.moveNext() && (limit == null || count++ < limit)) {
       var cmp = Comparable.compare(it.current, reversed ? start : end);
       if ((reversed && cmp < 0) || (!reversed && cmp > 0)) return;
@@ -222,12 +222,12 @@ abstract class UnmodifiableSortedMap<K extends Comparable, V>
     implements SortedMap<K, V> {
   @override
   void operator []=(K key, V value) =>
-      throw new UnsupportedError("Map view cannot be modified.");
+      throw UnsupportedError('Map view cannot be modified.');
 
   @override
-  void clear() => throw new UnsupportedError("Map view cannot be modified.");
+  void clear() => throw UnsupportedError('Map view cannot be modified.');
 
   @override
   V remove(Object key) =>
-      throw new UnsupportedError("Map view cannot be modified.");
+      throw UnsupportedError('Map view cannot be modified.');
 }

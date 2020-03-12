@@ -18,18 +18,18 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
   /// possible value.
   final bool isMin;
 
-  /// Creates a new key/value pair.
+  /// Creates a key/value pair.
   const Pair(this.key, this.value)
       : isMax = false,
         isMin = false;
 
-  /// Creates a new key/value pair, with null values for key and/or value
+  /// Creates a key/value pair, with null values for key and/or value
   /// interpreted as the maximum possible value.
   Pair.max([this.key, this.value])
       : isMax = key == null || value == null,
         isMin = false;
 
-  /// Creates a new key/value pair, with null values for key and/or value
+  /// Creates a key/value pair, with null values for key and/or value
   /// interpreted as the minimum possible value.
   Pair.min([this.key, this.value])
       : isMax = false,
@@ -55,7 +55,7 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
         if (other.isMin) return 1;
         return 0;
       }
-      return isMax ? 1 : isMin ? -1 : throw new ArgumentError.notNull();
+      return isMax ? 1 : isMin ? -1 : throw ArgumentError.notNull();
     }
     if (other.value == null) {
       return -other._compareValue(this);
@@ -72,7 +72,7 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
         if (other.isMin) return 1;
         return 0;
       }
-      return isMax ? 1 : isMin ? -1 : throw new ArgumentError.notNull();
+      return isMax ? 1 : isMin ? -1 : throw ArgumentError.notNull();
     }
     if (other.key == null) {
       return -other._compareKey(this);
@@ -88,5 +88,5 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
   }
 
   @override
-  String toString() => "Pair[$key,$value]";
+  String toString() => 'Pair[$key,$value]';
 }

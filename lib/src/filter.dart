@@ -27,12 +27,12 @@ class Filter<K extends Comparable, V> {
   /// The interval of acceptable values.
   final KeyValueInterval validInterval;
 
-  /// Creates a new [Filter] instance.
+  /// Creates a [Filter] instance.
   const Filter(
-      {this.ordering: const Ordering.byKey(),
+      {this.ordering = const Ordering.byKey(),
       this.limit,
-      this.reversed: false,
-      this.validInterval: const KeyValueInterval()});
+      this.reversed = false,
+      this.validInterval = const KeyValueInterval()});
 
   @override
   int get hashCode => quiver.hash4(ordering, limit, reversed, validInterval);
@@ -53,19 +53,20 @@ class KeyValueInterval {
   final Comparable _endKey;
   final Comparable _endValue;
 
-  /// Creates a new interval from individual keys and values.
+  /// Creates a interval from individual keys and values.
   const KeyValueInterval(
       [this._startKey, this._startValue, this._endKey, this._endValue]);
 
-  /// Creates a new interval from key/value pairs.
-  factory KeyValueInterval.fromPairs(Pair<Comparable,Comparable> start, Pair<Comparable,Comparable> end) =>
-      new KeyValueInterval(start.key, start.value, end.key, end.value);
+  /// Creates a interval from key/value pairs.
+  factory KeyValueInterval.fromPairs(Pair<Comparable, Comparable> start,
+          Pair<Comparable, Comparable> end) =>
+      KeyValueInterval(start.key, start.value, end.key, end.value);
 
   /// The lower limit.
-  Pair<Comparable,Comparable> get start => new Pair.min(_startKey, _startValue);
+  Pair<Comparable, Comparable> get start => Pair.min(_startKey, _startValue);
 
   /// The upper limit.
-  Pair<Comparable,Comparable> get end => new Pair.max(_endKey, _endValue);
+  Pair<Comparable, Comparable> get end => Pair.max(_endKey, _endValue);
 
   /// Returns true if this interval is unbounded.
   bool get isUnlimited =>
@@ -74,13 +75,13 @@ class KeyValueInterval {
       end.key == null &&
       end.value == null;
 
-  /// Creates a new interval replacing the lower limit.
+  /// Creates a interval replacing the lower limit.
   KeyValueInterval startAt(Comparable key, Comparable value) =>
-      new KeyValueInterval(key, value, _endKey, _endValue);
+      KeyValueInterval(key, value, _endKey, _endValue);
 
-  /// Creates a new interval replacing the upper limit.
+  /// Creates a interval replacing the upper limit.
   KeyValueInterval endAt(Comparable key, Comparable value) =>
-      new KeyValueInterval(_startKey, _startValue, key, value);
+      KeyValueInterval(_startKey, _startValue, key, value);
 
   /// Returns true if `point` is within the bounds (inclusive) of this interval.
   bool containsPoint(Pair p) =>
@@ -126,5 +127,5 @@ class KeyValueInterval {
       other is KeyValueInterval && other.start == start && other.end == end;
 
   @override
-  String toString() => "KeyValueInterval[$start,$end]";
+  String toString() => 'KeyValueInterval[$start,$end]';
 }
