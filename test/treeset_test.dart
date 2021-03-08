@@ -20,7 +20,7 @@ void main() {
 
     var set = createRandomSet(TreeSet(), 1000);
     benchmarkTest('Cloning', () {
-      TreeSet()..addAll(set);
+      TreeSet().addAll(set);
     });
   });
   group('Performance benchmarks quiver', () {
@@ -30,7 +30,7 @@ void main() {
 
     var set = createRandomSet(quiver.TreeSet(), 1000);
     benchmarkTest('Cloning quiver', () {
-      quiver.TreeSet()..addAll(set);
+      quiver.TreeSet().addAll(set);
     });
   });
 

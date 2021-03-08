@@ -29,7 +29,7 @@ class _Emitter implements ScoreEmitter {
 
   @override
   void emit(String testName, double value) {
-    print('$testName(RunTime): ${value} us.');
+    print('$testName(RunTime): $value us.');
   }
 }
 

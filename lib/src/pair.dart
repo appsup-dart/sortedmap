@@ -65,7 +65,7 @@ class Pair<K extends Comparable, V extends Comparable>
     if (other.value == null) {
       return -other._compareValue(this);
     }
-    return Comparable.compare(value as Comparable, other.value as Comparable);
+    return Comparable.compare(value, other.value);
   }
 
   int _compareKey(Pair<K, V> other) {
@@ -86,7 +86,7 @@ class Pair<K extends Comparable, V extends Comparable>
     if (other.key == null) {
       return -other._compareKey(this);
     }
-    return Comparable.compare(key as Comparable, other.key as Comparable);
+    return Comparable.compare(key, other.key);
   }
 
   @override
