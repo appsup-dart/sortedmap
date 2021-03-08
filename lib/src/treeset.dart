@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
+import 'package:meta/meta.dart';
 
 abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
   final Comparator<V> comparator;
@@ -32,7 +33,9 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 class AvlTreeSet<V> extends TreeSet<V> {
   AvlNode<V> _root;
 
-  AvlTreeSet({Comparator<V> comparator}) : super._(comparator);
+  AvlTreeSet({@required Comparator<V> comparator})
+      : assert(comparator != null),
+        super._(comparator);
 
   @override
   int get length => _root?.length ?? 0;
@@ -317,8 +320,9 @@ class AvlNode<V> {
   final int height;
   final int length;
 
-  AvlNode({this.object, this.left, this.right})
-      : height = max(left?.height ?? 0, right?.height ?? 0) + 1,
+  AvlNode({@required this.object, this.left, this.right})
+      : assert(object != null),
+        height = max(left?.height ?? 0, right?.height ?? 0) + 1,
         length = (left?.length ?? 0) + (right?.length ?? 0) + 1;
 
   int get balanceFactor => (right?.height ?? 0) - (left?.height ?? 0);
