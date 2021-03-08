@@ -17,10 +17,10 @@ library sortedmap;
 import 'dart:collection';
 import 'package:quiver/core.dart' as quiver;
 import 'src/treeset.dart';
+import 'src/treemap.dart';
 
 part 'src/filter.dart';
 part 'src/filteredmap.dart';
 part 'src/sortedmap.dart';
 part 'src/ordering.dart';
 part 'src/pair.dart';
-part 'src/treemap.dart';

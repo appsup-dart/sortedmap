@@ -1,6 +1,8 @@
-// @dart=2.9
+library treemap;
 
-part of sortedmap;
+import 'dart:collection';
+
+import 'treeset.dart';
 
 class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
   TreeMap();
@@ -11,17 +13,22 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
           MapEntry<K, V> a, MapEntry<K, V> b) =>
       Comparable.compare(a.key, b.key);
 
-  final TreeSet<MapEntry<K, V>> _tree = TreeSet(comparator: _compareKeys);
+  final TreeSet<MapEntry<K, V?>> _tree = TreeSet(comparator: _compareKeys);
 
   @override
   bool get isEmpty => _tree.isEmpty;
 
   @override
-  bool containsKey(Object key) =>
-      _tree.lookup(MapEntry<K, V>(key, null)) != null;
+  bool containsKey(Object? key) {
+    if (key is K) {
+      return _tree.lookup(MapEntry<K, V?>(key, null)) != null;
+    }
+    return false;
+  }
 
   @override
-  V operator [](Object key) => _tree.lookup(MapEntry<K, V>(key, null))?.value;
+  V? operator [](Object? key) =>
+      _tree.lookup(MapEntry<K, V?>(key as K, null))?.value;
 
   @override
   void operator []=(K key, V value) {
@@ -40,8 +47,8 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
   Iterable<K> get keys => _tree.map((p) => p.key);
 
   @override
-  V remove(Object key) {
-    var p = _tree.lookup(MapEntry<K, V>(key, null));
+  V? remove(Object? key) {
+    var p = _tree.lookup(MapEntry<K, V?>(key as K, null));
     if (p != null) _tree.remove(p);
     return p?.value;
   }

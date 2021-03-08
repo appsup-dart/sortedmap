@@ -114,13 +114,12 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Ordering ordering;
 
-  TreeSet<Pair> _sortedPairs;
-  TreeMap<K, V> _map;
+  final TreeSet<Pair> _sortedPairs;
+  final TreeMap<K, V> _map;
 
-  _SortedMap._(this.ordering, this._sortedPairs, this._map) {
-    _sortedPairs ??= TreeSet();
-    _map ??= TreeMap();
-  }
+  _SortedMap._(this.ordering, TreeSet<Pair> sortedPairs, TreeMap<K, V> map)
+      : _sortedPairs = sortedPairs ?? TreeSet(),
+        _map = map ?? TreeMap();
 
   @override
   bool containsKey(Object key) => _map.containsKey(key);
