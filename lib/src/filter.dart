@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of sortedmap;
 
@@ -21,7 +21,7 @@ class Filter<K extends Comparable, V> {
   final Ordering ordering;
 
   /// The number of elements allowed in a set.
-  final int limit;
+  final int? limit;
 
   /// Determines if the limit is applied from the start or from the end.
   final bool reversed;
@@ -50,10 +50,10 @@ class Filter<K extends Comparable, V> {
 
 /// Defines an interval.
 class KeyValueInterval {
-  final Comparable _startKey;
-  final Comparable _startValue;
-  final Comparable _endKey;
-  final Comparable _endValue;
+  final Comparable? _startKey;
+  final Comparable? _startValue;
+  final Comparable? _endKey;
+  final Comparable? _endValue;
 
   /// Creates a interval from individual keys and values.
   const KeyValueInterval(
@@ -88,32 +88,32 @@ class KeyValueInterval {
   bool containsPoint(Pair p) =>
       _isAfterStart(p.key, p.value) && _isBeforeEnd(p.key, p.value);
 
-  bool _isAfterStart(Comparable key, Comparable value) {
+  bool _isAfterStart(Comparable? key, Comparable? value) {
     if (start.value == null) {
       if (value != null) return true;
     } else {
       if (value == null) return false;
-      var cmp = Comparable.compare(start.value, value);
+      var cmp = Comparable.compare(start.value!, value);
       if (cmp > 0) return false;
       if (cmp < 0) return true;
     }
     if (start.key == null) return true;
     if (key == null) return false;
-    return (Comparable.compare(start.key, key)) <= 0;
+    return (Comparable.compare(start.key!, key)) <= 0;
   }
 
-  bool _isBeforeEnd(Comparable key, Comparable value) {
+  bool _isBeforeEnd(Comparable? key, Comparable? value) {
     if (end.value == null) {
       if (value != null) return true;
     } else {
       if (value == null) return false;
-      var cmp = Comparable.compare(end.value, value);
+      var cmp = Comparable.compare(end.value!, value);
       if (cmp > 0) return true;
       if (cmp < 0) return false;
     }
     if (end.key == null) return true;
     if (key == null) return false;
-    return (Comparable.compare(end.key, key)) >= 0;
+    return (Comparable.compare(end.key!, key)) >= 0;
   }
 
   /// Returns true if this interval contains the interval `other`.

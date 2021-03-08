@@ -1,17 +1,17 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of sortedmap;
 
 /// A [Pair] represents a key/value pair.
 class Pair implements Comparable<Pair> {
   /// The key.
-  final Comparable key;
+  final Comparable? key;
 
   /// The value.
-  final Comparable value;
+  final Comparable? value;
 
   /// When true, null values for key and/or value are interpreted as the maximum
   /// possible value.
@@ -67,7 +67,7 @@ class Pair implements Comparable<Pair> {
     if (other.value == null) {
       return -other._compareValue(this);
     }
-    return Comparable.compare(value, other.value);
+    return Comparable.compare(value!, other.value!);
   }
 
   int _compareKey(Pair other) {
@@ -88,7 +88,7 @@ class Pair implements Comparable<Pair> {
     if (other.key == null) {
       return -other._compareKey(this);
     }
-    return Comparable.compare(key, other.key);
+    return Comparable.compare(key!, other.key!);
   }
 
   @override

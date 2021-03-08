@@ -1,16 +1,17 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+
 
 part of sortedmap;
 
 /// A [Map] of objects that can be ordered relative to each other and where
 /// key/value pairs are filtered before adding them to the map.
-abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
+abstract class FilteredMap<K extends Comparable, V>
+    implements SortedMap<K, V> {
   /// Creates a [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
-  factory FilteredMap([Filter<K, V> filter]) =>
+  factory FilteredMap([Filter<K, V>? filter]) =>
       _FilteredMap._(filter ?? Filter(), null, null);
 
   /// The filter to be used to order and filter items.
@@ -19,19 +20,19 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
   KeyValueInterval get completeInterval {
-    var keys = this.keys;
+    Iterable<K> keys = this.keys;
     var filterInterval = filter.validInterval;
-    if (filter.limit == null || keys.length < filter.limit) {
+    if (filter.limit == null || keys.length < filter.limit!) {
       return filterInterval;
     }
-    if (filter.limit == 0) return null;
+    if (filter.limit == 0) return KeyValueInterval();
 
     if (filter.reversed) {
       return KeyValueInterval.fromPairs(
-          _pairForKey(keys.first), filterInterval.end);
+          _pairForKey(keys.first)!, filterInterval.end);
     } else {
       return KeyValueInterval.fromPairs(
-          filterInterval.start, _pairForKey(keys.last));
+          filterInterval.start, _pairForKey(keys.last)!);
     }
   }
 }
@@ -42,7 +43,7 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   final Filter<K, V> filter;
 
   _FilteredMap._(
-      Filter<K, V> filter, TreeSet<Pair> sortedPairs, TreeMap<K, V> map)
+      Filter<K, V> filter, TreeSet<Pair>? sortedPairs, TreeMap<K, V>? map)
       : filter = filter,
         super._(filter.ordering, sortedPairs, map);
 
@@ -56,10 +57,10 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
       return;
     }
     super._addPair(key, value);
-    if (filter.limit != null && length > filter.limit) {
+    if (filter.limit != null && length > filter.limit!) {
       var toDel = filter.reversed
-          ? _sortedPairs.take(length - filter.limit)
-          : _sortedPairs.skip(filter.limit);
+          ? _sortedPairs.take(length - filter.limit!)
+          : _sortedPairs.skip(filter.limit!);
       toDel.toList().forEach((p) => remove(p.key));
     }
   }
@@ -75,7 +76,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   /// Creates a FilteredMapView from a SortedMap.
   FilteredMapView(this._baseMap,
-      {Pair start, Pair end, int limit, bool reversed = false})
+      {required Pair start, required Pair end, int? limit, bool reversed = false})
       : filter = Filter(
             validInterval: KeyValueInterval.fromPairs(start, end),
             limit: limit,
@@ -83,12 +84,12 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
             ordering: _baseMap.ordering);
 
   @override
-  V operator [](Object key) => _baseMap[_pairForKey(key)?.key];
+  V? operator [](Object? key) => _baseMap[_pairForKey(key)?.key as K];
 
   @override
-  Pair _pairForKey(Object key, [bool checked = true]) {
-    var value = _baseMap[key];
-    var p = ordering.mapKeyValue(key as K, value);
+  Pair? _pairForKey(Object? key, [bool checked = true]) {
+    V value = _baseMap[key as K]!;
+    var p = ordering.mapKeyValue(key, value);
     if (checked && !_containsPair(p)) return null;
     return p;
   }
@@ -96,19 +97,21 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   bool _containsPair(Pair pair) => _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
-    var keys = this.keys;
+    Iterable<K> keys = this.keys;
     return KeyValueInterval.fromPairs(
-        _pairForKey(keys.first, false), _pairForKey(keys.last, false));
+        _pairForKey(keys.first, false)!, _pairForKey(keys.last, false)!);
   }
 
   @override
   SortedMap<K, V> clone() => FilteredMap(filter)..addAll(_baseMap);
 
   @override
-  K firstKeyAfter(K key) => _pairForKey(_baseMap.firstKeyAfter(key))?.key;
+  K firstKeyAfter(K key, {K Function()? orElse}) =>
+      _pairForKey(_baseMap.firstKeyAfter(key, orElse: orElse))!.key as K;
 
   @override
-  K lastKeyBefore(K key) => _pairForKey(_baseMap.lastKeyBefore(key))?.key;
+  K lastKeyBefore(K key, {K Function()? orElse}) =>
+      _pairForKey(_baseMap.lastKeyBefore(key, orElse: orElse))!.key as K;
 
   @override
   Iterable<K> get keys => _baseMap.subkeys(
@@ -131,7 +134,10 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<K> subkeys(
-      {Pair start, Pair end, int limit, bool reversed = false}) {
+      {required Pair start,
+      required Pair end,
+      int? limit,
+      bool reversed = false}) {
     throw UnimplementedError();
   }
 }

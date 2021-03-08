@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0-nullsafety.0
+
+- Null safety
+
 ## 0.4.2
 
 - Support Dart 2 in `pubspec.yaml`
