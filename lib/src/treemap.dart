@@ -6,23 +6,24 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
   factory TreeMap.from(Map<K, V> other) => TreeMap()..addAll(other);
 
   static int _compareKeys<K extends Comparable, V>(
-          Pair<K, V> a, Pair<K, V> b) =>
+          MapEntry<K, V> a, MapEntry<K, V> b) =>
       Comparable.compare(a.key, b.key);
 
-  final TreeSet<Pair<K, V>> _tree = TreeSet(comparator: _compareKeys);
+  final TreeSet<MapEntry<K, V>> _tree = TreeSet(comparator: _compareKeys);
 
   @override
   bool get isEmpty => _tree.isEmpty;
 
   @override
-  bool containsKey(Object key) => _tree.lookup(Pair<K, V>(key, null)) != null;
+  bool containsKey(Object key) =>
+      _tree.lookup(MapEntry<K, V>(key, null)) != null;
 
   @override
-  V operator [](Object key) => _tree.lookup(Pair<K, V>(key, null))?.value;
+  V operator [](Object key) => _tree.lookup(MapEntry<K, V>(key, null))?.value;
 
   @override
   void operator []=(K key, V value) {
-    var p = Pair<K, V>(key, value);
+    var p = MapEntry<K, V>(key, value);
     _tree.remove(
         p); // first remove otherwise not overwritten, could be improved?
     _tree.add(p);
@@ -38,7 +39,7 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
 
   @override
   V remove(Object key) {
-    var p = _tree.lookup(Pair<K, V>(key, null));
+    var p = _tree.lookup(MapEntry<K, V>(key, null));
     if (p != null) _tree.remove(p);
     return p?.value;
   }

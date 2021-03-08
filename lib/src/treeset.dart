@@ -12,7 +12,7 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 
   TreeSet._(this.comparator);
 
-  static int _defaultCompare<V>(V a, V b) => (a as dynamic).compareTo(b);
+  static int _defaultCompare<V>(V a, V b) => (a as Comparable).compareTo(b);
 
   BidirectionalIterator<V> fromIterator(V anchor,
       {bool reversed = false, bool inclusive = true});

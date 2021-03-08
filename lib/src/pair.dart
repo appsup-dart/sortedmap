@@ -3,7 +3,8 @@
 part of sortedmap;
 
 /// A [Pair] represents a key/value pair.
-class Pair<K, V> implements Comparable<Pair<K, V>> {
+class Pair<K extends Comparable, V extends Comparable>
+    implements Comparable<Pair<K, V>> {
   /// The key.
   final K key;
 
@@ -55,7 +56,11 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
         if (other.isMin) return 1;
         return 0;
       }
-      return isMax ? 1 : isMin ? -1 : throw ArgumentError.notNull();
+      return isMax
+          ? 1
+          : isMin
+              ? -1
+              : throw ArgumentError.notNull();
     }
     if (other.value == null) {
       return -other._compareValue(this);
@@ -72,7 +77,11 @@ class Pair<K, V> implements Comparable<Pair<K, V>> {
         if (other.isMin) return 1;
         return 0;
       }
-      return isMax ? 1 : isMin ? -1 : throw ArgumentError.notNull();
+      return isMax
+          ? 1
+          : isMin
+              ? -1
+              : throw ArgumentError.notNull();
     }
     if (other.key == null) {
       return -other._compareKey(this);
