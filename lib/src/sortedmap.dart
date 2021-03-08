@@ -154,7 +154,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   void _addPair(K key, V value) {
     _map[key] = value;
-    _sortedPairs.add(ordering.mapKeyValue(key!, value));
+    _sortedPairs.add(ordering.mapKeyValue(key, value));
   }
 
   @override

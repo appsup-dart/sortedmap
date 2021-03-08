@@ -1,14 +1,11 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-
-
 part of sortedmap;
 
 /// A [Map] of objects that can be ordered relative to each other and where
 /// key/value pairs are filtered before adding them to the map.
-abstract class FilteredMap<K extends Comparable, V>
-    implements SortedMap<K, V> {
+abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// Creates a [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
   factory FilteredMap([Filter<K, V>? filter]) =>
@@ -20,7 +17,7 @@ abstract class FilteredMap<K extends Comparable, V>
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
   KeyValueInterval get completeInterval {
-    Iterable<K> keys = this.keys;
+    var keys = this.keys;
     var filterInterval = filter.validInterval;
     if (filter.limit == null || keys.length < filter.limit!) {
       return filterInterval;
@@ -76,7 +73,10 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   /// Creates a FilteredMapView from a SortedMap.
   FilteredMapView(this._baseMap,
-      {required Pair start, required Pair end, int? limit, bool reversed = false})
+      {required Pair start,
+      required Pair end,
+      int? limit,
+      bool reversed = false})
       : filter = Filter(
             validInterval: KeyValueInterval.fromPairs(start, end),
             limit: limit,
@@ -97,7 +97,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   bool _containsPair(Pair pair) => _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
-    Iterable<K> keys = this.keys;
+    var keys = this.keys;
     return KeyValueInterval.fromPairs(
         _pairForKey(keys.first, false)!, _pairForKey(keys.last, false)!);
   }
