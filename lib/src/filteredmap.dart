@@ -76,7 +76,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       {Pair<Comparable, Comparable> start,
       Pair<Comparable, Comparable> end,
       int limit,
-      bool reversed})
+      bool reversed = false})
       : filter = Filter(
             validInterval: KeyValueInterval.fromPairs(start, end),
             limit: limit,
