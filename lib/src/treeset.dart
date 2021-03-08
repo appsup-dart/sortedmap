@@ -589,7 +589,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
   bool get isOnNode => _path.isNotEmpty;
 
   void positionAfter(
-    V anchor, {
+    V/*?*/ anchor, {
     bool inclusive = true,
   }) {
     _lastMovedForward = true;
@@ -620,7 +620,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
   }
 
   void positionBefore(
-    V anchor, {
+    V/*?*/ anchor, {
     bool inclusive = true,
   }) {
     _lastMovedForward = false;
