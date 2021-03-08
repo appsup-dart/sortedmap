@@ -39,8 +39,8 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   final Filter<K, V> filter;
 
-  _FilteredMap._(Filter<K, V> filter,
-      TreeSet<Pair<Comparable, Comparable>> sortedPairs, TreeMap<K, V> map)
+  _FilteredMap._(
+      Filter<K, V> filter, TreeSet<Pair> sortedPairs, TreeMap<K, V> map)
       : filter = filter,
         super._(filter.ordering, sortedPairs, map);
 
@@ -73,10 +73,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   /// Creates a FilteredMapView from a SortedMap.
   FilteredMapView(this._baseMap,
-      {Pair<Comparable, Comparable> start,
-      Pair<Comparable, Comparable> end,
-      int limit,
-      bool reversed = false})
+      {Pair start, Pair end, int limit, bool reversed = false})
       : filter = Filter(
             validInterval: KeyValueInterval.fromPairs(start, end),
             limit: limit,
@@ -87,15 +84,14 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   V operator [](Object key) => _baseMap[_pairForKey(key)?.key];
 
   @override
-  Pair<Comparable, Comparable> _pairForKey(Object key, [bool checked = true]) {
+  Pair _pairForKey(Object key, [bool checked = true]) {
     var value = _baseMap[key];
     var p = ordering.mapKeyValue(key as K, value);
     if (checked && !_containsPair(p)) return null;
     return p;
   }
 
-  bool _containsPair(Pair<Comparable, Comparable> pair) =>
-      _effectiveInterval.containsPoint(pair);
+  bool _containsPair(Pair pair) => _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
     var keys = this.keys;
@@ -133,10 +129,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<K> subkeys(
-      {Pair<Comparable, Comparable> start,
-      Pair<Comparable, Comparable> end,
-      int limit,
-      bool reversed = false}) {
+      {Pair start, Pair end, int limit, bool reversed = false}) {
     throw UnimplementedError();
   }
 }

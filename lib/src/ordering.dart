@@ -18,8 +18,7 @@ class Ordering {
   ///
   /// Pairs will be ordered according to their `compareTo` method, i.e. first on
   /// value, then on key.
-  Pair<Comparable, Comparable> mapKeyValue<K, V>(
-          Comparable key, dynamic value) =>
+  Pair mapKeyValue<K, V>(Comparable key, dynamic value) =>
       Pair(key, mapValue(value));
 
   /// Maps a value to a Comparable defining the desired order.

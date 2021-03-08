@@ -85,27 +85,17 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   K firstKeyAfter(K key);
 
   /// Gets the keys within the desired bounds and limit.
-  Iterable<K> subkeys(
-      {Pair<Comparable, Comparable> start,
-      Pair<Comparable, Comparable> end,
-      int limit,
-      bool reversed = false});
+  Iterable<K> subkeys({Pair start, Pair end, int limit, bool reversed = false});
 
   /// Creates a filtered view of this map.
   FilteredMapView<K, V> filteredMapView(
-          {Pair<Comparable, Comparable> start,
-          Pair<Comparable, Comparable> end,
-          int limit,
-          bool reversed = false}) =>
+          {Pair start, Pair end, int limit, bool reversed = false}) =>
       FilteredMapView(this,
           start: start, end: end, limit: limit, reversed: reversed);
 
   /// Creates a filtered map based on this map.
   FilteredMap<K, V> filteredMap(
-          {Pair<K, Comparable> start,
-          Pair<K, Comparable> end,
-          int limit,
-          bool reversed = false}) =>
+          {Pair start, Pair end, int limit, bool reversed = false}) =>
       FilteredMap(Filter(
           validInterval: KeyValueInterval.fromPairs(start, end),
           ordering: ordering,
@@ -113,7 +103,7 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
           reversed: reversed))
         ..addAll(this);
 
-  Pair<Comparable, Comparable> _pairForKey(K key) =>
+  Pair _pairForKey(K key) =>
       containsKey(key) ? ordering.mapKeyValue(key, this[key]) : null;
 }
 
@@ -122,7 +112,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Ordering ordering;
 
-  TreeSet<Pair<Comparable, Comparable>> _sortedPairs;
+  TreeSet<Pair> _sortedPairs;
   TreeMap<K, V> _map;
 
   _SortedMap._(this.ordering, this._sortedPairs, this._map) {
@@ -206,17 +196,13 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<K> subkeys(
-      {Pair<Comparable, Comparable> start,
-      Pair<Comparable, Comparable> end,
-      int limit,
-      bool reversed = false}) {
+      {Pair start, Pair end, int limit, bool reversed = false}) {
     var it = _subkeys(start, end, limit, reversed);
     if (reversed) return it.toList().reversed;
     return it;
   }
 
-  Iterable<K> _subkeys(Pair<Comparable, Comparable> start,
-      Pair<Comparable, Comparable> end, int limit, bool reversed) sync* {
+  Iterable<K> _subkeys(Pair start, Pair end, int limit, bool reversed) sync* {
     var from = reversed ? end : start;
     Iterator it = _sortedPairs.fromIterator(from, reversed: reversed);
     var count = 0;

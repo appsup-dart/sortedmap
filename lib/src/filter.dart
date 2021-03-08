@@ -58,15 +58,14 @@ class KeyValueInterval {
       [this._startKey, this._startValue, this._endKey, this._endValue]);
 
   /// Creates a interval from key/value pairs.
-  factory KeyValueInterval.fromPairs(Pair<Comparable, Comparable> start,
-          Pair<Comparable, Comparable> end) =>
+  factory KeyValueInterval.fromPairs(Pair start, Pair end) =>
       KeyValueInterval(start.key, start.value, end.key, end.value);
 
   /// The lower limit.
-  Pair<Comparable, Comparable> get start => Pair.min(_startKey, _startValue);
+  Pair get start => Pair.min(_startKey, _startValue);
 
   /// The upper limit.
-  Pair<Comparable, Comparable> get end => Pair.max(_endKey, _endValue);
+  Pair get end => Pair.max(_endKey, _endValue);
 
   /// Returns true if this interval is unbounded.
   bool get isUnlimited =>

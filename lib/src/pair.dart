@@ -3,13 +3,12 @@
 part of sortedmap;
 
 /// A [Pair] represents a key/value pair.
-class Pair<K extends Comparable, V extends Comparable>
-    implements Comparable<Pair<K, V>> {
+class Pair implements Comparable<Pair> {
   /// The key.
-  final K key;
+  final Comparable key;
 
   /// The value.
-  final V value;
+  final Comparable value;
 
   /// When true, null values for key and/or value are interpreted as the maximum
   /// possible value.
@@ -47,7 +46,7 @@ class Pair<K extends Comparable, V extends Comparable>
       other.isMax == isMax &&
       other.isMin == isMin;
 
-  int _compareValue(Pair<K, V> other) {
+  int _compareValue(Pair other) {
     if (value == null) {
       if (other.value == null) {
         if (isMax) return other.isMax ? 0 : 1;
@@ -68,7 +67,7 @@ class Pair<K extends Comparable, V extends Comparable>
     return Comparable.compare(value, other.value);
   }
 
-  int _compareKey(Pair<K, V> other) {
+  int _compareKey(Pair other) {
     if (key == null) {
       if (other.key == null) {
         if (isMax) return other.isMax ? 0 : 1;
@@ -90,7 +89,7 @@ class Pair<K extends Comparable, V extends Comparable>
   }
 
   @override
-  int compareTo(Pair<K, V> other) {
+  int compareTo(Pair other) {
     var cmp = _compareValue(other);
     if (cmp != 0) return cmp;
     return _compareKey(other);
