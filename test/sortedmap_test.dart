@@ -39,7 +39,7 @@ void main() {
       expect(keys.indexOf('d'), 3);
       expect(keys.indexOf('e'), 4);
 
-      expect(map.lastKeyBefore('a'), null);
+      expect(() => map.lastKeyBefore('a'), throwsStateError);
       expect(map.lastKeyBefore('b'), 'a');
       expect(map.lastKeyBefore('c'), 'b');
       expect(map.lastKeyBefore('d'), 'c');

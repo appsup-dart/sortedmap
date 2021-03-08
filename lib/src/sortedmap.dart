@@ -172,25 +172,36 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   }
 
   @override
-  K lastKeyBefore(K key) {
+  K lastKeyBefore(K key, {K Function() orElse}) {
     if (!_map.containsKey(key)) {
       throw StateError('No such key $key in collection');
     }
     var pair = _pairForKey(key);
     var it = _sortedPairs.fromIterator(pair, reversed: true);
-    while (it.moveNext() && it.current == pair) {}
-    return it.current?.key;
+    bool hasMore;
+    while ((hasMore = it.moveNext()) && it.current == pair) {}
+
+    if (!hasMore) {
+      if (orElse != null) return orElse();
+      throw StateError('No element.');
+    }
+    return it.current.key;
   }
 
   @override
-  K firstKeyAfter(K key) {
+  K firstKeyAfter(K key, {K Function() orElse}) {
     if (!_map.containsKey(key)) {
       throw StateError('No such key $key in collection');
     }
     var pair = _pairForKey(key);
     var it = _sortedPairs.fromIterator(pair);
-    while (it.moveNext() && it.current == pair) {}
-    return it.current?.key;
+    bool hasMore;
+    while ((hasMore = it.moveNext()) && it.current == pair) {}
+    if (!hasMore) {
+      if (orElse != null) return orElse();
+      throw StateError('No element.');
+    }
+    return it.current.key;
   }
 
   @override

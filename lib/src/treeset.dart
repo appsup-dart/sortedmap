@@ -71,8 +71,8 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
   @override
   bool addAll(Iterable<V> items) {
-    if (_root == null && items is AvlTreeSet) {
-      _root = (items as AvlTreeSet)._root;
+    if (_root == null && items is AvlTreeSet<V>) {
+      _root = items._root;
       return _root != null;
     }
     var modified = false;
@@ -150,16 +150,16 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
   @override
   V get first {
-    if (_root == null) return null;
+    if (_root == null) throw StateError('No element');
     var min = _root.minimumNode;
-    return min != null ? min.object : null;
+    return min.object;
   }
 
   @override
   V get last {
-    if (_root == null) return null;
+    if (_root == null) throw StateError('No element');
     var max = _root.maximumNode;
-    return max != null ? max.object : null;
+    return max.object;
   }
 
   @override
@@ -535,7 +535,13 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
       {this.anchor, this.reversed = false, this.inclusive = true});
 
   @override
-  V get current => _cursor?.current;
+  V get current {
+    if (_cursor == null) {
+      throw StateError(
+          'TreeIterator not initialized. Call `moveNext` or `movePrevious` first.');
+    }
+    return _cursor.current;
+  }
 
   @override
   bool moveNext() {
@@ -641,7 +647,12 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
   }
 
   @override
-  V get current => _path.isEmpty ? null : _path.last.object;
+  V get current {
+    if (_path.isEmpty) {
+      throw StateError('TreeCursor not pointing to a value.');
+    }
+    return _path.last.object;
+  }
 
   @override
   bool moveNext() {

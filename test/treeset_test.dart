@@ -46,11 +46,13 @@ void main() {
     //var set1 = quiver.TreeSet()..addAll(Iterable.generate(10,(i)=>i));
 
     expect((set1.iterator..moveNext()).current, 0);
-    expect((set1.iterator..movePrevious()).current, null);
+    expect(() => (set1.iterator..movePrevious()).current, throwsStateError);
     expect((set1.reverseIterator..moveNext()).current, 9);
-    expect((set1.reverseIterator..movePrevious()).current, null);
+    expect(
+        () => (set1.reverseIterator..movePrevious()).current, throwsStateError);
     expect((set1.fromIterator(9)..moveNext()).current, 9);
-    expect((set1.fromIterator(9)..moveNext()..moveNext()).current, null);
+    expect(() => (set1.fromIterator(9)..moveNext()..moveNext()).current,
+        throwsStateError);
     expect(
         (set1.fromIterator(9)
               ..moveNext()
