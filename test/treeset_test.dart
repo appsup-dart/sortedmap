@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:quiver/collection.dart' as quiver;
 import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';

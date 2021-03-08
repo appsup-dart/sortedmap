@@ -1,13 +1,12 @@
 import 'dart:collection';
 import 'dart:math';
-import 'package:meta/meta.dart';
 
 abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
   final Comparator<V> comparator;
 
   /// Create a [TreeSet] with an ordering defined by [comparator] or the
   /// default `(a, b) => a.compareTo(b)`.
-  factory TreeSet({Comparator<V> comparator}) {
+  factory TreeSet({Comparator<V>? comparator}) {
     return AvlTreeSet(comparator: comparator ?? _defaultCompare);
   }
 
@@ -31,11 +30,9 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 }
 
 class AvlTreeSet<V> extends TreeSet<V> {
-  AvlNode<V> _root;
+  AvlNode<V>? _root;
 
-  AvlTreeSet({@required Comparator<V> comparator})
-      : assert(comparator != null),
-        super._(comparator);
+  AvlTreeSet({required Comparator<V> comparator}) : super._(comparator);
 
   @override
   int get length => _root?.length ?? 0;
@@ -47,14 +44,14 @@ class AvlTreeSet<V> extends TreeSet<V> {
       return true;
     }
 
-    var newRoot = _root.add(comparator, element);
+    var newRoot = _root!.add(comparator, element);
     var added = newRoot == _root;
     _root = newRoot;
     return added;
   }
 
   /// Test to see if an element is stored in the tree
-  AvlNode<V> _getNode(V element) {
+  AvlNode<V>? _getNode(V? element) {
     if (element == null) return null;
     var x = _root;
     while (x != null) {
@@ -91,7 +88,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   @override
-  bool containsAll(Iterable<Object> items) {
+  bool containsAll(Iterable<Object?> items) {
     for (var ele in items) {
       if (!contains(ele)) return false;
     }
@@ -99,11 +96,11 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   @override
-  bool remove(Object item) {
+  bool remove(Object? item) {
     if (item is! V) return false;
 
     if (_root == null) return false;
-    var newRoot = _root.remove(comparator, item);
+    var newRoot = _root!.remove(comparator, item);
     if (newRoot == _root) return false;
     _root = newRoot;
     return true;
@@ -117,7 +114,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   @override
-  void retainAll(Iterable<Object> elements) {
+  void retainAll(Iterable<Object?> elements) {
     var chosen = <V>[];
     for (var target in elements) {
       if (target is V && contains(target)) {
@@ -154,24 +151,24 @@ class AvlTreeSet<V> extends TreeSet<V> {
   @override
   V get first {
     if (_root == null) throw StateError('No element');
-    var min = _root.minimumNode;
+    var min = _root!.minimumNode;
     return min.object;
   }
 
   @override
   V get last {
     if (_root == null) throw StateError('No element');
-    var max = _root.maximumNode;
+    var max = _root!.maximumNode;
     return max.object;
   }
 
   @override
-  V lookup(Object element) {
+  V? lookup(Object? element) {
     if (element is! V || _root == null) return null;
     var x = _root;
     var compare = 0;
     while (x != null) {
-      compare = comparator(element as V, x.object);
+      compare = comparator(element, x.object);
       if (compare == 0) {
         return x.object;
       } else if (compare < 0) {
@@ -191,13 +188,13 @@ class AvlTreeSet<V> extends TreeSet<V> {
       TreeIterator(this, reversed: true);
 
   @override
-  bool contains(Object object) {
-    var x = _getNode(object as V);
+  bool contains(Object? object) {
+    var x = _getNode(object as V?);
     return x != null;
   }
 
   @override
-  Set<V> intersection(Set<Object> other) {
+  Set<V> intersection(Set<Object?> other) {
     var set = TreeSet<V>(comparator: comparator);
 
     // Optimized for sorted sets
@@ -254,7 +251,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
         }
       }
       if (hasMore1 || hasMore2) {
-        i1 = hasMore1 ? i1 : i2;
+        i1 = hasMore1 ? i1 : i2 as BidirectionalIterator<V>;
         do {
           set.add(i1.current);
         } while (i1.moveNext());
@@ -267,7 +264,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   @override
-  Set<V> difference(Set<Object> other) {
+  Set<V> difference(Set<Object?> other) {
     var set = TreeSet<V>(comparator: comparator);
 
     if (other is TreeSet) {
@@ -314,13 +311,13 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
 class AvlNode<V> {
   final V object;
-  final AvlNode<V> left;
-  final AvlNode<V> right;
+  final AvlNode<V>? left;
+  final AvlNode<V>? right;
 
   final int height;
   final int length;
 
-  AvlNode({@required this.object, this.left, this.right})
+  AvlNode({required this.object, this.left, this.right})
       : assert(object != null),
         height = max(left?.height ?? 0, right?.height ?? 0) + 1,
         length = (left?.length ?? 0) + (right?.length ?? 0) + 1;
@@ -331,14 +328,14 @@ class AvlNode<V> {
 
   Iterable<AvlNode<V>> get minimumPath sync* {
     yield this;
-    if (left != null) yield* left.minimumPath;
+    if (left != null) yield* left!.minimumPath;
   }
 
   AvlNode<V> get maximumNode => maximumPath.last;
 
   Iterable<AvlNode<V>> get maximumPath sync* {
     yield this;
-    if (right != null) yield* right.maximumPath;
+    if (right != null) yield* right!.maximumPath;
   }
 
   AvlNode<V> add(Comparator<V> comparator, V element) {
@@ -365,7 +362,7 @@ class AvlNode<V> {
     }
   }
 
-  AvlNode<V> prepend(AvlNode<V> other) {
+  AvlNode<V> prepend(AvlNode<V>? other) {
     return AvlNode(
             object: object, left: left?.prepend(other) ?? other, right: right)
         .balanceDeep();
@@ -379,12 +376,12 @@ class AvlNode<V> {
     return node;
   }
 
-  AvlNode<V> remove(Comparator<V> comparator, V element) {
+  AvlNode<V>? remove(Comparator<V> comparator, V element) {
     var compare = comparator(element, object);
     if (compare == 0) {
       if (left == null) return right;
       if (right == null) return left;
-      return right.prepend(left);
+      return right!.prepend(left);
     } else if (compare < 0) {
       var newLeft = left?.remove(comparator, element);
       if (newLeft == left) return this;
@@ -418,9 +415,9 @@ class AvlNode<V> {
   /// When their is no right element, will return `this`.
   AvlNode<V> rotateLeft() {
     return AvlNode(
-        object: right.object,
-        left: AvlNode(object: object, left: left, right: right.left),
-        right: right.right);
+        object: right!.object,
+        left: AvlNode(object: object, left: left, right: right!.left),
+        right: right!.right);
   }
 
   /// This function will right rotate/pivot N with its left child, placing
@@ -437,9 +434,9 @@ class AvlNode<V> {
   /// Assertion: must have a left element
   AvlNode<V> rotateRight() {
     return AvlNode(
-      object: left.object,
-      left: left.left,
-      right: AvlNode(object: object, left: left.right, right: right),
+      object: left!.object,
+      left: left!.left,
+      right: AvlNode(object: object, left: left!.right, right: right),
     );
   }
 
@@ -455,12 +452,12 @@ class AvlNode<V> {
   ///    D   C
   AvlNode<V> rotateRightLeft() {
     var left =
-        AvlNode(object: object, left: this.left, right: this.right.left.left);
+        AvlNode(object: object, left: this.left, right: this.right!.left!.left);
     var right = AvlNode(
-        object: this.right.object,
-        left: this.right.left.right,
-        right: this.right.right);
-    return AvlNode(object: this.right.left.object, left: left, right: right);
+        object: this.right!.object,
+        left: this.right!.left!.right,
+        right: this.right!.right);
+    return AvlNode(object: this.right!.left!.object, left: left, right: right);
   }
   /*=> AvlNode(
     object: object,
@@ -480,12 +477,12 @@ class AvlNode<V> {
   ///      C   D
   AvlNode<V> rotateLeftRight() {
     var left = AvlNode(
-        object: this.left.object,
-        left: this.left.left,
-        right: this.left.right.left);
-    var right =
-        AvlNode(object: object, left: this.left.right.right, right: this.right);
-    return AvlNode(object: this.left.right.object, left: left, right: right);
+        object: this.left!.object,
+        left: this.left!.left,
+        right: this.left!.right!.left);
+    var right = AvlNode(
+        object: object, left: this.left!.right!.right, right: this.right);
+    return AvlNode(object: this.left!.right!.object, left: left, right: right);
   }
   /*=> AvlNode(
       object: object,
@@ -505,7 +502,7 @@ class AvlNode<V> {
     var balanceFactor = this.balanceFactor;
     if (balanceFactor >= 2) {
       // Heavy on the right side - Test for which rotation to perform
-      if (right.balanceFactor >= 1) {
+      if (right!.balanceFactor >= 1) {
         // Single (left) rotation; this will balance everything to zero
         return rotateLeft();
       } else {
@@ -515,7 +512,7 @@ class AvlNode<V> {
       }
     } else if (balanceFactor <= -2) {
       // Heavy on the left side - Test for which rotation to perform
-      if (left.balanceFactor <= -1) {
+      if (left!.balanceFactor <= -1) {
         return rotateRight();
       } else {
         // Double (Left/Right) rotation
@@ -531,9 +528,9 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
   final AvlTreeSet<V> tree;
   final bool reversed;
   final bool inclusive;
-  final V anchor;
+  final V? anchor;
 
-  TreeCursor<V> _cursor;
+  TreeCursor<V>? _cursor;
 
   TreeIterator(this.tree,
       {this.anchor, this.reversed = false, this.inclusive = true});
@@ -544,7 +541,7 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
       throw StateError(
           'TreeIterator not initialized. Call `moveNext` or `movePrevious` first.');
     }
-    return _cursor.current;
+    return _cursor!.current;
   }
 
   @override
@@ -552,13 +549,13 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
     if (_cursor == null) {
       _cursor = TreeCursor(tree);
       if (reversed) {
-        _cursor.positionBefore(anchor, inclusive: inclusive);
+        _cursor!.positionBefore(anchor, inclusive: inclusive);
       } else {
-        _cursor.positionAfter(anchor, inclusive: inclusive);
+        _cursor!.positionAfter(anchor, inclusive: inclusive);
       }
-      return _cursor.isOnNode;
+      return _cursor!.isOnNode;
     }
-    return reversed ? _cursor.movePrevious() : _cursor.moveNext();
+    return reversed ? _cursor!.movePrevious() : _cursor!.moveNext();
   }
 
   @override
@@ -569,13 +566,13 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
       }
       _cursor = TreeCursor(tree);
       if (reversed) {
-        _cursor.positionAfter(anchor, inclusive: inclusive);
+        _cursor!.positionAfter(anchor, inclusive: inclusive);
       } else {
-        _cursor.positionBefore(anchor, inclusive: inclusive);
+        _cursor!.positionBefore(anchor, inclusive: inclusive);
       }
-      return _cursor.isOnNode;
+      return _cursor!.isOnNode;
     }
-    return reversed ? _cursor.moveNext() : _cursor.movePrevious();
+    return reversed ? _cursor!.moveNext() : _cursor!.movePrevious();
   }
 }
 
@@ -589,14 +586,14 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
   bool get isOnNode => _path.isNotEmpty;
 
   void positionAfter(
-    V/*?*/ anchor, {
+    V? anchor, {
     bool inclusive = true,
   }) {
     _lastMovedForward = true;
     _path.clear();
     if (tree._root == null) return;
     if (anchor == null) {
-      _path.addAll(tree._root.minimumPath);
+      _path.addAll(tree._root!.minimumPath);
       return;
     }
     var x = tree._root;
@@ -620,14 +617,14 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
   }
 
   void positionBefore(
-    V/*?*/ anchor, {
+    V? anchor, {
     bool inclusive = true,
   }) {
     _lastMovedForward = false;
     _path.clear();
     if (tree._root == null) return;
     if (anchor == null) {
-      _path.addAll(tree._root.maximumPath);
+      _path.addAll(tree._root!.maximumPath);
       return;
     }
     var x = tree._root;
@@ -665,7 +662,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       if (_lastMovedForward) {
         return false;
       } else {
-        _path.addAll(tree._root.minimumPath);
+        _path.addAll(tree._root!.minimumPath);
         return true;
       }
     }
@@ -674,7 +671,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
     if (_path.first != tree._root) throw ConcurrentModificationError(tree);
     var current = _path.last;
     if (current.right != null) {
-      _path.addAll(current.right.minimumPath);
+      _path.addAll(current.right!.minimumPath);
       return true;
     }
     var l = _path.removeLast();
@@ -694,7 +691,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       if (!_lastMovedForward) {
         return false;
       } else {
-        _path.addAll(tree._root.maximumPath);
+        _path.addAll(tree._root!.maximumPath);
         return true;
       }
     }
@@ -703,7 +700,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
     if (_path.first != tree._root) throw ConcurrentModificationError(tree);
     var current = _path.last;
     if (current.left != null) {
-      _path.addAll(current.left.maximumPath);
+      _path.addAll(current.left!.maximumPath);
       return true;
     }
     var l = _path.removeLast();
