@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.0-nullsafety.0
+## 0.5.0
 
 - Null safety
 
