@@ -1,8 +1,6 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-
-
 part of sortedmap;
 
 /// Defines a filter that can be used with [FilteredMap] objects.
@@ -60,8 +58,11 @@ class KeyValueInterval {
       [this._startKey, this._startValue, this._endKey, this._endValue]);
 
   /// Creates a interval from key/value pairs.
-  factory KeyValueInterval.fromPairs(Pair start, Pair end) =>
-      KeyValueInterval(start.key, start.value, end.key, end.value);
+  factory KeyValueInterval.fromPairs(Pair start, Pair end) {
+    assert(start.isMin || (start.key != null && start.value != null));
+    assert(end.isMax || (end.key != null && end.value != null));
+    return KeyValueInterval(start.key, start.value, end.key, end.value);
+  }
 
   /// The lower limit.
   Pair get start => Pair.min(_startKey, _startValue);
@@ -86,35 +87,7 @@ class KeyValueInterval {
 
   /// Returns true if `point` is within the bounds (inclusive) of this interval.
   bool containsPoint(Pair p) =>
-      _isAfterStart(p.key, p.value) && _isBeforeEnd(p.key, p.value);
-
-  bool _isAfterStart(Comparable? key, Comparable? value) {
-    if (start.value == null) {
-      if (value != null) return true;
-    } else {
-      if (value == null) return false;
-      var cmp = Comparable.compare(start.value!, value);
-      if (cmp > 0) return false;
-      if (cmp < 0) return true;
-    }
-    if (start.key == null) return true;
-    if (key == null) return false;
-    return (Comparable.compare(start.key!, key)) <= 0;
-  }
-
-  bool _isBeforeEnd(Comparable? key, Comparable? value) {
-    if (end.value == null) {
-      if (value != null) return true;
-    } else {
-      if (value == null) return false;
-      var cmp = Comparable.compare(end.value!, value);
-      if (cmp > 0) return true;
-      if (cmp < 0) return false;
-    }
-    if (end.key == null) return true;
-    if (key == null) return false;
-    return (Comparable.compare(end.key!, key)) >= 0;
-  }
+      Comparable.compare(start, p) <= 0 && Comparable.compare(end, p) >= 0;
 
   /// Returns true if this interval contains the interval `other`.
   bool contains(KeyValueInterval other) =>

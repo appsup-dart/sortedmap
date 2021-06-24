@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Fix KeyValueInterval.containsPoint with min and max pairs
+
 ## 0.5.0
 
 - Null safety

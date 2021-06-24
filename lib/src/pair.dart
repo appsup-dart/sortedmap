@@ -1,8 +1,6 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-
-
 part of sortedmap;
 
 /// A [Pair] represents a key/value pair.
@@ -23,7 +21,9 @@ class Pair implements Comparable<Pair> {
 
   /// Creates a key/value pair.
   const Pair(this.key, this.value)
-      : isMax = false,
+      : assert(key != null),
+        assert(value != null),
+        isMax = false,
         isMin = false;
 
   /// Creates a key/value pair, with null values for key and/or value
