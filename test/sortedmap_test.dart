@@ -1,8 +1,6 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-
-
 import 'package:sortedmap/sortedmap.dart';
 import 'package:test/test.dart';
 import 'benchmark.dart';
@@ -90,6 +88,19 @@ void main() {
       map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
 
       expect(map.keys, ['a', 'c', 'd']);
+    });
+    test('should remove overwritten values', () {
+      var map = FilteredMap(Filter(
+          ordering: const Ordering.byValue(),
+          validInterval: KeyValueInterval(null, 2, null, 4)));
+
+      map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
+
+      expect(map.keys, ['e', 'a', 'c']);
+
+      map['a'] = 5;
+      expect(map.keys, ['e', 'c']);
+      expect(map['a'], isNull);
     });
   });
 
@@ -191,6 +202,28 @@ void main() {
 
       map.remove('c');
       expect(view, {'a': 3, 'ac': 4, 'f': 4});
+    });
+
+    test('should not return values for keys not contained', () {
+      var map = SortedMap();
+      map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
+
+      var view =
+          map.filteredMapView(start: Pair.min(), end: Pair.max(), limit: 3);
+
+      expect(view.keys, ['a', 'b', 'c']);
+
+      expect(view.containsKey('a'), isTrue);
+      expect(view.containsKey('b'), isTrue);
+      expect(view.containsKey('c'), isTrue);
+      expect(view.containsKey('d'), isFalse);
+      expect(view.containsKey('e'), isFalse);
+
+      expect(view['a'], 3);
+      expect(view['b'], 1);
+      expect(view['c'], 4);
+      expect(view['d'], isNull);
+      expect(view['e'], isNull);
     });
   });
 

@@ -51,6 +51,7 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   void _addPair(K key, V value) {
     if (!filter.validInterval.containsPoint(ordering.mapKeyValue(key, value))) {
+      remove(key);
       return;
     }
     super._addPair(key, value);
@@ -84,7 +85,10 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
             ordering: _baseMap.ordering);
 
   @override
-  V? operator [](Object? key) => _baseMap[_pairForKey(key)?.key as K];
+  V? operator [](Object? key) {
+    var k = _pairForKey(key)?.key as K?;
+    return k != null ? _baseMap[k] : null;
+  }
 
   @override
   Pair? _pairForKey(Object? key, [bool checked = true]) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2
+
+- Fix: FilteredMap returning values for keys that are not in the map
+
 ## 0.5.1
 
 - Fix KeyValueInterval.containsPoint with min and max pairs
