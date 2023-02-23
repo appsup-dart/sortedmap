@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+
+- Fix: `BidirectionalIterator` is deprecated in dart 3.0.0
+
 ## 0.5.2
 
 - Fix: FilteredMap returning values for keys that are not in the map

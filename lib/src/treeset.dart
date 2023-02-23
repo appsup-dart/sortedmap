@@ -260,7 +260,9 @@ class AvlTreeSet<V> extends TreeSet<V> {
     }
 
     // Non-optimized version.
-    return set..addAll(this)..addAll(other);
+    return set
+      ..addAll(this)
+      ..addAll(other);
   }
 
   @override
@@ -522,6 +524,15 @@ class AvlNode<V> {
     }
     return this;
   }
+}
+
+abstract class BidirectionalIterator<E> implements Iterator<E> {
+  /// Move back to the previous element.
+  ///
+  /// Returns true and updates [current] if successful. Returns false
+  /// and updates [current] to an implementation defined state if there is no
+  /// previous element
+  bool movePrevious();
 }
 
 class TreeIterator<V> extends BidirectionalIterator<V> {

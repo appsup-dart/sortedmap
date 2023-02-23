@@ -1,6 +1,6 @@
 name: sortedmap
 description: A map of objects which can be sorted and filtered on both their key and value
-version: 0.5.2
+version: 0.5.3
 homepage: https://github.com/appsup-dart/sortedmap
 
 environment:
