@@ -143,6 +143,16 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   V? operator [](Object? key) => _map[key as K];
 
   @override
+  void addAll(Map<K, V> other) {
+    if (other is _SortedMap<K, V> && other.ordering == ordering) {
+      _sortedPairs.addAll(other._sortedPairs);
+      _map.addAll(other._map);
+      return;
+    }
+    super.addAll(other);
+  }
+
+  @override
   void operator []=(K key, V value) {
     var pair = _pairForKey(key);
     if (pair != null) _sortedPairs.remove(pair);
