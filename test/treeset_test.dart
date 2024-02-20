@@ -1,5 +1,3 @@
-
-
 import 'package:quiver/collection.dart' as quiver;
 import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';
@@ -53,7 +51,11 @@ void main() {
     expect(
         () => (set1.reverseIterator..movePrevious()).current, throwsStateError);
     expect((set1.fromIterator(9)..moveNext()).current, 9);
-    expect(() => (set1.fromIterator(9)..moveNext()..moveNext()).current,
+    expect(
+        () => (set1.fromIterator(9)
+              ..moveNext()
+              ..moveNext())
+            .current,
         throwsStateError);
     expect(
         (set1.fromIterator(9)
@@ -74,11 +76,16 @@ void main() {
     expect((set1.fromIterator(5, reversed: true)..movePrevious()).current, 5);
     expect((set1.fromIterator(5, reversed: true)..moveNext()).current, 5);
     expect(
-        (set1.fromIterator(5, reversed: true)..movePrevious()..movePrevious())
+        (set1.fromIterator(5, reversed: true)
+              ..movePrevious()
+              ..movePrevious())
             .current,
         6);
     expect(
-        (set1.fromIterator(5, reversed: true)..moveNext()..moveNext()).current,
+        (set1.fromIterator(5, reversed: true)
+              ..moveNext()
+              ..moveNext())
+            .current,
         4);
 
     expect((set1.fromIterator(5, inclusive: false)..moveNext()).current, 6);
@@ -121,11 +128,15 @@ void main() {
     expect((set1.fromIterator(4.5, reversed: true)..movePrevious()).current, 5);
     expect((set1.fromIterator(4.5, reversed: true)..moveNext()).current, 4);
     expect(
-        (set1.fromIterator(4.5, reversed: true)..movePrevious()..movePrevious())
+        (set1.fromIterator(4.5, reversed: true)
+              ..movePrevious()
+              ..movePrevious())
             .current,
         6);
     expect(
-        (set1.fromIterator(4.5, reversed: true)..moveNext()..moveNext())
+        (set1.fromIterator(4.5, reversed: true)
+              ..moveNext()
+              ..moveNext())
             .current,
         3);
     expect(
@@ -171,5 +182,16 @@ void main() {
               ..moveNext())
             .current,
         3);
+  });
+
+  test('AvlTreeSet.countUntil', () {
+    var set = TreeSet() as AvlTreeSet;
+    set.addAll(Iterable.generate(10, (i) => i));
+
+    for (var i = 0; i < 10; i++) {
+      expect(set.countUntil(i), i + 1);
+      expect(set.countUntil(i, inclusive: false), i);
+      expect(set.countUntil(i - 0.1), i);
+    }
   });
 }

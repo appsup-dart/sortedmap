@@ -1,6 +1,8 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:sortedmap/sortedmap.dart';
+
 abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
   final Comparator<V> comparator;
 
@@ -308,6 +310,24 @@ class AvlTreeSet<V> extends TreeSet<V> {
       {bool reversed = false, bool inclusive = true}) {
     return TreeIterator(this,
         anchor: anchor, reversed: reversed, inclusive: inclusive);
+  }
+
+  int countUntil(V v, {bool inclusive = true}) {
+    var x = _root;
+    var i = 0;
+    while (x != null) {
+      var compare = comparator(v, x.object);
+      if (compare == 0) {
+        i += x.left?.length ?? 0;
+        return inclusive ? i + 1 : i;
+      } else if (compare < 0) {
+        x = x.left;
+      } else {
+        i += (x.left?.length ?? 0) + 1;
+        x = x.right;
+      }
+    }
+    return i;
   }
 }
 

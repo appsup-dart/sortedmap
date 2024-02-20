@@ -144,4 +144,18 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       bool reversed = false}) {
     throw UnimplementedError();
   }
+
+  @override
+  int get length {
+    var b = _baseMap;
+    if (b is _SortedMap<K, V>) {
+      var e = (b._sortedPairs as AvlTreeSet)
+          .countUntil(filter.validInterval.end, inclusive: true);
+      var s = (b._sortedPairs as AvlTreeSet)
+          .countUntil(filter.validInterval.start, inclusive: false);
+      var total = e - s;
+      return filter.limit == null ? total : min(total, filter.limit!);
+    }
+    return super.length;
+  }
 }
