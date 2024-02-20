@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
+import 'package:test_api/hooks.dart';
 
 import 'dart:developer';
 
@@ -10,9 +11,8 @@ final bool isProfileMode = Platform.environment['PROFILE_MODE'] == 'true';
 
 @isTest
 void benchmark(String description, dynamic Function() body,
-        {Duration minDuration = const Duration(seconds: 1),
-        int minSamples = 2,
-        double maxRelativeMarginOfError = 2}) =>
+        {Duration minDuration = const Duration(seconds: 2),
+        int minSamples = 5}) =>
     test(description, () async {
       var sw = Stopwatch();
 
@@ -30,9 +30,7 @@ void benchmark(String description, dynamic Function() body,
       var sum2 = 0;
       var rme = double.infinity;
 
-      while (sw.elapsed < minDuration ||
-          i < minSamples ||
-          rme > maxRelativeMarginOfError) {
+      while (sw.elapsed < minDuration || i < minSamples) {
         i++;
 
         var s = sw.elapsed.inMicroseconds;
@@ -66,7 +64,7 @@ void benchmark(String description, dynamic Function() body,
       var l = -(math.log(hz) / math.ln10).ceil() + 3;
 
       print(
-          '$description x ${hz.toStringAsFixed(math.max(l, 0))} ops/sec ±${rme.toStringAsFixed(2)}% ($i runs sampled)');
+          '${TestHandle.current.name} x ${hz.toStringAsFixed(math.max(l, 0))} ops/sec ±${rme.toStringAsFixed(2)}% ($i runs sampled)');
       if (isProfileMode) {
         print('  - stop recording');
         debugger(message: 'END: $description');
