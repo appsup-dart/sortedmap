@@ -2,7 +2,6 @@ import 'package:quiver/collection.dart' as quiver;
 import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';
 import 'dart:math';
-import 'benchmark.dart';
 
 void main() {
   Set<double> createRandomSet(Set<double> set, int count) {
@@ -12,27 +11,6 @@ void main() {
     }
     return set;
   }
-
-  group('Performance benchmarks', () {
-    benchmarkTest('Adding values', () {
-      createRandomSet(TreeSet(), 100);
-    });
-
-    var set = createRandomSet(TreeSet(), 1000);
-    benchmarkTest('Cloning', () {
-      TreeSet().addAll(set);
-    });
-  });
-  group('Performance benchmarks quiver', () {
-    benchmarkTest('Adding values quiver', () {
-      createRandomSet(quiver.TreeSet(), 100);
-    });
-
-    var set = createRandomSet(quiver.TreeSet(), 1000);
-    benchmarkTest('Cloning quiver', () {
-      quiver.TreeSet().addAll(set);
-    });
-  });
 
   test('compare', () {
     var set1 = createRandomSet(TreeSet(), 100);

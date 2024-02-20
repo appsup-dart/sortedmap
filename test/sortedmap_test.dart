@@ -3,8 +3,6 @@
 
 import 'package:sortedmap/sortedmap.dart';
 import 'package:test/test.dart';
-import 'benchmark.dart';
-import 'dart:math';
 
 void main() {
   group('SortedMap', () {
@@ -224,26 +222,6 @@ void main() {
       expect(view['c'], 4);
       expect(view['d'], isNull);
       expect(view['e'], isNull);
-    });
-  });
-
-  group('Performance benchmarks', () {
-    Map<String, double> createRandomMap(Map<String, double> map, int count) {
-      var random = Random(1);
-      for (var i = 0; i < count; i++) {
-        map[random.nextDouble().toString()] = random.nextDouble();
-      }
-      return map;
-    }
-
-    benchmarkTest('Adding values', () {
-      createRandomMap(SortedMap(), 100);
-    });
-
-    var map = createRandomMap(FilteredMap(), 1000);
-    benchmarkTest('Cloning', () {
-      (map as SortedMap).clone();
-//      SortedMap()..addAll(map);
     });
   });
 }
