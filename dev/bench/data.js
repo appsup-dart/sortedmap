@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708443283472,
+  "lastUpdate": 1708443560681,
   "repoUrl": "https://github.com/appsup-dart/sortedmap",
   "entries": {
     "Benchmark": [
@@ -85,6 +85,93 @@ window.BENCHMARK_DATA = {
             "name": "addAll to empty SortedMap from FilteredMapView",
             "value": 2e-7,
             "range": "±0.50%",
+            "unit": "ops/sec",
+            "extra": "5 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "committer": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "distinct": true,
+          "id": "92f0f5feee01168ca3a8578f45d6c039357c6e2d",
+          "message": "perf: improve speed of addAll on empty sorted map",
+          "timestamp": "2024-02-20T16:37:39+01:00",
+          "tree_id": "fc5ad012380bb490e22245f40fd72f2cdb8b04b7",
+          "url": "https://github.com/appsup-dart/sortedmap/commit/92f0f5feee01168ca3a8578f45d6c039357c6e2d"
+        },
+        "date": 1708443560239,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "completeInterval of FilteredMap",
+            "value": 0.472,
+            "range": "±0.23%",
+            "unit": "ops/sec",
+            "extra": "860141 samples"
+          },
+          {
+            "name": "completeInterval of FilteredMapView",
+            "value": 0.000505,
+            "range": "±0.95%",
+            "unit": "ops/sec",
+            "extra": "1009 samples"
+          },
+          {
+            "name": "length of FilteredMap",
+            "value": 4.01,
+            "range": "±0.41%",
+            "unit": "ops/sec",
+            "extra": "4565237 samples"
+          },
+          {
+            "name": "length of FilteredMapView",
+            "value": 0.00106,
+            "range": "±0.22%",
+            "unit": "ops/sec",
+            "extra": "2120 samples"
+          },
+          {
+            "name": "forEach of FilteredMap",
+            "value": 0.000277,
+            "range": "±0.74%",
+            "unit": "ops/sec",
+            "extra": "555 samples"
+          },
+          {
+            "name": "forEach of FilteredMapView",
+            "value": 2.01e-7,
+            "range": "±1.40%",
+            "unit": "ops/sec",
+            "extra": "5 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap",
+            "value": 0.0000634,
+            "range": "±0.97%",
+            "unit": "ops/sec",
+            "extra": "127 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap",
+            "value": 1.61,
+            "range": "±0.16%",
+            "unit": "ops/sec",
+            "extra": "2473981 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView",
+            "value": 2.03e-7,
+            "range": "±0.58%",
             "unit": "ops/sec",
             "extra": "5 samples"
           }
