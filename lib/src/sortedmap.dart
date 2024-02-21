@@ -144,7 +144,9 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   void addAll(Map<K, V> other) {
-    if (other is _SortedMap<K, V> && other.ordering == ordering) {
+    if (other is _SortedMap<K, V> &&
+        other.ordering == ordering &&
+        this is! FilteredMap) {
       _sortedPairs.addAll(other._sortedPairs);
       _map.addAll(other._map);
       return;
