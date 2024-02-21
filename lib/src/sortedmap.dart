@@ -113,8 +113,41 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
           reversed: reversed))
         ..addAll(this);
 
-  Pair? _pairForKey(K? key) =>
-      containsKey(key) ? ordering.mapKeyValue(key!, this[key]) : null;
+  _MapEntryWithIndex<K, V>? _entryForKey(K? key) =>
+      containsKey(key) ? ordering.mapEntry(key!, this[key] as V) : null;
+}
+
+class _MapEntryWithIndex<K extends Comparable, V> implements MapEntry<K, V> {
+  final K? _key;
+
+  final V? _value;
+
+  final Pair index;
+
+  _MapEntryWithIndex.indexOnly(Pair pair)
+      : _key = null,
+        _value = null,
+        index = pair;
+
+  _MapEntryWithIndex(K key, V value, this.index)
+      : _key = key,
+        _value = value;
+
+  @override
+  V get value => _value as V;
+
+  @override
+  K get key => _key as K;
+}
+
+extension _OrderingX on Ordering {
+  _MapEntryWithIndex<K, V> mapEntry<K extends Comparable, V>(K key, V value) =>
+      _MapEntryWithIndex(key, value, mapKeyValue(key, value));
+
+  Pair indexFromMapEntry<K extends Comparable, V>(MapEntry<K, V> entry) =>
+      entry is _MapEntryWithIndex<K, V>
+          ? entry.index
+          : mapKeyValue(entry.key, entry.value);
 }
 
 class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
@@ -122,22 +155,33 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Ordering ordering;
 
-  final TreeSet<Pair> _sortedPairs;
+  final TreeSet<_MapEntryWithIndex<K, V>> _sortedEntries;
   final TreeMap<K, V> _map;
 
-  _SortedMap._(this.ordering, TreeSet<Pair>? sortedPairs, TreeMap<K, V>? map)
-      : _sortedPairs = sortedPairs ?? TreeSet(),
+  _SortedMap._(this.ordering, TreeSet<_MapEntryWithIndex<K, V>>? sortedPairs,
+      TreeMap<K, V>? map)
+      : _sortedEntries = sortedPairs ??
+            TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index)),
         _map = map ?? TreeMap();
 
   @override
   bool containsKey(Object? key) => _map.containsKey(key);
 
   @override
-  Iterable<K> get keys => _sortedPairs.map<K>((p) => p.key as K);
+  Iterable<K> get keys => _sortedEntries.map<K>((p) => p.key);
+
+  @override
+  Iterable<V> get values => _sortedEntries.map<V>((p) => p.value);
+
+  @override
+  Iterable<MapEntry<K, V>> get entries => _sortedEntries;
 
   @override
   SortedMap<K, V> clone() => _SortedMap<K, V>._(
-      ordering, TreeSet()..addAll(_sortedPairs), TreeMap<K, V>.from(_map));
+      ordering,
+      TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index))
+        ..addAll(_sortedEntries),
+      TreeMap<K, V>.from(_map));
 
   @override
   V? operator [](Object? key) => _map[key as K];
@@ -147,7 +191,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     if (other is _SortedMap<K, V> &&
         other.ordering == ordering &&
         this is! FilteredMap) {
-      _sortedPairs.addAll(other._sortedPairs);
+      _sortedEntries.addAll(other._sortedEntries);
       _map.addAll(other._map);
       return;
     }
@@ -156,29 +200,29 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   void operator []=(K key, V value) {
-    var pair = _pairForKey(key);
-    if (pair != null) _sortedPairs.remove(pair);
-    _addPair(key, value);
+    var entry = _entryForKey(key);
+    if (entry != null) _sortedEntries.remove(entry);
+    _addEntry(key, value);
   }
 
   @override
   bool get isEmpty => _map.isEmpty;
 
-  void _addPair(K key, V value) {
+  void _addEntry(K key, V value) {
     _map[key] = value;
-    _sortedPairs.add(ordering.mapKeyValue(key, value));
+    _sortedEntries.add(ordering.mapEntry(key, value));
   }
 
   @override
   void clear() {
     _map.clear();
-    _sortedPairs.clear();
+    _sortedEntries.clear();
   }
 
   @override
   V? remove(Object? key) {
     if (!_map.containsKey(key)) return null;
-    _sortedPairs.remove(_pairForKey(key as K?));
+    _sortedEntries.remove(_entryForKey(key as K?));
     return _map.remove(key);
   }
 
@@ -187,16 +231,16 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     if (!_map.containsKey(key)) {
       throw StateError('No such key $key in collection');
     }
-    var pair = _pairForKey(key)!;
-    var it = _sortedPairs.fromIterator(pair, reversed: true);
+    var entry = _entryForKey(key)!;
+    var it = _sortedEntries.fromIterator(entry, reversed: true);
     bool hasMore;
-    while ((hasMore = it.moveNext()) && it.current == pair) {}
+    while ((hasMore = it.moveNext()) && it.current.index == entry.index) {}
 
     if (!hasMore) {
       if (orElse != null) return orElse();
       throw StateError('No element.');
     }
-    return it.current.key as K;
+    return it.current.key;
   }
 
   @override
@@ -204,15 +248,15 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     if (!_map.containsKey(key)) {
       throw StateError('No such key $key in collection');
     }
-    var pair = _pairForKey(key)!;
-    var it = _sortedPairs.fromIterator(pair);
+    var pair = _entryForKey(key)!;
+    var it = _sortedEntries.fromIterator(pair);
     bool hasMore;
-    while ((hasMore = it.moveNext()) && it.current == pair) {}
+    while ((hasMore = it.moveNext()) && it.current.index == pair.index) {}
     if (!hasMore) {
       if (orElse != null) return orElse();
       throw StateError('No element.');
     }
-    return it.current.key as K;
+    return it.current.key;
   }
 
   @override
@@ -228,12 +272,13 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   Iterable<K> _subkeys(Pair start, Pair end, int? limit, bool reversed) sync* {
     var from = reversed ? end : start;
-    var it = _sortedPairs.fromIterator(from, reversed: reversed);
+    var it = _sortedEntries.fromIterator(_MapEntryWithIndex.indexOnly(from),
+        reversed: reversed);
     var count = 0;
     while (it.moveNext() && (limit == null || count++ < limit)) {
-      var cmp = Comparable.compare(it.current, reversed ? start : end);
+      var cmp = Comparable.compare(it.current.index, reversed ? start : end);
       if ((reversed && cmp < 0) || (!reversed && cmp > 0)) return;
-      yield it.current.key as K;
+      yield it.current.key;
     }
   }
 }

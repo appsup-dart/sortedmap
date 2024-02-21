@@ -17,19 +17,18 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
   KeyValueInterval get completeInterval {
-    var keys = this.keys;
     var filterInterval = filter.validInterval;
-    if (filter.limit == null || keys.length < filter.limit!) {
+    if (filter.limit == null || length < filter.limit!) {
       return filterInterval;
     }
     if (filter.limit == 0) return KeyValueInterval();
 
     if (filter.reversed) {
       return KeyValueInterval.fromPairs(
-          _pairForKey(keys.first)!, filterInterval.end);
+          ordering.indexFromMapEntry(entries.first), filterInterval.end);
     } else {
       return KeyValueInterval.fromPairs(
-          filterInterval.start, _pairForKey(keys.last)!);
+          filterInterval.start, ordering.indexFromMapEntry(entries.last));
     }
   }
 }
@@ -39,26 +38,29 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   final Filter<K, V> filter;
 
-  _FilteredMap._(
-      Filter<K, V> filter, TreeSet<Pair>? sortedPairs, TreeMap<K, V>? map)
+  _FilteredMap._(Filter<K, V> filter,
+      TreeSet<_MapEntryWithIndex<K, V>>? sortedEntries, TreeMap<K, V>? map)
       : filter = filter,
-        super._(filter.ordering, sortedPairs, map);
+        super._(filter.ordering, sortedEntries, map);
 
   @override
   FilteredMap<K, V> clone() => _FilteredMap<K, V>._(
-      filter, TreeSet()..addAll(_sortedPairs), TreeMap.from(_map));
+      filter,
+      TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index))
+        ..addAll(_sortedEntries),
+      TreeMap.from(_map));
 
   @override
-  void _addPair(K key, V value) {
+  void _addEntry(K key, V value) {
     if (!filter.validInterval.containsPoint(ordering.mapKeyValue(key, value))) {
       remove(key);
       return;
     }
-    super._addPair(key, value);
+    super._addEntry(key, value);
     if (filter.limit != null && length > filter.limit!) {
       var toDel = filter.reversed
-          ? _sortedPairs.take(length - filter.limit!)
-          : _sortedPairs.skip(filter.limit!);
+          ? _sortedEntries.take(length - filter.limit!)
+          : _sortedEntries.skip(filter.limit!);
       toDel.toList().forEach((p) => remove(p.key));
     }
   }
@@ -86,15 +88,15 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   V? operator [](Object? key) {
-    var k = _pairForKey(key)?.key as K?;
+    var k = _entryForKey(key)?.key;
     return k != null ? _baseMap[k] : null;
   }
 
   @override
-  Pair? _pairForKey(Object? key, [bool checked = true]) {
+  _MapEntryWithIndex<K, V>? _entryForKey(Object? key, [bool checked = true]) {
     V value = _baseMap[key as K]!;
-    var p = ordering.mapKeyValue(key, value);
-    if (checked && !_containsPair(p)) return null;
+    var p = ordering.mapEntry(key, value);
+    if (checked && !_containsPair(p.index)) return null;
     return p;
   }
 
@@ -102,8 +104,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   KeyValueInterval get _effectiveInterval {
     var keys = this.keys;
-    return KeyValueInterval.fromPairs(
-        _pairForKey(keys.first, false)!, _pairForKey(keys.last, false)!);
+    return KeyValueInterval.fromPairs(_entryForKey(keys.first, false)!.index,
+        _entryForKey(keys.last, false)!.index);
   }
 
   @override
@@ -111,11 +113,11 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   K firstKeyAfter(K key, {K Function()? orElse}) =>
-      _pairForKey(_baseMap.firstKeyAfter(key, orElse: orElse))!.key as K;
+      _entryForKey(_baseMap.firstKeyAfter(key, orElse: orElse))!.key;
 
   @override
   K lastKeyBefore(K key, {K Function()? orElse}) =>
-      _pairForKey(_baseMap.lastKeyBefore(key, orElse: orElse))!.key as K;
+      _entryForKey(_baseMap.lastKeyBefore(key, orElse: orElse))!.key;
 
   @override
   Iterable<K> get keys => _baseMap.subkeys(
@@ -149,10 +151,12 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   int get length {
     var b = _baseMap;
     if (b is _SortedMap<K, V>) {
-      var e = (b._sortedPairs as AvlTreeSet)
-          .countUntil(filter.validInterval.end, inclusive: true);
-      var s = (b._sortedPairs as AvlTreeSet)
-          .countUntil(filter.validInterval.start, inclusive: false);
+      var e = (b._sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>)
+          .countUntil(_MapEntryWithIndex.indexOnly(filter.validInterval.end),
+              inclusive: true);
+      var s = (b._sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>)
+          .countUntil(_MapEntryWithIndex.indexOnly(filter.validInterval.start),
+              inclusive: false);
       var total = e - s;
       return filter.limit == null ? total : min(total, filter.limit!);
     }

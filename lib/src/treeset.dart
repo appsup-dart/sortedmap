@@ -1,8 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:sortedmap/sortedmap.dart';
-
 abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
   final Comparator<V> comparator;
 
