@@ -59,7 +59,7 @@ void benchmark(String description, dynamic Function() body,
       }
       sw.stop();
 
-      var hz = 1 / (sum / i);
+      var hz = 1 / (sum / i) * 1000 * 1000;
 
       var l = -(math.log(hz) / math.ln10).ceil() + 3;
 
