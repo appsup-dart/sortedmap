@@ -344,14 +344,20 @@ class AvlNode<V> {
 
   int get balanceFactor => (right?.height ?? 0) - (left?.height ?? 0);
 
-  AvlNode<V> get minimumNode => minimumPath.last;
+  AvlNode<V> get minimumNode {
+    if (left == null) return this;
+    return left!.minimumNode;
+  }
 
   Iterable<AvlNode<V>> get minimumPath sync* {
     yield this;
     if (left != null) yield* left!.minimumPath;
   }
 
-  AvlNode<V> get maximumNode => maximumPath.last;
+  AvlNode<V> get maximumNode {
+    if (right == null) return this;
+    return right!.maximumNode;
+  }
 
   Iterable<AvlNode<V>> get maximumPath sync* {
     yield this;
