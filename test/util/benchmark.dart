@@ -28,7 +28,6 @@ void benchmark(String description, dynamic Function() body,
       sw.start();
       var sum = 0;
       var sum2 = 0;
-      var rme = double.infinity;
 
       while (sw.elapsed < minDuration || i < minSamples) {
         i++;
@@ -39,25 +38,25 @@ void benchmark(String description, dynamic Function() body,
 
         sum += v;
         sum2 += v * v;
-
-        // Compute the sample mean (estimate of the population mean).
-        var mean = sum / i;
-        // Compute the sample variance (estimate of the population variance).
-        var variance = (sum2 - mean * mean * i) / (i - 1);
-        // Compute the sample standard deviation (estimate of the population standard deviation).
-        var sd = math.sqrt(variance);
-        // Compute the standard error of the mean (a.k.a. the standard deviation of the sampling distribution of the sample mean).
-        var sem = sd / math.sqrt(i);
-        // Compute the degrees of freedom.
-        var df = i - 1;
-        // Compute the critical value.
-        var critical = tTable[df.round().toString()] ?? tTable['infinity']!;
-        // Compute the margin of error.
-        var moe = sem * critical;
-        // Compute the relative margin of error.
-        rme = (moe / mean) * 100;
       }
       sw.stop();
+
+      // Compute the sample mean (estimate of the population mean).
+      var mean = sum / i;
+      // Compute the sample variance (estimate of the population variance).
+      var variance = (sum2 - mean * mean * i) / (i - 1);
+      // Compute the sample standard deviation (estimate of the population standard deviation).
+      var sd = math.sqrt(variance);
+      // Compute the standard error of the mean (a.k.a. the standard deviation of the sampling distribution of the sample mean).
+      var sem = sd / math.sqrt(i);
+      // Compute the degrees of freedom.
+      var df = i - 1;
+      // Compute the critical value.
+      var critical = tTable[df.round().toString()] ?? tTable['infinity']!;
+      // Compute the margin of error.
+      var moe = sem * critical;
+      // Compute the relative margin of error.
+      var rme = (moe / mean) * 100;
 
       var hz = 1 / (sum / i) * 1000 * 1000;
 
