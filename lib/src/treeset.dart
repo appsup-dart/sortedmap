@@ -349,19 +349,9 @@ class AvlNode<V> {
     return left!.minimumNode;
   }
 
-  Iterable<AvlNode<V>> get minimumPath sync* {
-    yield this;
-    if (left != null) yield* left!.minimumPath;
-  }
-
   AvlNode<V> get maximumNode {
     if (right == null) return this;
     return right!.maximumNode;
-  }
-
-  Iterable<AvlNode<V>> get maximumPath sync* {
-    yield this;
-    if (right != null) yield* right!.maximumPath;
   }
 
   AvlNode<V> add(Comparator<V> comparator, V element) {
@@ -611,29 +601,53 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
   }
 }
 
+class _Path<V> {
+  final AvlNode<V> node;
+  final _Path<V>? parent;
+
+  final AvlNode<V> root;
+
+  _Path(this.node, this.parent) : root = parent?.root ?? node;
+
+  factory _Path.from(Iterable<AvlNode<V>> nodes, [_Path<V>? parent]) {
+    if (nodes.isEmpty) return parent!;
+    return _Path.from(nodes.skip(1), _Path(nodes.first, parent));
+  }
+
+  factory _Path.minimum(AvlNode<V> node, [_Path<V>? parent]) {
+    if (node.left == null) return _Path(node, parent);
+    return _Path.minimum(node.left!, _Path(node, parent));
+  }
+
+  factory _Path.maximum(AvlNode<V> node, [_Path<V>? parent]) {
+    if (node.right == null) return _Path(node, parent);
+    return _Path.maximum(node.right!, _Path(node, parent));
+  }
+}
+
 class TreeCursor<V> extends BidirectionalIterator<V> {
   final AvlTreeSet<V> tree;
-  final List<AvlNode<V>> _path = [];
+  _Path<V>? _path;
   bool _lastMovedForward = true;
 
   TreeCursor(this.tree);
 
-  bool get isOnNode => _path.isNotEmpty;
+  bool get isOnNode => _path != null;
 
   void positionAfter(
     V? anchor, {
     bool inclusive = true,
   }) {
     _lastMovedForward = true;
-    _path.clear();
+    _path = null;
     if (tree._root == null) return;
     if (anchor == null) {
-      _path.addAll(tree._root!.minimumPath);
+      _path = _Path.minimum(tree._root!);
       return;
     }
     var x = tree._root;
     while (x != null) {
-      _path.add(x);
+      _path = _Path(x, _path);
       var compare = tree.comparator(anchor, x.object);
       if (compare == 0) {
         if (!inclusive) moveNext();
@@ -644,7 +658,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
         x = x.right;
       }
     }
-    x = _path.last;
+    x = _path!.node;
     var compare = tree.comparator(anchor, x.object);
     if (compare > 0) {
       moveNext();
@@ -656,15 +670,15 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
     bool inclusive = true,
   }) {
     _lastMovedForward = false;
-    _path.clear();
+    _path = null;
     if (tree._root == null) return;
     if (anchor == null) {
-      _path.addAll(tree._root!.maximumPath);
+      _path = _Path.maximum(tree._root!);
       return;
     }
     var x = tree._root;
     while (x != null) {
-      _path.add(x);
+      _path = _Path(x, _path);
       var compare = tree.comparator(anchor, x.object);
       if (compare == 0) {
         if (!inclusive) movePrevious();
@@ -675,7 +689,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
         x = x.right;
       }
     }
-    x = _path.last;
+    x = _path!.node;
     var compare = tree.comparator(anchor, x.object);
     if (compare < 0) {
       movePrevious();
@@ -684,36 +698,38 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
   @override
   V get current {
-    if (_path.isEmpty) {
+    if (_path == null) {
       throw StateError('TreeCursor not pointing to a value.');
     }
-    return _path.last.object;
+    return _path!.node.object;
   }
 
   @override
   bool moveNext() {
-    if (_path.isEmpty) {
+    if (_path == null) {
       if (tree._root == null) return false;
       if (_lastMovedForward) {
         return false;
       } else {
-        _path.addAll(tree._root!.minimumPath);
+        _path = _Path.minimum(tree._root!);
         return true;
       }
     }
     _lastMovedForward = true;
 
-    if (_path.first != tree._root) throw ConcurrentModificationError(tree);
-    var current = _path.last;
+    if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
+    var current = _path!.node;
     if (current.right != null) {
-      _path.addAll(current.right!.minimumPath);
+      _path = _Path.minimum(current.right!, _path);
       return true;
     }
-    var l = _path.removeLast();
-    while (_path.isNotEmpty && _path.last.right == l) {
-      l = _path.removeLast();
+    var l = _path!.node;
+    _path = _path!.parent;
+    while (_path != null && _path!.node.right == l) {
+      l = _path!.node;
+      _path = _path!.parent;
     }
-    if (_path.isEmpty) {
+    if (_path == null) {
       return false;
     }
     return true;
@@ -721,28 +737,30 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
   @override
   bool movePrevious() {
-    if (_path.isEmpty) {
+    if (_path == null) {
       if (tree._root == null) return false;
       if (!_lastMovedForward) {
         return false;
       } else {
-        _path.addAll(tree._root!.maximumPath);
+        _path = _Path.maximum(tree._root!, _path);
         return true;
       }
     }
     _lastMovedForward = true;
 
-    if (_path.first != tree._root) throw ConcurrentModificationError(tree);
-    var current = _path.last;
+    if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
+    var current = _path!.node;
     if (current.left != null) {
-      _path.addAll(current.left!.maximumPath);
+      _path = _Path.maximum(current.left!, _path);
       return true;
     }
-    var l = _path.removeLast();
-    while (_path.isNotEmpty && _path.last.left == l) {
-      l = _path.removeLast();
+    var l = _path!.node;
+    _path = _path!.parent;
+    while (_path != null && _path!.node.left == l) {
+      l = _path!.node;
+      _path = _path!.parent;
     }
-    if (_path.isEmpty) {
+    if (_path == null) {
       return false;
     }
     return true;

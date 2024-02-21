@@ -206,6 +206,13 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   }
 
   @override
+  void forEach(void Function(K key, V value) action) {
+    for (var e in entries) {
+      action(e.key, e.value);
+    }
+  }
+
+  @override
   bool get isEmpty => _map.isEmpty;
 
   void _addEntry(K key, V value) {
