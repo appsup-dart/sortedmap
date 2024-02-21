@@ -27,63 +27,63 @@ window.BENCHMARK_DATA = {
         "benches": [
           {
             "name": "completeInterval of FilteredMap",
-            "value": 0.435,
+            "value": 435000,
             "range": "±0.22%",
             "unit": "ops/sec",
             "extra": "795187 samples"
           },
           {
             "name": "completeInterval of FilteredMapView",
-            "value": 0.000466,
+            "value": 466,
             "range": "±1.38%",
             "unit": "ops/sec",
             "extra": "932 samples"
           },
           {
             "name": "length of FilteredMap",
-            "value": 3.64,
+            "value": 3640000,
             "range": "±0.36%",
             "unit": "ops/sec",
             "extra": "4293419 samples"
           },
           {
             "name": "length of FilteredMapView",
-            "value": 0.000949,
+            "value": 949,
             "range": "±0.16%",
             "unit": "ops/sec",
             "extra": "1898 samples"
           },
           {
             "name": "forEach of FilteredMap",
-            "value": 0.000262,
+            "value": 262,
             "range": "±1.11%",
             "unit": "ops/sec",
             "extra": "525 samples"
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 1.89e-7,
+            "value": 1.89e-1,
             "range": "±0.45%",
             "unit": "ops/sec",
             "extra": "5 samples"
           },
           {
             "name": "addAll to empty SortedMap",
-            "value": 0.0000614,
+            "value": 61.4,
             "range": "±0.94%",
             "unit": "ops/sec",
             "extra": "123 samples"
           },
           {
             "name": "addAll to empty SortedMap from SortedMap",
-            "value": 0.0000454,
+            "value": 45.4,
             "range": "±0.82%",
             "unit": "ops/sec",
             "extra": "91 samples"
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2e-7,
+            "value": 2e-1,
             "range": "±0.50%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -114,63 +114,63 @@ window.BENCHMARK_DATA = {
         "benches": [
           {
             "name": "completeInterval of FilteredMap",
-            "value": 0.472,
+            "value": 472000,
             "range": "±0.23%",
             "unit": "ops/sec",
             "extra": "860141 samples"
           },
           {
             "name": "completeInterval of FilteredMapView",
-            "value": 0.000505,
+            "value": 505,
             "range": "±0.95%",
             "unit": "ops/sec",
             "extra": "1009 samples"
           },
           {
             "name": "length of FilteredMap",
-            "value": 4.01,
+            "value": 4010000,
             "range": "±0.41%",
             "unit": "ops/sec",
             "extra": "4565237 samples"
           },
           {
             "name": "length of FilteredMapView",
-            "value": 0.00106,
+            "value": 1060,
             "range": "±0.22%",
             "unit": "ops/sec",
             "extra": "2120 samples"
           },
           {
             "name": "forEach of FilteredMap",
-            "value": 0.000277,
+            "value": 277,
             "range": "±0.74%",
             "unit": "ops/sec",
             "extra": "555 samples"
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 2.01e-7,
+            "value": 2.01e-1,
             "range": "±1.40%",
             "unit": "ops/sec",
             "extra": "5 samples"
           },
           {
             "name": "addAll to empty SortedMap",
-            "value": 0.0000634,
+            "value": 63.4,
             "range": "±0.97%",
             "unit": "ops/sec",
             "extra": "127 samples"
           },
           {
             "name": "addAll to empty SortedMap from SortedMap",
-            "value": 1.61,
+            "value": 1610000,
             "range": "±0.16%",
             "unit": "ops/sec",
             "extra": "2473981 samples"
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2.03e-7,
+            "value": 2.03e-1,
             "range": "±0.58%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -201,63 +201,63 @@ window.BENCHMARK_DATA = {
         "benches": [
           {
             "name": "completeInterval of FilteredMap",
-            "value": 0.454,
+            "value": 454000,
             "range": "±0.49%",
             "unit": "ops/sec",
             "extra": "828457 samples"
           },
           {
             "name": "completeInterval of FilteredMapView",
-            "value": 0.000469,
+            "value": 469,
             "range": "±1.45%",
             "unit": "ops/sec",
             "extra": "937 samples"
           },
           {
             "name": "length of FilteredMap",
-            "value": 3.89,
+            "value": 3890000,
             "range": "±0.63%",
             "unit": "ops/sec",
             "extra": "4399008 samples"
           },
           {
             "name": "length of FilteredMapView",
-            "value": 1.54,
+            "value": 1540000,
             "range": "±0.17%",
             "unit": "ops/sec",
             "extra": "2359523 samples"
           },
           {
             "name": "forEach of FilteredMap",
-            "value": 0.000245,
+            "value": 245,
             "range": "±0.84%",
             "unit": "ops/sec",
             "extra": "490 samples"
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 1.94e-7,
+            "value": 1.94e-1,
             "range": "±0.69%",
             "unit": "ops/sec",
             "extra": "5 samples"
           },
           {
             "name": "addAll to empty SortedMap",
-            "value": 0.0000614,
+            "value": 61.4,
             "range": "±0.87%",
             "unit": "ops/sec",
             "extra": "123 samples"
           },
           {
             "name": "addAll to empty SortedMap from SortedMap",
-            "value": 1.56,
+            "value": 1560000,
             "range": "±0.19%",
             "unit": "ops/sec",
             "extra": "2385745 samples"
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2.01e-7,
+            "value": 2.01e-1,
             "range": "±0.42%",
             "unit": "ops/sec",
             "extra": "5 samples"
