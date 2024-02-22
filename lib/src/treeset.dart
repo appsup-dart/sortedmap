@@ -38,6 +38,16 @@ class AvlTreeSet<V> extends TreeSet<V> {
   int get length => _root?.length ?? 0;
 
   @override
+  V elementAt(int index) {
+    RangeError.checkNotNegative(index, 'index');
+    if (index >= length) {
+      throw IndexError.withLength(index, length,
+          indexable: this, name: 'index');
+    }
+    return _root!.elementAt(index);
+  }
+
+  @override
   bool add(V element) {
     if (_root == null) {
       _root = AvlNode(object: element);
@@ -539,6 +549,17 @@ class AvlNode<V> {
       }
     }
     return this;
+  }
+
+  V elementAt(int index) {
+    var l = left?.length ?? 0;
+    if (index < l) {
+      return left!.elementAt(index);
+    }
+    if (index == l) {
+      return this.object;
+    }
+    return right!.elementAt(index - l - 1);
   }
 }
 
