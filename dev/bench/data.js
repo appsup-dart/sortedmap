@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1708511440034,
+  "lastUpdate": 1708629803323,
   "repoUrl": "https://github.com/appsup-dart/sortedmap",
   "entries": {
     "Benchmark": [
@@ -62,7 +62,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 1.89e-1,
+            "value": 0.189,
             "range": "±0.45%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -83,7 +83,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2e-1,
+            "value": 0.2,
             "range": "±0.50%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -149,7 +149,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 2.01e-1,
+            "value": 0.201,
             "range": "±1.40%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -170,7 +170,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2.03e-1,
+            "value": 0.203,
             "range": "±0.58%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -236,7 +236,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "forEach of FilteredMapView",
-            "value": 1.94e-1,
+            "value": 0.194,
             "range": "±0.69%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -257,7 +257,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "addAll to empty SortedMap from FilteredMapView",
-            "value": 2.01e-1,
+            "value": 0.201,
             "range": "±0.42%",
             "unit": "ops/sec",
             "extra": "5 samples"
@@ -609,6 +609,100 @@ window.BENCHMARK_DATA = {
             "range": "±0.98%",
             "unit": "ops/sec",
             "extra": "5 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "committer": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "distinct": true,
+          "id": "84dca023164ed84c3f4987366dc12ef7677b988f",
+          "message": "test: benchmark test TreeSet.elementAt",
+          "timestamp": "2024-02-22T20:17:19+01:00",
+          "tree_id": "a0d1f110c8220ee8cfc2c7e07bdb65daf34b1a11",
+          "url": "https://github.com/appsup-dart/sortedmap/commit/84dca023164ed84c3f4987366dc12ef7677b988f"
+        },
+        "date": 1708629801365,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "completeInterval of FilteredMap",
+            "value": 2650442,
+            "range": "±0.32%",
+            "unit": "ops/sec",
+            "extra": "4129738 samples"
+          },
+          {
+            "name": "completeInterval of FilteredMapView",
+            "value": 1360,
+            "range": "±1.18%",
+            "unit": "ops/sec",
+            "extra": "2719 samples"
+          },
+          {
+            "name": "length of FilteredMap",
+            "value": 3441150,
+            "range": "±0.57%",
+            "unit": "ops/sec",
+            "extra": "5043783 samples"
+          },
+          {
+            "name": "length of FilteredMapView",
+            "value": 1372760,
+            "range": "±0.11%",
+            "unit": "ops/sec",
+            "extra": "2392342 samples"
+          },
+          {
+            "name": "forEach of FilteredMap",
+            "value": 3860,
+            "range": "±0.87%",
+            "unit": "ops/sec",
+            "extra": "7716 samples"
+          },
+          {
+            "name": "forEach of FilteredMapView",
+            "value": 0.557,
+            "range": "±1.61%",
+            "unit": "ops/sec",
+            "extra": "5 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap",
+            "value": 49.8,
+            "range": "±1.22%",
+            "unit": "ops/sec",
+            "extra": "100 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap",
+            "value": 2489248,
+            "range": "±0.21%",
+            "unit": "ops/sec",
+            "extra": "3945294 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView",
+            "value": 0.548,
+            "range": "±0.81%",
+            "unit": "ops/sec",
+            "extra": "5 samples"
+          },
+          {
+            "name": "elementAt of TreeSet",
+            "value": 18339,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "36584 samples"
           }
         ]
       }
