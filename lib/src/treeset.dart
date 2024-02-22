@@ -27,6 +27,8 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 
   @override
   TreeSet<V> toSet() => TreeSet(comparator: comparator)..addAll(this);
+
+  int indexOf(V element);
 }
 
 class AvlTreeSet<V> extends TreeSet<V> {
@@ -338,6 +340,11 @@ class AvlTreeSet<V> extends TreeSet<V> {
       }
     }
     return i;
+  }
+
+  @override
+  int indexOf(V element) {
+    return toList().indexOf(element);
   }
 }
 

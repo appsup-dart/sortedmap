@@ -89,4 +89,12 @@ Future<void> main() async {
       set.elementAt(n ~/ 3);
     });
   });
+
+  group('indexOf', () {
+    var set = TreeSet()..addAll(data.values);
+    var e = set.elementAt(n ~/ 3);
+    benchmark('of TreeSet', () {
+      set.indexOf(e);
+    });
+  });
 }
