@@ -46,8 +46,7 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   FilteredMap<K, V> clone() => _FilteredMap<K, V>._(
       filter,
-      TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index))
-        ..addAll(_sortedEntries),
+      TreeSet(comparator: _SortedMap._compare)..addAll(_sortedEntries),
       TreeMap.from(_map));
 
   @override

@@ -9,8 +9,7 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
 
   factory TreeMap.from(Map<K, V> other) => TreeMap()..addAll(other);
 
-  static int _compareKeys<K extends Comparable, V>(
-          MapEntry<K, V> a, MapEntry<K, V> b) =>
+  static int _compareKeys(MapEntry a, MapEntry b) =>
       Comparable.compare(a.key, b.key);
 
   final TreeSet<MapEntry<K, V?>> _tree = TreeSet(comparator: _compareKeys);

@@ -71,7 +71,9 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
   @override
   bool addAll(Iterable<V> items) {
-    if (_root == null && items is AvlTreeSet<V>) {
+    if (_root == null &&
+        items is AvlTreeSet<V> &&
+        identical((items as dynamic).comparator, comparator)) {
       _root = items._root;
       return _root != null;
     }

@@ -158,10 +158,12 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   final TreeSet<_MapEntryWithIndex<K, V>> _sortedEntries;
   final TreeMap<K, V> _map;
 
+  static int _compare(_MapEntryWithIndex a, _MapEntryWithIndex b) =>
+      Comparable.compare(a.index, b.index);
+
   _SortedMap._(this.ordering, TreeSet<_MapEntryWithIndex<K, V>>? sortedPairs,
       TreeMap<K, V>? map)
-      : _sortedEntries = sortedPairs ??
-            TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index)),
+      : _sortedEntries = sortedPairs ?? TreeSet(comparator: _compare),
         _map = map ?? TreeMap();
 
   @override
@@ -179,8 +181,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   SortedMap<K, V> clone() => _SortedMap<K, V>._(
       ordering,
-      TreeSet(comparator: (a, b) => Comparable.compare(a.index, b.index))
-        ..addAll(_sortedEntries),
+      TreeSet(comparator: _compare)..addAll(_sortedEntries),
       TreeMap<K, V>.from(_map));
 
   @override
