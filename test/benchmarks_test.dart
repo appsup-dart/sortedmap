@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:sortedmap/sortedmap.dart';
+import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';
 
 import 'util/benchmark.dart';
@@ -79,6 +80,13 @@ Future<void> main() async {
 
     benchmark('to empty SortedMap from FilteredMapView', () async {
       SortedMap(const Ordering.byValue()).addAll(view);
+    });
+  });
+
+  group('elementAt', () {
+    var set = TreeSet()..addAll(data.values);
+    benchmark('of TreeSet', () {
+      set.elementAt(n ~/ 3);
     });
   });
 }
