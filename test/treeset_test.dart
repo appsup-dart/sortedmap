@@ -162,6 +162,26 @@ void main() {
         3);
   });
 
+  test('movePrevious after reaching end should return last element', () {
+    var set1 = TreeSet()..addAll(Iterable.generate(10, (i) => i));
+    var it = set1.fromIterator(9, inclusive: true);
+    expect(it.moveNext(), true);
+    expect(it.current, 9);
+    expect(it.moveNext(), false);
+    expect(it.movePrevious(), true);
+    expect(it.current, 9);
+  });
+
+  test('moveNext after reaching begin should return first element', () {
+    var set1 = TreeSet()..addAll(Iterable.generate(10, (i) => i));
+    var it = set1.iterator;
+    expect(it.moveNext(), true);
+    expect(it.current, 0);
+    expect(it.movePrevious(), false);
+    expect(it.moveNext(), true);
+    expect(it.current, 0);
+  });
+
   test('AvlTreeSet.countUntil', () {
     var set = TreeSet() as AvlTreeSet;
     set.addAll(Iterable.generate(10, (i) => i));

@@ -801,7 +801,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
         return true;
       }
     }
-    _lastMovedForward = true;
+    _lastMovedForward = false;
 
     if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
     _path = _path!.previous();
