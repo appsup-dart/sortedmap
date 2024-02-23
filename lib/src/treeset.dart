@@ -663,6 +663,34 @@ class _Path<V> {
       (node == parent?.node.right ? ((parent!.node.left?.length ?? 0) + 1) : 0);
 
   int get index => leftIndex + (node.left?.length ?? 0);
+
+  _Path<V>? next() {
+    var current = node;
+    if (current.right != null) {
+      return _Path.minimum(current.right!, this);
+    }
+    var l = node;
+    var p = parent;
+    while (p != null && p.node.right == l) {
+      l = p.node;
+      p = p.parent;
+    }
+    return p;
+  }
+
+  _Path<V>? previous() {
+    var current = node;
+    if (current.left != null) {
+      return _Path.maximum(current.left!, this);
+    }
+    var l = node;
+    var p = parent;
+    while (p != null && p.node.left == l) {
+      l = p.node;
+      p = p.parent;
+    }
+    return p;
+  }
 }
 
 class TreeCursor<V> extends BidirectionalIterator<V> {
@@ -758,21 +786,8 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
     _lastMovedForward = true;
 
     if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
-    var current = _path!.node;
-    if (current.right != null) {
-      _path = _Path.minimum(current.right!, _path);
-      return true;
-    }
-    var l = _path!.node;
-    _path = _path!.parent;
-    while (_path != null && _path!.node.right == l) {
-      l = _path!.node;
-      _path = _path!.parent;
-    }
-    if (_path == null) {
-      return false;
-    }
-    return true;
+    _path = _path!.next();
+    return _path != null;
   }
 
   @override
@@ -789,20 +804,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
     _lastMovedForward = true;
 
     if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
-    var current = _path!.node;
-    if (current.left != null) {
-      _path = _Path.maximum(current.left!, _path);
-      return true;
-    }
-    var l = _path!.node;
-    _path = _path!.parent;
-    while (_path != null && _path!.node.left == l) {
-      l = _path!.node;
-      _path = _path!.parent;
-    }
-    if (_path == null) {
-      return false;
-    }
-    return true;
+    _path = _path!.previous();
+    return _path != null;
   }
 }
