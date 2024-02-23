@@ -63,15 +63,17 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   /// Test to see if an element is stored in the tree
-  AvlNode<V>? _getNode(V? element) {
+  _Path<V>? _getPath(V? element) {
     if (element == null) return null;
     var x = _root;
+    _Path<V>? path;
     while (x != null) {
+      path = _Path(x, path);
       var compare = comparator(element, x.object);
       if (compare == 0) {
         // This only means our node matches; we need to search for the exact
         // element. We could have been glutons and used a hashmap to back.
-        return x;
+        return path;
       } else if (compare < 0) {
         x = x.left;
       } else {
@@ -203,7 +205,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
   @override
   bool contains(Object? object) {
-    var x = _getNode(object as V?);
+    var x = _getPath(object as V?);
     return x != null;
   }
 
@@ -344,7 +346,9 @@ class AvlTreeSet<V> extends TreeSet<V> {
 
   @override
   int indexOf(V element) {
-    return toList().indexOf(element);
+    var p = _getPath(element);
+    if (p == null) return -1;
+    return p.index;
   }
 }
 
@@ -653,6 +657,12 @@ class _Path<V> {
     if (node.right == null) return _Path(node, parent);
     return _Path.maximum(node.right!, _Path(node, parent));
   }
+
+  int get leftIndex =>
+      (parent?.leftIndex ?? 0) +
+      (node == parent?.node.right ? ((parent!.node.left?.length ?? 0) + 1) : 0);
+
+  int get index => leftIndex + (node.left?.length ?? 0);
 }
 
 class TreeCursor<V> extends BidirectionalIterator<V> {
