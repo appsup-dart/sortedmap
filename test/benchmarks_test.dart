@@ -97,4 +97,18 @@ Future<void> main() async {
       set.indexOf(e);
     });
   });
+
+  group('first', () {
+    var set = TreeSet()..addAll(data.values);
+    benchmark('of TreeSet', () {
+      set.first;
+    });
+  });
+
+  group('last', () {
+    var set = TreeSet()..addAll(data.values);
+    benchmark('of TreeSet', () {
+      set.last;
+    });
+  });
 }
