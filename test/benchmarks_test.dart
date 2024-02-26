@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:sortedmap/sortedmap.dart';
 import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';
+import 'package:quiver/collection.dart' as quiver;
 
 import 'util/benchmark.dart';
 
@@ -83,15 +84,20 @@ Future<void> main() async {
     });
   });
 
+  var set = TreeSet()..addAll(data.values);
+  var qSet = quiver.TreeSet<int>()..addAll(data.values);
+
   group('elementAt', () {
-    var set = TreeSet()..addAll(data.values);
     benchmark('of TreeSet', () {
       set.elementAt(n ~/ 3);
+    });
+
+    benchmark('of quiver.TreeSet', () {
+      qSet.elementAt(n ~/ 3);
     });
   });
 
   group('indexOf', () {
-    var set = TreeSet()..addAll(data.values);
     var e = set.elementAt(n ~/ 3);
     benchmark('of TreeSet', () {
       set.indexOf(e);
@@ -99,16 +105,22 @@ Future<void> main() async {
   });
 
   group('first', () {
-    var set = TreeSet()..addAll(data.values);
     benchmark('of TreeSet', () {
       set.first;
+    });
+
+    benchmark('of quiver.TreeSet', () {
+      qSet.first;
     });
   });
 
   group('last', () {
-    var set = TreeSet()..addAll(data.values);
     benchmark('of TreeSet', () {
       set.last;
+    });
+
+    benchmark('of quiver.TreeSet', () {
+      qSet.last;
     });
   });
 }
