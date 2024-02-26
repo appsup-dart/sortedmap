@@ -14,8 +14,6 @@ void benchmark(String description, dynamic Function() body,
         {Duration minDuration = const Duration(seconds: 2),
         int minSamples = 5}) =>
     test(description, () async {
-      var sw = Stopwatch();
-
       if (isProfileMode) {
         print('Profiling: $description');
         print('  - open the CPU profiler');
@@ -25,21 +23,20 @@ void benchmark(String description, dynamic Function() body,
         debugger(message: 'START: $description');
       }
       var i = 0;
-      sw.start();
       var sum = 0;
       var sum2 = 0;
 
-      while (sw.elapsed < minDuration || i < minSamples) {
+      var d = minDuration.inMicroseconds;
+      while (sum < d || i < minSamples) {
         i++;
 
-        var s = sw.elapsed.inMicroseconds;
+        var s = Timeline.now;
         await body();
-        var v = sw.elapsed.inMicroseconds - s;
+        var v = Timeline.now - s;
 
         sum += v;
         sum2 += v * v;
       }
-      sw.stop();
 
       // Compute the sample mean (estimate of the population mean).
       var mean = sum / i;
