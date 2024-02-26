@@ -322,7 +322,7 @@ class AvlTreeSet<V> extends TreeSet<V> {
   @override
   BidirectionalIterator<V> fromIterator(V anchor,
       {bool reversed = false, bool inclusive = true}) {
-    return TreeIterator(this,
+    return TreeIterator.atAnchor(this,
         anchor: anchor, reversed: reversed, inclusive: inclusive);
   }
 
@@ -584,54 +584,38 @@ abstract class BidirectionalIterator<E> implements Iterator<E> {
 }
 
 class TreeIterator<V> extends BidirectionalIterator<V> {
-  final AvlTreeSet<V> tree;
+  final TreeCursor<V> _cursor;
+
   final bool reversed;
-  final bool inclusive;
-  final V? anchor;
 
-  TreeCursor<V>? _cursor;
+  TreeIterator(AvlTreeSet<V> tree, {this.reversed = false})
+      : _cursor = TreeCursor(tree)
+          .._state =
+              reversed ? _TreeCursorState.after : _TreeCursorState.before;
 
-  TreeIterator(this.tree,
-      {this.anchor, this.reversed = false, this.inclusive = true});
+  TreeIterator.atAnchor(AvlTreeSet<V> tree,
+      {required V anchor, this.reversed = false, bool inclusive = true})
+      : _cursor = TreeCursor(tree) {
+    _cursor.positionOn(anchor, inclusive: inclusive);
+  }
 
   @override
   V get current {
-    if (_cursor == null) {
+    if (_cursor._state != _TreeCursorState.on) {
       throw StateError(
           'TreeIterator not initialized. Call `moveNext` or `movePrevious` first.');
     }
-    return _cursor!.current;
+    return _cursor.current;
   }
 
   @override
   bool moveNext() {
-    if (_cursor == null) {
-      _cursor = TreeCursor(tree);
-      if (reversed) {
-        _cursor!.positionBefore(anchor, inclusive: inclusive);
-      } else {
-        _cursor!.positionAfter(anchor, inclusive: inclusive);
-      }
-      return _cursor!.isOnNode;
-    }
-    return reversed ? _cursor!.movePrevious() : _cursor!.moveNext();
+    return reversed ? _cursor.movePrevious() : _cursor.moveNext();
   }
 
   @override
   bool movePrevious() {
-    if (_cursor == null) {
-      if (anchor == null) {
-        return false;
-      }
-      _cursor = TreeCursor(tree);
-      if (reversed) {
-        _cursor!.positionAfter(anchor, inclusive: inclusive);
-      } else {
-        _cursor!.positionBefore(anchor, inclusive: inclusive);
-      }
-      return _cursor!.isOnNode;
-    }
-    return reversed ? _cursor!.moveNext() : _cursor!.movePrevious();
+    return reversed ? _cursor.moveNext() : _cursor.movePrevious();
   }
 }
 
@@ -693,75 +677,106 @@ class _Path<V> {
   }
 }
 
+enum _TreeCursorState {
+  /// The cursor is before the element pointed to by path or before the first
+  /// element if path is null.
+  ///
+  /// A call to `moveNext` will move the cursor to the element pointed to by
+  /// path, or to the first element if path is null. A call to `movePrevious`
+  /// will move the cursor to the element that comes before the element pointed
+  /// to by path.
+  before,
+
+  /// The cursor is after the element pointed to by path or after the last
+  /// element if path is null.
+  ///
+  /// A call to `movePrevious` will move the cursor to the element pointed to
+  /// by path, or to the last element if path is null. A call to `moveNext` will
+  /// move the cursor to the element that comes after the element pointed to by
+  /// path.
+  after,
+
+  /// The cursor is on the element pointed to by path.
+  ///
+  /// A call to `current` will return the element pointed to by path.
+  ///
+  /// A call to `moveNext` will move the cursor to the element that comes after
+  /// the element pointed to by path. A call to `movePrevious` will move the
+  /// cursor to the element that comes before the element pointed to by path.
+  on,
+
+  /// The cursor will be on the element pointed to by path after the next call
+  /// to `moveNext` or `movePrevious`.
+  willBeOnAfterFirstMove,
+
+  /// The cursor will be after the element pointed to by path after the next
+  /// call to `moveNext` or before the element pointed to by path after the
+  /// next call to `movePrevious`.
+  willBeOnNextOrPreviousAfterFirstMove,
+}
+
 class TreeCursor<V> extends BidirectionalIterator<V> {
+  final AvlNode<V>? _root;
   final AvlTreeSet<V> tree;
+
   _Path<V>? _path;
-  bool _lastMovedForward = true;
 
-  TreeCursor(this.tree);
+  _TreeCursorState _state = _TreeCursorState.before;
 
-  bool get isOnNode => _path != null;
+  TreeCursor(this.tree) : _root = tree._root;
 
-  void positionAfter(
-    V? anchor, {
-    bool inclusive = true,
-  }) {
-    _lastMovedForward = true;
-    _path = null;
-    if (tree._root == null) return;
-    if (anchor == null) {
-      _path = _Path.minimum(tree._root!);
+  void _position(V anchor, _TreeCursorState state) {
+    if (tree._root != _root) {
+      throw ConcurrentModificationError(tree);
+    }
+
+    if (_root == null) {
+      _state = state;
       return;
     }
-    var x = tree._root;
-    while (x != null) {
-      _path = _Path(x, _path);
-      var compare = tree.comparator(anchor, x.object);
+
+    var p = _path = _Path(_root!, null);
+    while (true) {
+      var compare = tree.comparator(anchor, p.node.object);
       if (compare == 0) {
-        if (!inclusive) moveNext();
+        _state = state;
         return;
       } else if (compare < 0) {
-        x = x.left;
+        if (p.node.left == null) {
+          break;
+        }
+        p = _path = _Path(p.node.left!, p);
       } else {
-        x = x.right;
+        if (p.node.right == null) {
+          break;
+        }
+        p = _path = _Path(p.node.right!, p);
       }
     }
-    x = _path!.node;
-    var compare = tree.comparator(anchor, x.object);
+    var compare = tree.comparator(anchor, p.node.object);
     if (compare > 0) {
-      moveNext();
+      _state = _TreeCursorState.after;
+    } else if (compare < 0) {
+      _state = _TreeCursorState.before;
+    } else {
+      _state = state;
     }
   }
 
-  void positionBefore(
-    V? anchor, {
-    bool inclusive = true,
-  }) {
-    _lastMovedForward = false;
-    _path = null;
-    if (tree._root == null) return;
-    if (anchor == null) {
-      _path = _Path.maximum(tree._root!);
-      return;
-    }
-    var x = tree._root;
-    while (x != null) {
-      _path = _Path(x, _path);
-      var compare = tree.comparator(anchor, x.object);
-      if (compare == 0) {
-        if (!inclusive) movePrevious();
-        return;
-      } else if (compare < 0) {
-        x = x.left;
-      } else {
-        x = x.right;
-      }
-    }
-    x = _path!.node;
-    var compare = tree.comparator(anchor, x.object);
-    if (compare < 0) {
-      movePrevious();
-    }
+  void positionAfter(V anchor) {
+    _position(anchor, _TreeCursorState.after);
+  }
+
+  void positionBefore(V anchor) {
+    _position(anchor, _TreeCursorState.before);
+  }
+
+  void positionOn(V anchor, {bool inclusive = true}) {
+    _position(
+        anchor,
+        inclusive
+            ? _TreeCursorState.willBeOnAfterFirstMove
+            : _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove);
   }
 
   @override
@@ -774,37 +789,56 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
   @override
   bool moveNext() {
-    if (_path == null) {
-      if (tree._root == null) return false;
-      if (_lastMovedForward) {
-        return false;
-      } else {
-        _path = _Path.minimum(tree._root!);
-        return true;
-      }
+    if (tree._root != _root) {
+      throw ConcurrentModificationError(tree);
     }
-    _lastMovedForward = true;
+    switch (_state) {
+      case _TreeCursorState.willBeOnAfterFirstMove:
+        _state = _TreeCursorState.on;
+        return true;
 
-    if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
-    _path = _path!.next();
-    return _path != null;
+      case _TreeCursorState.before:
+        if (_root == null) return false;
+        _path ??= _Path.minimum(_root!);
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.on:
+      case _TreeCursorState.after:
+      case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
+        _path = _path?.next();
+        if (_path == null) {
+          _state = _TreeCursorState.after;
+          return false;
+        }
+        _state = _TreeCursorState.on;
+        return true;
+    }
   }
 
   @override
   bool movePrevious() {
-    if (_path == null) {
-      if (tree._root == null) return false;
-      if (!_lastMovedForward) {
-        return false;
-      } else {
-        _path = _Path.maximum(tree._root!, _path);
-        return true;
-      }
+    if (tree._root != _root) {
+      throw ConcurrentModificationError(tree);
     }
-    _lastMovedForward = false;
-
-    if (_path!.root != tree._root) throw ConcurrentModificationError(tree);
-    _path = _path!.previous();
-    return _path != null;
+    switch (_state) {
+      case _TreeCursorState.willBeOnAfterFirstMove:
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.after:
+        if (_root == null) return false;
+        _path ??= _Path.maximum(_root!);
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.on:
+      case _TreeCursorState.before:
+      case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
+        _path = _path?.previous();
+        if (_path == null) {
+          _state = _TreeCursorState.before;
+          return false;
+        }
+        _state = _TreeCursorState.on;
+        return true;
+    }
   }
 }
