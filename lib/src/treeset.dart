@@ -368,13 +368,21 @@ class AvlNode<V> {
   int get balanceFactor => (right?.height ?? 0) - (left?.height ?? 0);
 
   AvlNode<V> get minimumNode {
-    if (left == null) return this;
-    return left!.minimumNode;
+    var x = this;
+
+    while (x.left != null) {
+      x = x.left!;
+    }
+    return x;
   }
 
   AvlNode<V> get maximumNode {
-    if (right == null) return this;
-    return right!.maximumNode;
+    var x = this;
+
+    while (x.right != null) {
+      x = x.right!;
+    }
+    return x;
   }
 
   AvlNode<V> add(Comparator<V> comparator, V element) {
