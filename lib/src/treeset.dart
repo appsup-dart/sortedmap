@@ -641,6 +641,12 @@ class _Path<V> {
   }
 
   factory _Path.minimum(AvlNode<V> node, [_Path<V>? parent]) {
+    var p = parent;
+    while (node.left != null) {
+      p = _Path(node, p);
+      node = node.left!;
+    }
+    return _Path(node, p);
     if (node.left == null) return _Path(node, parent);
     return _Path.minimum(node.left!, _Path(node, parent));
   }
@@ -801,15 +807,6 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       throw ConcurrentModificationError(tree);
     }
     switch (_state) {
-      case _TreeCursorState.willBeOnAfterFirstMove:
-        _state = _TreeCursorState.on;
-        return true;
-
-      case _TreeCursorState.before:
-        if (_root == null) return false;
-        _path ??= _Path.minimum(_root!);
-        _state = _TreeCursorState.on;
-        return true;
       case _TreeCursorState.on:
       case _TreeCursorState.after:
       case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
@@ -818,6 +815,15 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
           _state = _TreeCursorState.after;
           return false;
         }
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.willBeOnAfterFirstMove:
+        _state = _TreeCursorState.on;
+        return true;
+
+      case _TreeCursorState.before:
+        if (_root == null) return false;
+        _path ??= _Path.minimum(_root!);
         _state = _TreeCursorState.on;
         return true;
     }
@@ -829,14 +835,6 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       throw ConcurrentModificationError(tree);
     }
     switch (_state) {
-      case _TreeCursorState.willBeOnAfterFirstMove:
-        _state = _TreeCursorState.on;
-        return true;
-      case _TreeCursorState.after:
-        if (_root == null) return false;
-        _path ??= _Path.maximum(_root!);
-        _state = _TreeCursorState.on;
-        return true;
       case _TreeCursorState.on:
       case _TreeCursorState.before:
       case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
@@ -845,6 +843,14 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
           _state = _TreeCursorState.before;
           return false;
         }
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.willBeOnAfterFirstMove:
+        _state = _TreeCursorState.on;
+        return true;
+      case _TreeCursorState.after:
+        if (_root == null) return false;
+        _path ??= _Path.maximum(_root!);
         _state = _TreeCursorState.on;
         return true;
     }
