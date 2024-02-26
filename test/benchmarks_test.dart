@@ -12,6 +12,9 @@ Future<void> main() async {
 
   final data = {for (var i = 0; i < n; i++) 'key$i': i.hashCode};
 
+  var set = TreeSet()..addAll(data.values);
+  var qSet = quiver.TreeSet<int>()..addAll(data.values);
+
   group('completeInterval', () {
     late FilteredMap map;
     late FilteredMapView view;
@@ -46,6 +49,14 @@ Future<void> main() async {
     benchmark('of FilteredMapView', () async {
       view.length;
     });
+
+    benchmark('of TreeSet', () async {
+      set.length;
+    });
+
+    benchmark('of quiver.TreeSet', () async {
+      qSet.length;
+    });
   });
 
   group('forEach', () {
@@ -64,12 +75,21 @@ Future<void> main() async {
     benchmark('of FilteredMapView', () async {
       view.forEach((key, value) {});
     });
+
+    benchmark('of TreeSet', () async {
+      set.forEach((e) {});
+    });
+
+    benchmark('of quiver.TreeSet', () async {
+      qSet.forEach((e) {});
+    });
   });
 
   group('addAll', () {
     var map = SortedMap.from(data, const Ordering.byValue());
     var view = map.filteredMapView(
         start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
+    var values = data.values.toList();
 
     benchmark('to empty SortedMap', () async {
       SortedMap(const Ordering.byValue()).addAll(data);
@@ -82,10 +102,19 @@ Future<void> main() async {
     benchmark('to empty SortedMap from FilteredMapView', () async {
       SortedMap(const Ordering.byValue()).addAll(view);
     });
-  });
 
-  var set = TreeSet()..addAll(data.values);
-  var qSet = quiver.TreeSet<int>()..addAll(data.values);
+    benchmark('to empty TreeSet', () async {
+      TreeSet().addAll(values);
+    });
+
+    benchmark('to empty TreeSet from TreeSet', () async {
+      TreeSet().addAll(set);
+    });
+
+    benchmark('to empty quiver.TreeSet', () async {
+      quiver.TreeSet().addAll(values);
+    });
+  });
 
   group('elementAt', () {
     benchmark('of TreeSet', () {
