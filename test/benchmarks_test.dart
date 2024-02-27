@@ -14,6 +14,12 @@ Future<void> main() async {
 
   var set = TreeSet()..addAll(data.values);
   var qSet = quiver.TreeSet<int>()..addAll(data.values);
+  var setView = TreeSetView(
+      baseMap: set as AvlTreeSet,
+      startAt: set.elementAt(n ~/ 4),
+      startInclusive: false,
+      endAt: set.elementAt(3 * n ~/ 4),
+      endInclusive: true);
 
   group('completeInterval', () {
     late FilteredMap map;
@@ -121,6 +127,10 @@ Future<void> main() async {
       set.elementAt(n ~/ 3);
     });
 
+    benchmark('of TreeSetView', () {
+      setView.elementAt(n ~/ 3);
+    });
+
     benchmark('of quiver.TreeSet', () {
       qSet.elementAt(n ~/ 3);
     });
@@ -131,11 +141,18 @@ Future<void> main() async {
     benchmark('of TreeSet', () {
       set.indexOf(e);
     });
+    benchmark('of TreeSetView', () {
+      setView.indexOf(e);
+    });
   });
 
   group('first', () {
     benchmark('of TreeSet', () {
       set.first;
+    });
+
+    benchmark('of TreeSetView', () {
+      setView.first;
     });
 
     benchmark('of quiver.TreeSet', () {
@@ -146,6 +163,10 @@ Future<void> main() async {
   group('last', () {
     benchmark('of TreeSet', () {
       set.last;
+    });
+
+    benchmark('of TreeSetView', () {
+      setView.last;
     });
 
     benchmark('of quiver.TreeSet', () {

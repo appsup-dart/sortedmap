@@ -1,19 +1,17 @@
 import 'dart:collection';
 import 'dart:math';
 
-abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
-  final Comparator<V> comparator;
-
+abstract class TreeSet<V> implements Set<V> {
   /// Create a [TreeSet] with an ordering defined by [comparator] or the
   /// default `(a, b) => a.compareTo(b)`.
   factory TreeSet({Comparator<V>? comparator}) {
     return AvlTreeSet(comparator: comparator ?? _defaultCompare);
   }
 
-  TreeSet._(this.comparator);
-
   static int _defaultCompare(dynamic a, dynamic b) =>
       (a as Comparable).compareTo(b);
+
+  Comparator<V> get comparator;
 
   BidirectionalIterator<V> fromIterator(V anchor,
       {bool reversed = false, bool inclusive = true});
@@ -23,19 +21,169 @@ abstract class TreeSet<V> extends SetMixin<V> implements Set<V> {
 
   BidirectionalIterator<V> get reverseIterator;
 
+  int indexOf(V element);
+}
+
+abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
+  _Path<V>? get _first;
+
+  _Path<V>? get _last;
+
+  AvlTreeSet<V> get _avlTreeSet;
+
   @override
   bool get isEmpty => length == 0;
 
   @override
   TreeSet<V> toSet() => TreeSet(comparator: comparator)..addAll(this);
 
-  int indexOf(V element);
+  @override
+  BidirectionalIterator<V> get iterator => TreeIterator(this);
+
+  @override
+  BidirectionalIterator<V> get reverseIterator =>
+      TreeIterator(this, reversed: true);
+
+  @override
+  BidirectionalIterator<V> fromIterator(V anchor,
+      {bool reversed = false, bool inclusive = true}) {
+    return TreeIterator.atAnchor(this,
+        anchor: anchor, reversed: reversed, inclusive: inclusive);
+  }
 }
 
-class AvlTreeSet<V> extends TreeSet<V> {
+class TreeSetView<V> extends _BaseTreeSet<V> {
+  final AvlTreeSet<V> baseMap;
+  final V? startAt;
+  final bool startInclusive;
+  final V? endAt;
+  final bool endInclusive;
+
+  final int? limit;
+  final bool limitFromStart;
+
+  TreeSetView(
+      {required this.baseMap,
+      this.startAt,
+      this.startInclusive = true,
+      this.endAt,
+      this.endInclusive = true,
+      this.limit,
+      this.limitFromStart = true});
+
+  @override
+  bool add(V value) {
+    throw UnsupportedError('add is not supported on a TreeSetView');
+  }
+
+  @override
+  bool contains(Object? element) {
+    if (element is! V) return false;
+    var index = indexOf(element);
+    return index != -1;
+  }
+
+  @override
+  _Path<V>? get _first {
+    if (limit == 0) return null;
+    if (baseMap._root == null) return null;
+    var v = startAt == null
+        ? _Path.minimum(baseMap._root!)
+        : baseMap._firstAfter(startAt!, startInclusive);
+    if (v == null) return null;
+
+    var c = endAt == null ? 1 : comparator(endAt!, v.node.object);
+    if (c < 0 || (c == 0 && !endInclusive)) return null;
+
+    if (limit != null && !limitFromStart) {
+      var indexFromEnd = _endIndex! - v.index;
+      if (indexFromEnd < limit!) return null;
+    }
+    return v;
+  }
+
+  @override
+  _Path<V>? get _last {
+    if (limit == 0) return null;
+    if (baseMap._root == null) return null;
+    var v = endAt == null
+        ? _Path.maximum(baseMap._root!)
+        : baseMap._lastBefore(endAt!, endInclusive);
+    if (v == null) return null;
+
+    var c = startAt == null ? -1 : comparator(startAt!, v.node.object);
+    if (c > 0 || (c == 0 && !startInclusive)) return null;
+
+    if (limit != null && limitFromStart) {
+      var indexFromStart = v.index - _startIndex!;
+      if (indexFromStart < limit!) return null;
+    }
+    return v;
+  }
+
+  bool _limitsContain(V element) {
+    if (startAt != null) {
+      var compare = baseMap.comparator(startAt!, element);
+      if (compare > 0 || (compare == 0 && !startInclusive)) return false;
+    }
+    if (endAt != null) {
+      var compare = baseMap.comparator(endAt!, element);
+      if (compare < 0 || (compare == 0 && !endInclusive)) return false;
+    }
+    return true;
+  }
+
+  @override
+  int indexOf(V element) {
+    if (!_limitsContain(element)) return -1;
+
+    var p = baseMap._getPath(element);
+    if (p == null) return -1;
+    if (!limitFromStart && limit != null) {
+      var indexFromEnd = _endIndex! - p.index;
+      if (indexFromEnd < limit!) return -1;
+    }
+    var index = p.index - _startIndex!;
+    return limit == null || index < limit! ? index : -1;
+  }
+
+  int? get _endIndex => _last?.index;
+  int? get _startIndex => _first?.index;
+
+  @override
+  int get length {
+    var a = _startIndex;
+    if (a == null) return -1;
+    return _endIndex! - a + 1;
+  }
+
+  @override
+  V? lookup(Object? element) {
+    if (element is! V) return null;
+    var i = indexOf(element);
+    if (i == -1) return null;
+    return elementAt(i);
+  }
+
+  @override
+  bool remove(Object? value) {
+    throw UnsupportedError('remove is not supported on a TreeSetView');
+  }
+
+  @override
+  Comparator<V> get comparator => baseMap.comparator;
+
+  @override
+  AvlTreeSet<V> get _avlTreeSet => baseMap;
+}
+
+class AvlTreeSet<V> extends _BaseTreeSet<V> {
+  @override
+  final Comparator<V> comparator;
+
   AvlNode<V>? _root;
 
-  AvlTreeSet({required Comparator<V> comparator}) : super._(comparator);
+  AvlTreeSet({required this.comparator});
 
   @override
   int get length => _root?.length ?? 0;
@@ -198,13 +346,6 @@ class AvlTreeSet<V> extends TreeSet<V> {
   }
 
   @override
-  BidirectionalIterator<V> get iterator => TreeIterator(this);
-
-  @override
-  BidirectionalIterator<V> get reverseIterator =>
-      TreeIterator(this, reversed: true);
-
-  @override
   bool contains(Object? object) {
     var x = _getPath(object as V?);
     return x != null;
@@ -320,13 +461,6 @@ class AvlTreeSet<V> extends TreeSet<V> {
     return set;
   }
 
-  @override
-  BidirectionalIterator<V> fromIterator(V anchor,
-      {bool reversed = false, bool inclusive = true}) {
-    return TreeIterator.atAnchor(this,
-        anchor: anchor, reversed: reversed, inclusive: inclusive);
-  }
-
   int countUntil(V v, {bool inclusive = true}) {
     var x = _root;
     var i = 0;
@@ -351,6 +485,43 @@ class AvlTreeSet<V> extends TreeSet<V> {
     if (p == null) return -1;
     return p.index;
   }
+
+  _Path<V>? _firstAfter(V anchor, bool inclusive) {
+    var it = TreeCursor(this);
+    if (inclusive) {
+      it
+        ..positionOn(anchor)
+        ..moveNext();
+    } else {
+      it
+        ..positionAfter(anchor)
+        ..moveNext();
+    }
+    return it._path;
+  }
+
+  _Path<V>? _lastBefore(V anchor, bool inclusive) {
+    var it = TreeCursor(this);
+    if (inclusive) {
+      it
+        ..positionOn(anchor)
+        ..movePrevious();
+    } else {
+      it
+        ..positionBefore(anchor)
+        ..movePrevious();
+    }
+    return it._path;
+  }
+
+  @override
+  AvlTreeSet<V> get _avlTreeSet => this;
+
+  @override
+  _Path<V>? get _first => _root == null ? null : _Path.minimum(_root!);
+
+  @override
+  _Path<V>? get _last => _root == null ? null : _Path.maximum(_root!);
 }
 
 class AvlNode<V> {
@@ -597,14 +768,18 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
 
   final bool reversed;
 
-  TreeIterator(AvlTreeSet<V> tree, {this.reversed = false})
-      : _cursor = TreeCursor(tree)
-          .._state =
-              reversed ? _TreeCursorState.after : _TreeCursorState.before;
+  TreeIterator._(this._cursor, {this.reversed = false});
 
-  TreeIterator.atAnchor(AvlTreeSet<V> tree,
+  TreeIterator(_BaseTreeSet<V> tree, {this.reversed = false})
+      : _cursor =
+            TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last)
+              .._state =
+                  reversed ? _TreeCursorState.after : _TreeCursorState.before;
+
+  TreeIterator.atAnchor(_BaseTreeSet<V> tree,
       {required V anchor, this.reversed = false, bool inclusive = true})
-      : _cursor = TreeCursor(tree) {
+      : _cursor =
+            TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last) {
     _cursor.positionOn(anchor, inclusive: inclusive);
   }
 
@@ -642,12 +817,6 @@ class _Path<V> {
   }
 
   factory _Path.minimum(AvlNode<V> node, [_Path<V>? parent]) {
-    var p = parent;
-    while (node.left != null) {
-      p = _Path(node, p);
-      node = node.left!;
-    }
-    return _Path(node, p);
     if (node.left == null) return _Path(node, parent);
     return _Path.minimum(node.left!, _Path(node, parent));
   }
@@ -738,15 +907,37 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
   _TreeCursorState _state = _TreeCursorState.before;
 
-  TreeCursor(this.tree) : _root = tree._root;
+  final _Path<V>? _first;
+
+  final _Path<V>? _last;
+
+  TreeCursor(this.tree, {_Path<V>? first, _Path<V>? last})
+      : _root = tree._root,
+        _first =
+            first ?? (tree._root == null ? null : _Path.minimum(tree._root!)),
+        _last =
+            last ?? (tree._root == null ? null : _Path.maximum(tree._root!));
 
   void _position(V anchor, _TreeCursorState state) {
     if (tree._root != _root) {
       throw ConcurrentModificationError(tree);
     }
 
-    if (_root == null) {
+    if (_root == null || _first == null || _last == null) {
       _state = state;
+      return;
+    }
+
+    var compare = tree.comparator(anchor, _first!.node.object);
+    if (compare < 0) {
+      _state = _TreeCursorState.before;
+      _path = null;
+      return;
+    }
+    compare = tree.comparator(anchor, _last!.node.object);
+    if (compare > 0) {
+      _state = _TreeCursorState.after;
+      _path = null;
       return;
     }
 
@@ -768,7 +959,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
         p = _path = _Path(p.node.right!, p);
       }
     }
-    var compare = tree.comparator(anchor, p.node.object);
+    compare = tree.comparator(anchor, p.node.object);
     if (compare > 0) {
       _state = _TreeCursorState.after;
     } else if (compare < 0) {
@@ -811,7 +1002,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       case _TreeCursorState.on:
       case _TreeCursorState.after:
       case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
-        _path = _path?.next();
+        _path = _last?.node == _path?.node ? null : _path?.next();
         if (_path == null) {
           _state = _TreeCursorState.after;
           return false;
@@ -824,7 +1015,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
       case _TreeCursorState.before:
         if (_root == null) return false;
-        _path ??= _Path.minimum(_root!);
+        _path ??= _first;
         _state = _TreeCursorState.on;
         return true;
     }
@@ -839,7 +1030,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
       case _TreeCursorState.on:
       case _TreeCursorState.before:
       case _TreeCursorState.willBeOnNextOrPreviousAfterFirstMove:
-        _path = _path?.previous();
+        _path = _first?.node == _path?.node ? null : _path?.previous();
         if (_path == null) {
           _state = _TreeCursorState.before;
           return false;
@@ -851,7 +1042,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
         return true;
       case _TreeCursorState.after:
         if (_root == null) return false;
-        _path ??= _Path.maximum(_root!);
+        _path ??= _last;
         _state = _TreeCursorState.on;
         return true;
     }
