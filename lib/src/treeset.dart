@@ -50,6 +50,30 @@ abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
     return TreeIterator.atAnchor(this,
         anchor: anchor, reversed: reversed, inclusive: inclusive);
   }
+
+  @override
+  V get first {
+    var f = _first;
+    if (f == null) throw StateError('No element');
+    return f.node.object;
+  }
+
+  @override
+  V get last {
+    var f = _last;
+    if (f == null) throw StateError('No element');
+    return f.node.object;
+  }
+
+  @override
+  V elementAt(int index) {
+    RangeError.checkNotNegative(index, 'index');
+    if (index >= length) {
+      throw IndexError.withLength(index, length,
+          indexable: this, name: 'index');
+    }
+    return _avlTreeSet._root!.elementAt(index + _first!.index);
+  }
 }
 
 class TreeSetView<V> extends _BaseTreeSet<V> {
