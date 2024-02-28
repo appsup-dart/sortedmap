@@ -22,6 +22,11 @@ abstract class TreeSet<V> implements Set<V> {
   BidirectionalIterator<V> get reverseIterator;
 
   int indexOf(V element);
+
+  @override
+  TreeSet<V> toSet();
+
+  TreeSet<V> get reversed;
 }
 
 abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
@@ -72,8 +77,68 @@ abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _avlTreeSet._root!.elementAt(index + _first!.index);
+    return _avlTreeSet._root!
+        .elementAt(index + _first!.index, null)
+        .node
+        .object;
   }
+
+  @override
+  TreeSet<V> get reversed => ReversedTreeSet(this);
+}
+
+class ReversedTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
+  final TreeSet<V> baseMap;
+
+  ReversedTreeSet(this.baseMap);
+
+  @override
+  bool add(V value) {
+    throw UnsupportedError('add is not supported on a ReversedTreeSet');
+  }
+
+  @override
+  bool contains(Object? element) => baseMap.contains(element);
+
+  @override
+  bool remove(Object? value) {
+    throw UnsupportedError('remove is not supported on a ReversedTreeSet');
+  }
+
+  @override
+  int indexOf(V element) {
+    var index = baseMap.indexOf(element);
+    if (index == -1) return -1;
+    return baseMap.length - index - 1;
+  }
+
+  @override
+  int get length => baseMap.length;
+
+  @override
+  V? lookup(Object? element) => baseMap.lookup(element);
+
+  @override
+  Comparator<V> get comparator => baseMap.comparator;
+
+  @override
+  BidirectionalIterator<V> fromIterator(V anchor,
+      {bool reversed = false, bool inclusive = true}) {
+    return baseMap.fromIterator(anchor,
+        reversed: !reversed, inclusive: inclusive);
+  }
+
+  @override
+  BidirectionalIterator<V> get iterator => baseMap.reverseIterator;
+
+  @override
+  BidirectionalIterator<V> get reverseIterator => baseMap.iterator;
+
+  @override
+  TreeSet<V> toSet() => ReversedTreeSet(baseMap.toSet());
+
+  @override
+  TreeSet<V> get reversed => baseMap;
 }
 
 class TreeSetView<V> extends _BaseTreeSet<V> {
@@ -121,7 +186,9 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
 
     if (limit != null && !limitFromStart) {
       var indexFromEnd = _endIndex! - v.index;
-      if (indexFromEnd < limit!) return null;
+      if (indexFromEnd >= limit!) {
+        return baseMap._root!.elementAt(_endIndex! - limit! + 1, v);
+      }
     }
     return v;
   }
@@ -140,7 +207,9 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
 
     if (limit != null && limitFromStart) {
       var indexFromStart = v.index - _startIndex!;
-      if (indexFromStart < limit!) return null;
+      if (indexFromStart >= limit!) {
+        return baseMap._root!.elementAt(_startIndex! + limit! - 1, v);
+      }
     }
     return v;
   }
@@ -219,7 +288,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _root!.elementAt(index);
+    return _root!.elementAt(index, null).node.object;
   }
 
   @override
@@ -766,15 +835,15 @@ class AvlNode<V> {
     return this;
   }
 
-  V elementAt(int index) {
+  _Path<V> elementAt(int index, _Path<V>? parent) {
     var l = left?.length ?? 0;
     if (index < l) {
-      return left!.elementAt(index);
+      return left!.elementAt(index, _Path(this, parent));
     }
     if (index == l) {
-      return this.object;
+      return _Path(this, parent);
     }
-    return right!.elementAt(index - l - 1);
+    return right!.elementAt(index - l - 1, _Path(this, parent));
   }
 }
 

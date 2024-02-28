@@ -86,10 +86,25 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 
   /// Gets the keys within the desired bounds and limit.
   Iterable<K> subkeys(
+          {required Pair start,
+          required Pair end,
+          int? limit,
+          bool reversed = false}) =>
+      subentries(start: start, end: end, limit: limit, reversed: reversed)
+          .map((v) => v.key);
+
+  /// Gets the entries within the desired bounds and limit.
+  Iterable<MapEntry<K, V>> subentries(
       {required Pair start,
       required Pair end,
       int? limit,
       bool reversed = false});
+
+  @override
+  Iterable<K> get keys => entries.map<K>((p) => p.key);
+
+  @override
+  Iterable<V> get values => entries.map<V>((p) => p.value);
 
   /// Creates a filtered view of this map.
   FilteredMapView<K, V> filteredMapView(
@@ -168,12 +183,6 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   bool containsKey(Object? key) => _map.containsKey(key);
-
-  @override
-  Iterable<K> get keys => _sortedEntries.map<K>((p) => p.key);
-
-  @override
-  Iterable<V> get values => _sortedEntries.map<V>((p) => p.value);
 
   @override
   Iterable<MapEntry<K, V>> get entries => _sortedEntries;
@@ -268,26 +277,20 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   }
 
   @override
-  Iterable<K> subkeys(
+  Iterable<MapEntry<K, V>> subentries(
       {required Pair start,
       required Pair end,
       int? limit,
       bool reversed = false}) {
-    var it = _subkeys(start, end, limit, reversed);
-    if (reversed) return it.toList().reversed;
-    return it;
-  }
-
-  Iterable<K> _subkeys(Pair start, Pair end, int? limit, bool reversed) sync* {
-    var from = reversed ? end : start;
-    var it = _sortedEntries.fromIterator(_MapEntryWithIndex.indexOnly(from),
-        reversed: reversed);
-    var count = 0;
-    while (it.moveNext() && (limit == null || count++ < limit)) {
-      var cmp = Comparable.compare(it.current.index, reversed ? start : end);
-      if ((reversed && cmp < 0) || (!reversed && cmp > 0)) return;
-      yield it.current.key;
-    }
+    var v = TreeSetView<_MapEntryWithIndex<K, V>>(
+        baseMap: _sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>,
+        startAt: _MapEntryWithIndex.indexOnly(start),
+        startInclusive: true,
+        endAt: _MapEntryWithIndex.indexOnly(end),
+        endInclusive: true,
+        limit: limit,
+        limitFromStart: !reversed);
+    return v;
   }
 }
 

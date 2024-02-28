@@ -87,8 +87,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   V? operator [](Object? key) {
-    var k = _entryForKey(key)?.key;
-    return k != null ? _baseMap[k] : null;
+    var e = _entryForKey(key);
+    return e?.value;
   }
 
   @override
@@ -102,9 +102,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   bool _containsPair(Pair pair) => _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
-    var keys = this.keys;
-    return KeyValueInterval.fromPairs(_entryForKey(keys.first, false)!.index,
-        _entryForKey(keys.last, false)!.index);
+    return KeyValueInterval.fromPairs(ordering.indexFromMapEntry(entries.first),
+        ordering.indexFromMapEntry(entries.last));
   }
 
   @override
@@ -125,6 +124,16 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       limit: filter.limit,
       reversed: filter.reversed);
 
+  @override
+  Iterable<V> get values => keys.map((k) => _baseMap[k]!);
+
+  @override
+  Iterable<MapEntry<K, V>> get entries => _baseMap.subentries(
+      start: filter.validInterval.start,
+      end: filter.validInterval.end,
+      limit: filter.limit,
+      reversed: filter.reversed);
+
   /// Returns true when the [completeInterval] is within the complete interval
   /// of the base map.
   bool get isComplete {
@@ -136,15 +145,6 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Ordering get ordering => _baseMap.ordering;
-
-  @override
-  Iterable<K> subkeys(
-      {required Pair start,
-      required Pair end,
-      int? limit,
-      bool reversed = false}) {
-    throw UnimplementedError();
-  }
 
   @override
   int get length {
@@ -160,5 +160,14 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       return filter.limit == null ? total : min(total, filter.limit!);
     }
     return super.length;
+  }
+
+  @override
+  Iterable<MapEntry<K, V>> subentries(
+      {required Pair start,
+      required Pair end,
+      int? limit,
+      bool reversed = false}) {
+    throw UnimplementedError();
   }
 }
