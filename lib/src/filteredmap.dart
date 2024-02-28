@@ -17,8 +17,9 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
   KeyValueInterval get completeInterval {
+    var entries = this.entries;
     var filterInterval = filter.validInterval;
-    if (filter.limit == null || length < filter.limit!) {
+    if (filter.limit == null || entries.length < filter.limit!) {
       return filterInterval;
     }
     if (filter.limit == 0) return KeyValueInterval();
@@ -148,18 +149,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   int get length {
-    var b = _baseMap;
-    if (b is _SortedMap<K, V>) {
-      var e = (b._sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>)
-          .countUntil(_MapEntryWithIndex.indexOnly(filter.validInterval.end),
-              inclusive: true);
-      var s = (b._sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>)
-          .countUntil(_MapEntryWithIndex.indexOnly(filter.validInterval.start),
-              inclusive: false);
-      var total = e - s;
-      return filter.limit == null ? total : min(total, filter.limit!);
-    }
-    return super.length;
+    return entries.length;
   }
 
   @override
