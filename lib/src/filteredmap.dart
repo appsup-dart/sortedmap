@@ -40,14 +40,14 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   final Filter<K, V> filter;
 
   _FilteredMap._(Filter<K, V> filter,
-      TreeSet<_MapEntryWithIndex<K, V>>? sortedEntries, TreeMap<K, V>? map)
+      AvlTreeSet<_MapEntryWithIndex<K, V>>? sortedEntries, TreeMap<K, V>? map)
       : filter = filter,
         super._(filter.ordering, sortedEntries, map);
 
   @override
   FilteredMap<K, V> clone() => _FilteredMap<K, V>._(
       filter,
-      TreeSet(comparator: _SortedMap._compare)..addAll(_sortedEntries),
+      AvlTreeSet(comparator: _SortedMap._compare)..addAll(_sortedEntries),
       TreeMap.from(_map));
 
   @override
@@ -69,13 +69,15 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
 /// A filtered view on a [SortedMap] or [FilteredMap].
 class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
     with SortedMap<K, V>, FilteredMap<K, V>, UnmodifiableSortedMap<K, V> {
-  final SortedMap<K, V> _baseMap;
+  final _SortedMap<K, V> _baseMap;
 
   @override
   final Filter<K, V> filter;
 
+  
+
   /// Creates a FilteredMapView from a SortedMap.
-  FilteredMapView(this._baseMap,
+  FilteredMapView._(this._baseMap,
       {required Pair start,
       required Pair end,
       int? limit,
@@ -119,21 +121,26 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
       _entryForKey(_baseMap.lastKeyBefore(key, orElse: orElse))!.key;
 
   @override
-  Iterable<K> get keys => _baseMap.subkeys(
-      start: filter.validInterval.start,
-      end: filter.validInterval.end,
-      limit: filter.limit,
-      reversed: filter.reversed);
+  Iterable<K> get keys => entries.map((e) => e.key);
 
   @override
-  Iterable<V> get values => keys.map((k) => _baseMap[k]!);
+  Iterable<V> get values => entries.map((e) => e.value);
 
+  MapEntry<Object?, Iterable<MapEntry<K, V>>>? _entriesCache;
   @override
-  Iterable<MapEntry<K, V>> get entries => _baseMap.subentries(
-      start: filter.validInterval.start,
-      end: filter.validInterval.end,
-      limit: filter.limit,
-      reversed: filter.reversed);
+  Iterable<MapEntry<K, V>> get entries {
+    if (_entriesCache == null ||
+        _entriesCache!.key != _baseMap._sortedEntries) {
+      _entriesCache = MapEntry(
+          _baseMap._sortedEntries,
+          _baseMap.subentries(
+              start: filter.validInterval.start,
+              end: filter.validInterval.end,
+              limit: filter.limit,
+              reversed: filter.reversed));
+    }
+    return _entriesCache!.value;
+  }
 
   /// Returns true when the [completeInterval] is within the complete interval
   /// of the base map.
@@ -154,6 +161,15 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   Iterable<MapEntry<K, V>> subentries(
+      {required Pair start,
+      required Pair end,
+      int? limit,
+      bool reversed = false}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  FilteredMapView<K, V> filteredMapView(
       {required Pair start,
       required Pair end,
       int? limit,

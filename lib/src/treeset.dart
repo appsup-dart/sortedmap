@@ -1,6 +1,10 @@
 import 'dart:collection';
 import 'dart:math';
 
+mixin HasCacheState {
+  Object get cacheState;
+}
+
 abstract class TreeSet<V> implements Set<V> {
   /// Create a [TreeSet] with an ordering defined by [comparator] or the
   /// default `(a, b) => a.compareTo(b)`.

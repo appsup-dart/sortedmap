@@ -28,11 +28,14 @@ Future<void> main() async {
       map = SortedMap(const Ordering.byValue()).filteredMap(
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
-      view = map.filteredMapView(
-          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMap', () async {
       map.completeInterval;
+    });
+
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMapView', () async {
       view.completeInterval;
@@ -46,11 +49,13 @@ Future<void> main() async {
       map = SortedMap(const Ordering.byValue()).filteredMap(
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
-      view = map.filteredMapView(
-          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMap', () async {
       map.length;
+    });
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMapView', () async {
       view.length;
@@ -72,11 +77,13 @@ Future<void> main() async {
       map = SortedMap(const Ordering.byValue()).filteredMap(
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
-      view = map.filteredMapView(
-          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMap', () async {
       map.forEach((key, value) {});
+    });
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
     benchmark('of FilteredMapView', () async {
       view.forEach((key, value) {});
@@ -93,10 +100,13 @@ Future<void> main() async {
 
   group('addAll', () {
     var map = SortedMap.from(data, const Ordering.byValue());
-    var view = map.filteredMapView(
-        start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     var values = data.values.toList();
 
+    late FilteredMapView view;
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
+    });
     benchmark('to empty SortedMap', () async {
       SortedMap(const Ordering.byValue()).addAll(data);
     });

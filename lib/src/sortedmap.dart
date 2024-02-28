@@ -108,12 +108,10 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 
   /// Creates a filtered view of this map.
   FilteredMapView<K, V> filteredMapView(
-          {required Pair start,
-          required Pair end,
-          int? limit,
-          bool reversed = false}) =>
-      FilteredMapView(this,
-          start: start, end: end, limit: limit, reversed: reversed);
+      {required Pair start,
+      required Pair end,
+      int? limit,
+      bool reversed = false});
 
   /// Creates a filtered map based on this map.
   FilteredMap<K, V> filteredMap(
@@ -130,6 +128,13 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 
   _MapEntryWithIndex<K, V>? _entryForKey(K? key) =>
       containsKey(key) ? ordering.mapEntry(key!, this[key] as V) : null;
+
+  @override
+  void forEach(void Function(K key, V value) action) {
+    for (var e in entries) {
+      action(e.key, e.value);
+    }
+  }
 }
 
 class _MapEntryWithIndex<K extends Comparable, V> implements MapEntry<K, V> {
@@ -170,15 +175,15 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Ordering ordering;
 
-  final TreeSet<_MapEntryWithIndex<K, V>> _sortedEntries;
+  final AvlTreeSet<_MapEntryWithIndex<K, V>> _sortedEntries;
   final TreeMap<K, V> _map;
 
   static int _compare(_MapEntryWithIndex a, _MapEntryWithIndex b) =>
       Comparable.compare(a.index, b.index);
 
-  _SortedMap._(this.ordering, TreeSet<_MapEntryWithIndex<K, V>>? sortedPairs,
+  _SortedMap._(this.ordering, AvlTreeSet<_MapEntryWithIndex<K, V>>? sortedPairs,
       TreeMap<K, V>? map)
-      : _sortedEntries = sortedPairs ?? TreeSet(comparator: _compare),
+      : _sortedEntries = sortedPairs ?? AvlTreeSet(comparator: _compare),
         _map = map ?? TreeMap();
 
   @override
@@ -190,12 +195,20 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   SortedMap<K, V> clone() => _SortedMap<K, V>._(
       ordering,
-      TreeSet(comparator: _compare)..addAll(_sortedEntries),
+      AvlTreeSet(comparator: _compare)..addAll(_sortedEntries),
       TreeMap<K, V>.from(_map));
 
   @override
   V? operator [](Object? key) => _map[key as K];
 
+  @override
+  FilteredMapView<K, V> filteredMapView(
+          {required Pair start,
+          required Pair end,
+          int? limit,
+          bool reversed = false}) =>
+      FilteredMapView._(this,
+          start: start, end: end, limit: limit, reversed: reversed);
   @override
   void addAll(Map<K, V> other) {
     if (other is _SortedMap<K, V> &&
@@ -213,13 +226,6 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     var entry = _entryForKey(key);
     if (entry != null) _sortedEntries.remove(entry);
     _addEntry(key, value);
-  }
-
-  @override
-  void forEach(void Function(K key, V value) action) {
-    for (var e in entries) {
-      action(e.key, e.value);
-    }
   }
 
   @override
