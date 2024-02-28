@@ -836,14 +836,20 @@ class AvlNode<V> {
   }
 
   _Path<V> elementAt(int index, _Path<V>? parent) {
-    var l = left?.length ?? 0;
-    if (index < l) {
-      return left!.elementAt(index, _Path(this, parent));
+    var x = this;
+    var l = x.left?.length ?? 0;
+    var v = _Path(this, parent);
+    while (index != l) {
+      if (index < l) {
+        x = x.left!;
+      } else {
+        x = x.right!;
+        index -= l + 1;
+      }
+      v = _Path(x, v);
+      l = x.left?.length ?? 0;
     }
-    if (index == l) {
-      return _Path(this, parent);
-    }
-    return right!.elementAt(index - l - 1, _Path(this, parent));
+    return v;
   }
 }
 
