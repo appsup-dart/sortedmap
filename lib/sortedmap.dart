@@ -13,7 +13,6 @@
 library sortedmap;
 
 import 'dart:collection';
-import 'dart:math';
 import 'package:quiver/core.dart' as quiver;
 import 'src/treeset.dart';
 import 'src/treemap.dart';

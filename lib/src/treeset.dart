@@ -927,8 +927,6 @@ class TreeIterator<V> extends BidirectionalIterator<V> {
 
   final bool reversed;
 
-  TreeIterator._(this._cursor, {this.reversed = false});
-
   TreeIterator(_BaseTreeSet<V> tree, {this.reversed = false})
       : _cursor =
             TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last)

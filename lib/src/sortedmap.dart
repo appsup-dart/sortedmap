@@ -289,7 +289,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
       int? limit,
       bool reversed = false}) {
     var v = TreeSetView<_MapEntryWithIndex<K, V>>(
-        baseMap: _sortedEntries as AvlTreeSet<_MapEntryWithIndex<K, V>>,
+        baseMap: _sortedEntries,
         startAt: _MapEntryWithIndex.indexOnly(start),
         startInclusive: true,
         endAt: _MapEntryWithIndex.indexOnly(end),
