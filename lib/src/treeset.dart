@@ -916,20 +916,32 @@ class _Path<V> {
   }
 
   factory _Path.minimum(AvlNode<V> node, [_Path<V>? parent]) {
-    if (node.left == null) return _Path(node, parent);
-    return _Path.minimum(node.left!, _Path(node, parent));
+    var p = _Path(node, parent);
+    while (p.node.left != null) {
+      p = _Path(p.node.left!, p);
+    }
+    return p;
   }
 
   factory _Path.maximum(AvlNode<V> node, [_Path<V>? parent]) {
-    if (node.right == null) return _Path(node, parent);
-    return _Path.maximum(node.right!, _Path(node, parent));
+    var p = _Path(node, parent);
+    while (p.node.right != null) {
+      p = _Path(p.node.right!, p);
+    }
+    return p;
   }
 
-  int get leftIndex =>
-      (parent?.leftIndex ?? 0) +
-      (node == parent?.node.right ? ((parent!.node.left?.length ?? 0) + 1) : 0);
-
-  int get index => leftIndex + (node.left?.length ?? 0);
+  int get index {
+    var v = node.left?.length ?? 0;
+    var p = this;
+    while (p.parent != null) {
+      if (p.node == p.parent!.node.right) {
+        v += (p.parent!.node.left?.length ?? 0) + 1;
+      }
+      p = p.parent!;
+    }
+    return v;
+  }
 
   _Path<V>? next() {
     var current = node;
