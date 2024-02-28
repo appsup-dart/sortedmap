@@ -141,6 +141,61 @@ class ReversedTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
   TreeSet<V> get reversed => baseMap;
 }
 
+class _TreeSetViewCache<V> {
+  final AvlNode<V>? node;
+  final TreeSetView<V> view;
+
+  _TreeSetViewCache(this.view) : node = view.baseMap._root;
+
+  late final _Path<V>? first = _first;
+  _Path<V>? get _first {
+    if (view.limit == 0) return null;
+    if (node == null) return null;
+    var v = view.startAt == null
+        ? _Path.minimum(node!)
+        : view.baseMap._firstAfter(view.startAt!, view.startInclusive);
+    if (v == null) return null;
+
+    var c =
+        view.endAt == null ? 1 : view.comparator(view.endAt!, v.node.object);
+    if (c < 0 || (c == 0 && !view.endInclusive)) return null;
+
+    if (view.limit != null && !view.limitFromStart) {
+      var indexFromEnd = _endIndex! - v.index;
+      if (indexFromEnd >= view.limit!) {
+        return node!.elementAt(_endIndex! - view.limit! + 1, v);
+      }
+    }
+    return v;
+  }
+
+  late final _Path<V>? last = _last;
+  _Path<V>? get _last {
+    if (view.limit == 0) return null;
+    if (node == null) return null;
+    var v = view.endAt == null
+        ? _Path.maximum(node!)
+        : view.baseMap._lastBefore(view.endAt!, view.endInclusive);
+    if (v == null) return null;
+
+    var c = view.startAt == null
+        ? -1
+        : view.comparator(view.startAt!, v.node.object);
+    if (c > 0 || (c == 0 && !view.startInclusive)) return null;
+
+    if (view.limit != null && view.limitFromStart) {
+      var indexFromStart = v.index - _startIndex!;
+      if (indexFromStart >= view.limit!) {
+        return node!.elementAt(_startIndex! + view.limit! - 1, v);
+      }
+    }
+    return v;
+  }
+
+  late final int? _endIndex = last?.index;
+  late final int? _startIndex = first?.index;
+}
+
 class TreeSetView<V> extends _BaseTreeSet<V> {
   final AvlTreeSet<V> baseMap;
   final V? startAt;
@@ -151,6 +206,8 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
   final int? limit;
   final bool limitFromStart;
 
+  _TreeSetViewCache<V>? _cache;
+
   TreeSetView(
       {required this.baseMap,
       this.startAt,
@@ -159,6 +216,13 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
       this.endInclusive = true,
       this.limit,
       this.limitFromStart = true});
+
+  _TreeSetViewCache<V> _getCache() {
+    if (_cache != null && _cache!.node == baseMap._root) {
+      return _cache!;
+    }
+    return _cache = _TreeSetViewCache(this);
+  }
 
   @override
   bool add(V value) {
@@ -174,44 +238,12 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
 
   @override
   _Path<V>? get _first {
-    if (limit == 0) return null;
-    if (baseMap._root == null) return null;
-    var v = startAt == null
-        ? _Path.minimum(baseMap._root!)
-        : baseMap._firstAfter(startAt!, startInclusive);
-    if (v == null) return null;
-
-    var c = endAt == null ? 1 : comparator(endAt!, v.node.object);
-    if (c < 0 || (c == 0 && !endInclusive)) return null;
-
-    if (limit != null && !limitFromStart) {
-      var indexFromEnd = _endIndex! - v.index;
-      if (indexFromEnd >= limit!) {
-        return baseMap._root!.elementAt(_endIndex! - limit! + 1, v);
-      }
-    }
-    return v;
+    return _getCache().first;
   }
 
   @override
   _Path<V>? get _last {
-    if (limit == 0) return null;
-    if (baseMap._root == null) return null;
-    var v = endAt == null
-        ? _Path.maximum(baseMap._root!)
-        : baseMap._lastBefore(endAt!, endInclusive);
-    if (v == null) return null;
-
-    var c = startAt == null ? -1 : comparator(startAt!, v.node.object);
-    if (c > 0 || (c == 0 && !startInclusive)) return null;
-
-    if (limit != null && limitFromStart) {
-      var indexFromStart = v.index - _startIndex!;
-      if (indexFromStart >= limit!) {
-        return baseMap._root!.elementAt(_startIndex! + limit! - 1, v);
-      }
-    }
-    return v;
+    return _getCache().last;
   }
 
   bool _limitsContain(V element) {
@@ -232,22 +264,22 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
 
     var p = baseMap._getPath(element);
     if (p == null) return -1;
+
+    var c = _getCache();
     if (!limitFromStart && limit != null) {
-      var indexFromEnd = _endIndex! - p.index;
+      var indexFromEnd = c._endIndex! - p.index;
       if (indexFromEnd < limit!) return -1;
     }
-    var index = p.index - _startIndex!;
+    var index = p.index - c._startIndex!;
     return limit == null || index < limit! ? index : -1;
   }
 
-  int? get _endIndex => _last?.index;
-  int? get _startIndex => _first?.index;
-
   @override
   int get length {
-    var a = _startIndex;
+    var c = _getCache();
+    var a = c._startIndex;
     if (a == null) return -1;
-    return _endIndex! - a + 1;
+    return c._endIndex! - a + 1;
   }
 
   @override
@@ -270,13 +302,37 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
   AvlTreeSet<V> get _avlTreeSet => baseMap;
 }
 
+class _AvlTreeSetCache<V> {
+  final AvlNode<V>? node;
+  final AvlTreeSet<V> set;
+
+  _AvlTreeSetCache(this.set) : node = set._root;
+
+  late final _Path<V>? first = node == null ? null : _Path.minimum(node!);
+
+  late final _Path<V>? last = node == null ? null : _Path.maximum(node!);
+
+  TreeCursor<V> createCursor() {
+    return TreeCursor(set, first: first, last: last);
+  }
+}
+
 class AvlTreeSet<V> extends _BaseTreeSet<V> {
   @override
   final Comparator<V> comparator;
 
   AvlNode<V>? _root;
 
+  _AvlTreeSetCache<V>? _cache;
+
   AvlTreeSet({required this.comparator});
+
+  _AvlTreeSetCache<V> _getCache() {
+    if (_cache != null && _cache!.node == _root) {
+      return _cache!;
+    }
+    return _cache = _AvlTreeSetCache(this);
+  }
 
   @override
   int get length => _root?.length ?? 0;
@@ -580,7 +636,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
   }
 
   _Path<V>? _firstAfter(V anchor, bool inclusive) {
-    var it = TreeCursor(this);
+    var it = _getCache().createCursor();
     if (inclusive) {
       it
         ..positionOn(anchor)
@@ -594,7 +650,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
   }
 
   _Path<V>? _lastBefore(V anchor, bool inclusive) {
-    var it = TreeCursor(this);
+    var it = _getCache().createCursor();
     if (inclusive) {
       it
         ..positionOn(anchor)

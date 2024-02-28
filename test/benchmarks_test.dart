@@ -127,6 +127,15 @@ Future<void> main() async {
       set.elementAt(n ~/ 3);
     });
 
+    late TreeSetView setView;
+    setUpEach(() {
+      setView = TreeSetView(
+          baseMap: set,
+          startAt: set.elementAt(n ~/ 4),
+          startInclusive: false,
+          endAt: set.elementAt(3 * n ~/ 4),
+          endInclusive: true);
+    });
     benchmark('of TreeSetView', () {
       setView.elementAt(n ~/ 3);
     });

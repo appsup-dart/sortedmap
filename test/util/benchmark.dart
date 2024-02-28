@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -8,6 +9,15 @@ import 'package:test_api/hooks.dart';
 import 'dart:developer';
 
 final bool isProfileMode = Platform.environment['PROFILE_MODE'] == 'true';
+
+final _setUpsEach = <dynamic Function()>[];
+
+void setUpEach(FutureOr<void> Function() callback) {
+  setUp(() {
+    _setUpsEach.add(callback);
+  });
+  tearDown(() => _setUpsEach.clear());
+}
 
 @isTest
 void benchmark(String description, dynamic Function() body,
@@ -27,9 +37,13 @@ void benchmark(String description, dynamic Function() body,
       var sum2 = 0;
 
       var d = minDuration.inMicroseconds;
+
       while (sum < d || i < minSamples) {
         i++;
 
+        for (var setup in _setUpsEach) {
+          await setup();
+        }
         var s = Timeline.now;
         await body();
         var v = Timeline.now - s;
