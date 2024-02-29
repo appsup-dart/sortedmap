@@ -74,8 +74,6 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   @override
   final Filter<K, V> filter;
 
-  
-
   /// Creates a FilteredMapView from a SortedMap.
   FilteredMapView._(this._baseMap,
       {required Pair start,
@@ -160,7 +158,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   }
 
   @override
-  Iterable<MapEntry<K, V>> subentries(
+  Iterable<K> subkeys(
       {required Pair start,
       required Pair end,
       int? limit,

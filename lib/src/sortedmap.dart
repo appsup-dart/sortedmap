@@ -86,15 +86,6 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
 
   /// Gets the keys within the desired bounds and limit.
   Iterable<K> subkeys(
-          {required Pair start,
-          required Pair end,
-          int? limit,
-          bool reversed = false}) =>
-      subentries(start: start, end: end, limit: limit, reversed: reversed)
-          .map((v) => v.key);
-
-  /// Gets the entries within the desired bounds and limit.
-  Iterable<MapEntry<K, V>> subentries(
       {required Pair start,
       required Pair end,
       int? limit,
@@ -282,7 +273,6 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     return it.current.key;
   }
 
-  @override
   Iterable<MapEntry<K, V>> subentries(
       {required Pair start,
       required Pair end,
@@ -298,6 +288,15 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
         limitFromStart: !reversed);
     return v;
   }
+
+  @override
+  Iterable<K> subkeys(
+          {required Pair start,
+          required Pair end,
+          int? limit,
+          bool reversed = false}) =>
+      subentries(start: start, end: end, limit: limit, reversed: reversed)
+          .map((v) => v.key);
 }
 
 /// An unmodifiable sorted map.
