@@ -713,7 +713,14 @@ class AvlNode<V> {
   AvlNode<V> add(Comparator<V> comparator, V element) {
     var compare = comparator(element, object);
     if (compare == 0) {
-      return this;
+      if (identical(object, element)) {
+        return this;
+      }
+      return AvlNode(
+        object: element,
+        left: left,
+        right: right,
+      );
     } else if (compare < 0) {
       var newLeft = left?.add(comparator, element) ?? AvlNode(object: element);
       if (newLeft == left) return this;

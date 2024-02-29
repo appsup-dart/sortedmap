@@ -32,8 +32,8 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
   @override
   void operator []=(K key, V value) {
     var p = MapEntry<K, V>(key, value);
-    _tree.remove(
-        p); // first remove otherwise not overwritten, could be improved?
+    // _tree.remove(
+    //     p); // first remove otherwise not overwritten, could be improved?
     _tree.add(p);
   }
 
