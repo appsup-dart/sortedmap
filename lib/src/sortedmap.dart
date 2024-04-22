@@ -209,6 +209,12 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
       _map.addAll(other._map);
       return;
     }
+    if (this is! FilteredMap) {
+      _sortedEntries
+          .addAll(other.entries.map((e) => ordering.mapEntry(e.key, e.value)));
+      _map.addAll(other);
+      return;
+    }
     super.addAll(other);
   }
 

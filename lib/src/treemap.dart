@@ -57,7 +57,7 @@ class TreeMap<K extends Comparable, V> extends MapBase<K, V> {
     if (other is TreeMap<K, V>) {
       _tree.addAll(other._tree);
     } else {
-      super.addAll(other);
+      _tree.addAll(other.entries);
     }
   }
 }

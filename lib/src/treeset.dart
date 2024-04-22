@@ -387,11 +387,18 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
 
   @override
   bool addAll(Iterable<V> items) {
+    if (items.isEmpty) return false;
     if (_root == null &&
         items is AvlTreeSet<V> &&
         identical((items as dynamic).comparator, comparator)) {
       _root = items._root;
       return _root != null;
+    }
+    if (_root == null) {
+      //
+      var l = items.toList()..sort(comparator);
+      _root = AvlNode.fromOrderedList(l);
+      return true;
     }
     var modified = false;
     for (var ele in items) {
@@ -689,6 +696,55 @@ class AvlNode<V> {
       : assert(object != null),
         height = max(left?.height ?? 0, right?.height ?? 0) + 1,
         length = (left?.length ?? 0) + (right?.length ?? 0) + 1;
+
+  factory AvlNode.fromOrderedList(List<V> items) {
+    var depth = (log(items.length + 1) / ln2).ceil();
+    var size = (1 << depth) - 1;
+
+    var nulls = size - items.length;
+
+    var l = items.cast<V?>();
+    if (nulls > 0) {
+      var nonNulls = (size + 1) ~/ 2 - nulls;
+
+      var spacing = nonNulls;
+
+      var skip = 0;
+      var space = spacing;
+      l = List<V?>.generate(size, (index) {
+        if (index % 2 == 0) {
+          if (space >= spacing) {
+            space -= spacing;
+            skip++;
+            return null;
+          } else {
+            space += nulls - 1;
+          }
+        }
+        return items[index - skip];
+      });
+    }
+
+    var k = List<AvlNode<V>?>.generate(
+        (size + 1) >> 1,
+        (index) => l[index * 2] == null
+            ? null
+            : AvlNode(
+                object: l[index * 2]!,
+              ));
+
+    var skip = 2;
+    while (k.length > 1) {
+      skip *= 2;
+      k = List.generate(k.length >> 1, (index) {
+        return AvlNode(
+            object: l[(skip ~/ 2) - 1 + index * skip]!,
+            left: k[index * 2],
+            right: k[index * 2 + 1]);
+      });
+    }
+    return k.single!;
+  }
 
   int get balanceFactor => (right?.height ?? 0) - (left?.height ?? 0);
 

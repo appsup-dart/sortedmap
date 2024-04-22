@@ -26,7 +26,6 @@ void main() {
       map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4});
 
       var keys = map.keys.toList();
-
       expect(keys.indexOf('a'), 0);
       expect(keys.indexOf('b'), 1);
       expect(keys.indexOf('c'), 2);
