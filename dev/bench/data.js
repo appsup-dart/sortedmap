@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1713812715443,
+  "lastUpdate": 1713814211640,
   "repoUrl": "https://github.com/appsup-dart/sortedmap",
   "entries": {
     "Benchmark": [
@@ -3670,6 +3670,233 @@ window.BENCHMARK_DATA = {
             "range": "±0.13%",
             "unit": "ops/sec",
             "extra": "8818928 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "committer": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "distinct": true,
+          "id": "9ef6e1b463bf697a97ec3cb6ebf1b84d865d2a8c",
+          "message": "perf: improve speed of addAll to empty map",
+          "timestamp": "2024-04-22T21:11:59+02:00",
+          "tree_id": "0453d16cd2874774877fbebf0e00630a85c64200",
+          "url": "https://github.com/appsup-dart/sortedmap/commit/9ef6e1b463bf697a97ec3cb6ebf1b84d865d2a8c"
+        },
+        "date": 1713814211303,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "completeInterval of FilteredMap",
+            "value": 3038150,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "6076299 samples"
+          },
+          {
+            "name": "completeInterval of FilteredMapView",
+            "value": 1163042,
+            "range": "±0.33%",
+            "unit": "ops/sec",
+            "extra": "2326084 samples"
+          },
+          {
+            "name": "length of FilteredMap",
+            "value": 3944025,
+            "range": "±0.43%",
+            "unit": "ops/sec",
+            "extra": "7888049 samples"
+          },
+          {
+            "name": "length of FilteredMapView",
+            "value": 1254669,
+            "range": "±0.09%",
+            "unit": "ops/sec",
+            "extra": "2509338 samples"
+          },
+          {
+            "name": "length of TreeSet",
+            "value": 4143495,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "8286989 samples"
+          },
+          {
+            "name": "length of quiver.TreeSet",
+            "value": 4195694,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "8391387 samples"
+          },
+          {
+            "name": "forEach of FilteredMap",
+            "value": 4000,
+            "range": "±0.34%",
+            "unit": "ops/sec",
+            "extra": "8001 samples"
+          },
+          {
+            "name": "forEach of FilteredMapView",
+            "value": 7920,
+            "range": "±0.12%",
+            "unit": "ops/sec",
+            "extra": "15840 samples"
+          },
+          {
+            "name": "forEach of TreeSet",
+            "value": 4652,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "9305 samples"
+          },
+          {
+            "name": "forEach of quiver.TreeSet",
+            "value": 5864,
+            "range": "±0.44%",
+            "unit": "ops/sec",
+            "extra": "11729 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap",
+            "value": 138,
+            "range": "±0.86%",
+            "unit": "ops/sec",
+            "extra": "277 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap, ordered by key",
+            "value": 98,
+            "range": "±0.42%",
+            "unit": "ops/sec",
+            "extra": "196 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap",
+            "value": 2628795,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "5257590 samples"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView",
+            "value": 405,
+            "range": "±0.39%",
+            "unit": "ops/sec",
+            "extra": "810 samples"
+          },
+          {
+            "name": "addAll to empty FilteredMap",
+            "value": 2.34,
+            "range": "±2.83%",
+            "unit": "ops/sec",
+            "extra": "5 samples"
+          },
+          {
+            "name": "addAll to empty TreeSet",
+            "value": 856,
+            "range": "±0.40%",
+            "unit": "ops/sec",
+            "extra": "1712 samples"
+          },
+          {
+            "name": "addAll to empty TreeSet from TreeSet",
+            "value": 3622519,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "7245037 samples"
+          },
+          {
+            "name": "addAll to empty quiver.TreeSet",
+            "value": 530,
+            "range": "±0.19%",
+            "unit": "ops/sec",
+            "extra": "1061 samples"
+          },
+          {
+            "name": "elementAt of TreeSet",
+            "value": 3222574,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "6445149 samples"
+          },
+          {
+            "name": "elementAt of TreeSetView",
+            "value": 1355091,
+            "range": "±0.11%",
+            "unit": "ops/sec",
+            "extra": "2710181 samples"
+          },
+          {
+            "name": "elementAt of quiver.TreeSet",
+            "value": 23584,
+            "range": "±0.07%",
+            "unit": "ops/sec",
+            "extra": "47169 samples"
+          },
+          {
+            "name": "indexOf of TreeSet",
+            "value": 2566719,
+            "range": "±0.12%",
+            "unit": "ops/sec",
+            "extra": "5133438 samples"
+          },
+          {
+            "name": "indexOf of TreeSetView",
+            "value": 2298173,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "4596346 samples"
+          },
+          {
+            "name": "first of TreeSet",
+            "value": 4764504,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "9529008 samples"
+          },
+          {
+            "name": "first of TreeSetView",
+            "value": 5766329,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "11532657 samples"
+          },
+          {
+            "name": "first of quiver.TreeSet",
+            "value": 4783052,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "9566103 samples"
+          },
+          {
+            "name": "last of TreeSet",
+            "value": 4396038,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "8792075 samples"
+          },
+          {
+            "name": "last of TreeSetView",
+            "value": 5797230,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "11594460 samples"
+          },
+          {
+            "name": "last of quiver.TreeSet",
+            "value": 4134360,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "8268719 samples"
           }
         ]
       }
