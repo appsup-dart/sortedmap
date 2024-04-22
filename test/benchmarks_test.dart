@@ -111,12 +111,22 @@ Future<void> main() async {
       SortedMap(const Ordering.byValue()).addAll(data);
     });
 
+    benchmark('to empty SortedMap, ordered by key', () async {
+      SortedMap(const Ordering.byKey()).addAll(data);
+    });
+
     benchmark('to empty SortedMap from SortedMap', () async {
       SortedMap(const Ordering.byValue()).addAll(map);
     });
 
     benchmark('to empty SortedMap from FilteredMapView', () async {
       SortedMap(const Ordering.byValue()).addAll(view);
+    });
+
+    benchmark('to empty FilteredMap', () async {
+      SortedMap(const Ordering.byValue())
+          .filteredMap(start: Pair.min(), end: Pair.max(), limit: n ~/ 3)
+          .addAll(data);
     });
 
     benchmark('to empty TreeSet', () async {
