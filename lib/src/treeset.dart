@@ -393,10 +393,12 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
         identical((items as dynamic).comparator, comparator)) {
       _root = items._root;
       return _root != null;
-    }
-    if (_root == null) {
-      //
-      var l = items.toList()..sort(comparator);
+    } else if (_root == null) {
+      var l = items.toList();
+      if (items is! TreeSet<V> ||
+          !identical((items as dynamic).comparator, comparator)) {
+        l.sort(comparator);
+      }
       _root = AvlNode.fromOrderedList(l);
       return true;
     }

@@ -210,8 +210,12 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
       return;
     }
     if (this is! FilteredMap) {
-      _sortedEntries
-          .addAll(other.entries.map((e) => ordering.mapEntry(e.key, e.value)));
+      var entries = other.entries;
+      if (entries is! Iterable<_MapEntryWithIndex<K, V>>) {
+        entries = entries.map<_MapEntryWithIndex<K, V>>(
+            (e) => ordering.mapEntry(e.key, e.value));
+      }
+      _sortedEntries.addAll(entries);
       _map.addAll(other);
       return;
     }
