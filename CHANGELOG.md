@@ -1,4 +1,6 @@
-# Changelog
+## 0.5.4
+
+- Performance improvements
 
 ## 0.5.3
 
