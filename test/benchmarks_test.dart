@@ -90,12 +90,14 @@ Future<void> main() async {
       view.forEach((key, value) {});
     });
 
+    void noop(dynamic _) {}
+
     benchmark('of TreeSet', () async {
-      set.forEach((e) {});
+      set.forEach(noop);
     });
 
     benchmark('of quiver.TreeSet', () async {
-      qSet.forEach((e) {});
+      qSet.forEach(noop);
     });
   });
 

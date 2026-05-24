@@ -10,7 +10,7 @@
 /// The [FilteredMap] also allows to specify an isValid function on key/value
 /// pairs and limit the number of objects allowed in the map.
 ///
-library sortedmap;
+library;
 
 import 'dart:collection';
 import 'package:quiver/core.dart' as quiver;

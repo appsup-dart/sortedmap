@@ -1,7 +1,7 @@
 // Copyright (c) 2016, Rik Bellens. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-part of sortedmap;
+part of '../sortedmap.dart';
 
 /// A [Map] of objects that can be ordered relative to each other and where
 /// key/value pairs are filtered before adding them to the map.
@@ -40,10 +40,9 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
   @override
   final Filter<K, V> filter;
 
-  _FilteredMap._(Filter<K, V> filter,
+  _FilteredMap._(this.filter,
       AvlTreeSet<_MapEntryWithIndex<K, V>>? sortedEntries, TreeMap<K, V>? map)
-      : filter = filter,
-        super._(filter.ordering, sortedEntries, map);
+      : super._(filter.ordering, sortedEntries, map);
 
   @override
   FilteredMap<K, V> clone() => _FilteredMap<K, V>._(
@@ -111,7 +110,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   _MapEntryWithIndex<K, V>? _entryForKey(Object? key, [bool checked = true]) {
-    V value = _baseMap[key as K]!;
+    V value = _baseMap[key as K] as V;
     var p = ordering.mapEntry(MapEntry(key, value));
     if (checked && !_containsPair(p.index)) return null;
     return p;

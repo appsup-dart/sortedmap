@@ -1,4 +1,4 @@
-library treemap;
+library;
 
 import 'dart:collection';
 

@@ -47,16 +47,16 @@ abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
   TreeSet<V> toSet() => TreeSet(comparator: comparator)..addAll(this);
 
   @override
-  BidirectionalIterator<V> get iterator => TreeIterator(this);
+  BidirectionalIterator<V> get iterator => _TreeIterator(this);
 
   @override
   BidirectionalIterator<V> get reverseIterator =>
-      TreeIterator(this, reversed: true);
+      _TreeIterator(this, reversed: true);
 
   @override
   BidirectionalIterator<V> fromIterator(V anchor,
       {bool reversed = false, bool inclusive = true}) {
-    return TreeIterator.atAnchor(this,
+    return _TreeIterator.atAnchor(this,
         anchor: anchor, reversed: reversed, inclusive: inclusive);
   }
 
@@ -81,7 +81,7 @@ abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _avlTreeSet._root!.elementAt(index + _first!.index).node.object;
+    return _avlTreeSet._root!._elementAt(index + _first!.index).node.object;
   }
 
   @override
@@ -154,17 +154,18 @@ class _TreeSetViewCache<V> {
     if (node == null) return null;
     var v = view.startAt == null
         ? _Path.minimum(node!)
-        : view.baseMap._firstAfter(view.startAt!, view.startInclusive);
+        : view.baseMap._firstAfter(view.startAt as V, view.startInclusive);
     if (v == null) return null;
 
-    var c =
-        view.endAt == null ? 1 : view.comparator(view.endAt!, v.node.object);
+    var c = view.endAt == null
+        ? 1
+        : view.comparator(view.endAt as V, v.node.object);
     if (c < 0 || (c == 0 && !view.endInclusive)) return null;
 
     if (view.limit != null && !view.limitFromStart) {
       var indexFromEnd = _endIndex! - v.index;
       if (indexFromEnd >= view.limit!) {
-        return node!.elementAt(_endIndex! - view.limit! + 1);
+        return node!._elementAt(_endIndex! - view.limit! + 1);
       }
     }
     return v;
@@ -176,18 +177,18 @@ class _TreeSetViewCache<V> {
     if (node == null) return null;
     var v = view.endAt == null
         ? _Path.maximum(node!)
-        : view.baseMap._lastBefore(view.endAt!, view.endInclusive);
+        : view.baseMap._lastBefore(view.endAt as V, view.endInclusive);
     if (v == null) return null;
 
     var c = view.startAt == null
         ? -1
-        : view.comparator(view.startAt!, v.node.object);
+        : view.comparator(view.startAt as V, v.node.object);
     if (c > 0 || (c == 0 && !view.startInclusive)) return null;
 
     if (view.limit != null && view.limitFromStart) {
       var indexFromStart = v.index - _startIndex!;
       if (indexFromStart >= view.limit!) {
-        return node!.elementAt(_startIndex! + view.limit! - 1);
+        return node!._elementAt(_startIndex! + view.limit! - 1);
       }
     }
     return v;
@@ -249,11 +250,11 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
 
   bool _limitsContain(V element) {
     if (startAt != null) {
-      var compare = baseMap.comparator(startAt!, element);
+      var compare = baseMap.comparator(startAt as V, element);
       if (compare > 0 || (compare == 0 && !startInclusive)) return false;
     }
     if (endAt != null) {
-      var compare = baseMap.comparator(endAt!, element);
+      var compare = baseMap.comparator(endAt as V, element);
       if (compare < 0 || (compare == 0 && !endInclusive)) return false;
     }
     return true;
@@ -313,8 +314,8 @@ class _AvlTreeSetCache<V> {
 
   late final _Path<V>? last = node == null ? null : _Path.maximum(node!);
 
-  TreeCursor<V> createCursor() {
-    return TreeCursor(set, first: first, last: last);
+  _TreeCursor<V> createCursor() {
+    return _TreeCursor(set, first: first, last: last);
   }
 }
 
@@ -345,7 +346,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _root!.elementAt(index).node.object;
+    return _root!._elementAt(index).node.object;
   }
 
   @override
@@ -383,24 +384,24 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
   }
 
   @override
-  bool addAll(Iterable<V> items) {
-    if (items.isEmpty) return false;
+  bool addAll(Iterable<V> elements) {
+    if (elements.isEmpty) return false;
     if (_root == null &&
-        items is AvlTreeSet<V> &&
-        identical((items as dynamic).comparator, comparator)) {
-      _root = items._root;
+        elements is AvlTreeSet<V> &&
+        identical((elements as dynamic).comparator, comparator)) {
+      _root = elements._root;
       return _root != null;
     } else if (_root == null) {
-      var l = items.toList();
-      if (items is! TreeSet<V> ||
-          !identical((items as dynamic).comparator, comparator)) {
+      var l = elements.toList();
+      if (elements is! TreeSet<V> ||
+          !identical((elements as dynamic).comparator, comparator)) {
         l.sort(comparator);
       }
       _root = AvlNode.fromOrderedList(l);
       return true;
     }
     var modified = false;
-    for (var ele in items) {
+    for (var ele in elements) {
       modified = add(ele) ? true : modified;
     }
     return modified;
@@ -412,8 +413,8 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
   }
 
   @override
-  bool containsAll(Iterable<Object?> items) {
-    for (var ele in items) {
+  bool containsAll(Iterable<Object?> other) {
+    for (var ele in other) {
       if (!contains(ele)) return false;
     }
     return true;
@@ -431,8 +432,8 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
   }
 
   @override
-  void removeAll(Iterable items) {
-    for (var ele in items) {
+  void removeAll(Iterable elements) {
+    for (var ele in elements) {
       remove(ele);
     }
   }
@@ -729,7 +730,7 @@ class AvlNode<V> {
         (index) => l[index * 2] == null
             ? null
             : AvlNode(
-                object: l[index * 2]!,
+                object: l[index * 2] as V,
               ));
 
     var skip = 2;
@@ -737,7 +738,7 @@ class AvlNode<V> {
       skip *= 2;
       k = List.generate(k.length >> 1, (index) {
         return AvlNode(
-            object: l[(skip ~/ 2) - 1 + index * skip]!,
+            object: l[(skip ~/ 2) - 1 + index * skip] as V,
             left: k[index * 2],
             right: k[index * 2 + 1]);
       });
@@ -957,7 +958,7 @@ class AvlNode<V> {
     return this;
   }
 
-  _Path<V> elementAt(int index) {
+  _Path<V> _elementAt(int index) {
     var x = this;
     var l = x.left?.length ?? 0;
     var v = _Path(this, null);
@@ -984,21 +985,21 @@ abstract class BidirectionalIterator<E> implements Iterator<E> {
   bool movePrevious();
 }
 
-class TreeIterator<V> extends BidirectionalIterator<V> {
-  final TreeCursor<V> _cursor;
+class _TreeIterator<V> extends BidirectionalIterator<V> {
+  final _TreeCursor<V> _cursor;
 
   final bool reversed;
 
-  TreeIterator(_BaseTreeSet<V> tree, {this.reversed = false})
+  _TreeIterator(_BaseTreeSet<V> tree, {this.reversed = false})
       : _cursor =
-            TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last)
+            _TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last)
               .._state =
                   reversed ? _TreeCursorState.after : _TreeCursorState.before;
 
-  TreeIterator.atAnchor(_BaseTreeSet<V> tree,
+  _TreeIterator.atAnchor(_BaseTreeSet<V> tree,
       {required V anchor, this.reversed = false, bool inclusive = true})
-      : _cursor =
-            TreeCursor(tree._avlTreeSet, first: tree._first, last: tree._last) {
+      : _cursor = _TreeCursor(tree._avlTreeSet,
+            first: tree._first, last: tree._last) {
     _cursor.positionOn(anchor, inclusive: inclusive);
   }
 
@@ -1130,7 +1131,7 @@ enum _TreeCursorState {
   willBeOnNextOrPreviousAfterFirstMove,
 }
 
-class TreeCursor<V> extends BidirectionalIterator<V> {
+class _TreeCursor<V> extends BidirectionalIterator<V> {
   final AvlNode<V>? _root;
   final AvlTreeSet<V> tree;
 
@@ -1142,7 +1143,7 @@ class TreeCursor<V> extends BidirectionalIterator<V> {
 
   final _Path<V>? _last;
 
-  TreeCursor(this.tree, {_Path<V>? first, _Path<V>? last})
+  _TreeCursor(this.tree, {_Path<V>? first, _Path<V>? last})
       : _root = tree._root,
         _first =
             first ?? (tree._root == null ? null : _Path.minimum(tree._root!)),
