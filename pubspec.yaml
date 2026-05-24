@@ -11,5 +11,5 @@ dependencies:
 
 dev_dependencies:
   test: ^1.16.5
-  benchmark_harness: ^2.0.0
+  benchmark_test: ^0.1.0
   pedantic: ^1.11.0

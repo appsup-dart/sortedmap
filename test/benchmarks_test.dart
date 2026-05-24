@@ -6,7 +6,7 @@ import 'package:sortedmap/src/treeset.dart';
 import 'package:test/test.dart';
 import 'package:quiver/collection.dart' as quiver;
 
-import 'util/benchmark.dart';
+import 'package:benchmark_test/benchmark_test.dart';
 
 Future<void> main() async {
   var n = 10000;
