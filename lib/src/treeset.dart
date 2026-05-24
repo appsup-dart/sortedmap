@@ -356,7 +356,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
     }
 
     var newRoot = _root!.add(comparator, element);
-    var added = newRoot == _root;
+    var added = newRoot != _root;
     _root = newRoot;
     return added;
   }
