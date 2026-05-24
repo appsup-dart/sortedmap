@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:sortedmap/sortedmap.dart';
 import 'package:sortedmap/src/treeset.dart';
@@ -204,88 +205,96 @@ Future<void> main() async {
   });
 
   group('operator []=', () {
+    var random = Random(DateTime.now().millisecondsSinceEpoch);
+    final data = {for (var i = 0; i < n; i++) 'key$i': random.nextDouble()};
+
     group('with order by value', () {
       late SortedMap sourceMap, map;
+      late double newValue, oldValue;
       setUp(() {
         sourceMap = SortedMap(const Ordering.byValue())..addAll(data);
+        oldValue = sourceMap['key${n ~/ 2}']!;
       });
 
       setUpEach(() {
         map = sourceMap.clone();
+        newValue = random.nextDouble();
       });
 
       benchmark('of SortedMap, replacing existing value', () {
-        map['key${n ~/ 2}'] = Object().hashCode;
+        map['key${n ~/ 2}'] = newValue;
       });
 
       benchmark('of SortedMap, replacing existing value with same value', () {
-        map['key${n ~/ 2}'] = (n ~/ 2).hashCode;
+        map['key${n ~/ 2}'] = oldValue;
       });
 
       benchmark('of SortedMap, adding new value', () {
-        map['key$n'] = Object().hashCode;
+        map['key$n'] = newValue;
       });
     });
 
     group('with order by mapped value', () {
       late SortedMap sourceMap, map;
-      late Map<String, dynamic> value;
+      late Map<String, dynamic> newValue, oldValue, sameOrderValue;
       setUp(() {
         sourceMap = SortedMap(Ordering.byMappedValue((v) => v['order']))
           ..addAll({
             for (var k in data.keys) k: {'value': data[k]!, 'order': data[k]!}
           });
-        value = sourceMap['key${n ~/ 2}']!;
+        oldValue = sourceMap['key${n ~/ 2}']!;
       });
 
       setUpEach(() {
         map = sourceMap.clone();
-      });
-
-      benchmark('of SortedMap, replacing existing value', () {
-        map['key${n ~/ 2}'] = {
-          'value': Object().hashCode,
-          'order': Object().hashCode
+        newValue = {'value': random.nextDouble(), 'order': random.nextDouble()};
+        sameOrderValue = {
+          'value': random.nextDouble(),
+          'order': oldValue['order']
         };
       });
 
+      benchmark('of SortedMap, replacing existing value', () {
+        map['key${n ~/ 2}'] = newValue;
+      });
+
       benchmark('of SortedMap, replacing existing value with same value', () {
-        map['key${n ~/ 2}'] = value;
+        map['key${n ~/ 2}'] = oldValue;
       });
 
       benchmark('of SortedMap, replacing existing value with same order value',
           () {
-        map['key${n ~/ 2}'] = {
-          'value': Object().hashCode,
-          'order': (n ~/ 2).hashCode
-        };
+        map['key${n ~/ 2}'] = sameOrderValue;
       });
 
       benchmark('of SortedMap, adding new value', () {
-        map['key$n'] = {'value': Object().hashCode, 'order': Object().hashCode};
+        map['key$n'] = newValue;
       });
     });
 
     group('with order by key', () {
       late SortedMap sourceMap, map;
+      late double newValue, oldValue;
       setUp(() {
         sourceMap = SortedMap(const Ordering.byKey())..addAll(data);
+        oldValue = sourceMap['key${n ~/ 2}']!;
       });
 
       setUpEach(() {
         map = sourceMap.clone();
+        newValue = random.nextDouble();
       });
 
       benchmark('of SortedMap, replacing existing value', () {
-        map['key${n ~/ 2}'] = Object().hashCode;
+        map['key${n ~/ 2}'] = newValue;
       });
 
       benchmark('of SortedMap, replacing existing value with same value', () {
-        map['key${n ~/ 2}'] = (n ~/ 2).hashCode;
+        map['key${n ~/ 2}'] = oldValue;
       });
 
       benchmark('of SortedMap, adding new value', () {
-        map['key$n'] = Object().hashCode;
+        map['key$n'] = newValue;
       });
     });
   });
