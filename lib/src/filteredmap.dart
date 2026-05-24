@@ -52,13 +52,25 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
       TreeMap.from(_map));
 
   @override
-  void _addEntry(K key, V value) {
-    if (!filter.validInterval.containsPoint(ordering.mapKeyValue(key, value))) {
+  void operator []=(K key, V value) {
+    var newEntry = ordering.mapEntry(MapEntry(key, value));
+
+    if (!filter.validInterval.containsPoint(newEntry.index)) {
       remove(key);
       return;
     }
-    super._addEntry(key, value);
+
+    var entry = _entryForKey(key);
+
+    _map[key] = value;
+
+    if (entry != null && entry.index != newEntry.index) {
+      _sortedEntries.remove(entry);
+    }
+    _sortedEntries.add(newEntry);
+
     if (filter.limit != null && length > filter.limit!) {
+      // TODO: Optimize this, do not add entry when limit is reached and on the wrong side, and use first/last iso travelling list
       var toDel = filter.reversed
           ? _sortedEntries.take(length - filter.limit!)
           : _sortedEntries.skip(filter.limit!);

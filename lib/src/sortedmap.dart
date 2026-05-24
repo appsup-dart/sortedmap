@@ -217,17 +217,26 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
   @override
   void operator []=(K key, V value) {
     var entry = _entryForKey(key);
-    if (entry != null) _sortedEntries.remove(entry);
-    _addEntry(key, value);
+
+    // If the value is the same, do not add it again. This improves performance
+    // in geneal, but when the operator== is expensive, this can be a performance
+    // bottleneck.
+    if (entry != null && entry.value == value) {
+      return;
+    }
+
+    var newEntry = ordering.mapEntry(MapEntry(key, value));
+
+    _map[key] = value;
+
+    if (entry != null && entry.index.compareTo(newEntry.index) != 0) {
+      _sortedEntries.remove(entry);
+    }
+    _sortedEntries.add(newEntry);
   }
 
   @override
   bool get isEmpty => _map.isEmpty;
-
-  void _addEntry(K key, V value) {
-    _map[key] = value;
-    _sortedEntries.add(ordering.mapEntry(MapEntry(key, value)));
-  }
 
   @override
   void clear() {
