@@ -38,7 +38,7 @@ class Filter<K extends Comparable, V> {
   int get hashCode => quiver.hash4(ordering, limit, reversed, validInterval);
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is Filter &&
       other.ordering == ordering &&
       other.limit == limit &&
@@ -97,7 +97,7 @@ class KeyValueInterval {
   int get hashCode => quiver.hash2(start, end);
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is KeyValueInterval && other.start == start && other.end == end;
 
   @override

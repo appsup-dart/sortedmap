@@ -5,7 +5,8 @@ part of sortedmap;
 
 /// A [Map] of objects that can be ordered relative to each other and where
 /// key/value pairs are filtered before adding them to the map.
-abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
+abstract mixin class FilteredMap<K extends Comparable, V>
+    implements SortedMap<K, V>, _SortedMapMixin<K, V> {
   /// Creates a [FilteredMap] instance with an optional [Filter] definition
   /// [filter].
   factory FilteredMap([Filter<K, V>? filter]) =>
@@ -17,7 +18,7 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
   /// The interval within which no values were filtered out based on the
   /// filter's `limit` or `validInterval`.
   KeyValueInterval get completeInterval {
-    var entries = this.entries;
+    var entries = _sortedEntries;
     var filterInterval = filter.validInterval;
     if (filter.limit == null || entries.length < filter.limit!) {
       return filterInterval;
@@ -26,10 +27,10 @@ abstract class FilteredMap<K extends Comparable, V> implements SortedMap<K, V> {
 
     if (filter.reversed) {
       return KeyValueInterval.fromPairs(
-          ordering.indexFromMapEntry(entries.first), filterInterval.end);
+          entries.first.index, filterInterval.end);
     } else {
       return KeyValueInterval.fromPairs(
-          filterInterval.start, ordering.indexFromMapEntry(entries.last));
+          filterInterval.start, entries.last.index);
     }
   }
 }
@@ -68,7 +69,11 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
 
 /// A filtered view on a [SortedMap] or [FilteredMap].
 class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
-    with SortedMap<K, V>, FilteredMap<K, V>, UnmodifiableSortedMap<K, V> {
+    with
+        SortedMap<K, V>,
+        FilteredMap<K, V>,
+        UnmodifiableSortedMap<K, V>,
+        _SortedMapMixin<K, V> {
   final _SortedMap<K, V> _baseMap;
 
   @override
@@ -95,7 +100,7 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   @override
   _MapEntryWithIndex<K, V>? _entryForKey(Object? key, [bool checked = true]) {
     V value = _baseMap[key as K]!;
-    var p = ordering.mapEntry(key, value);
+    var p = ordering.mapEntry(MapEntry(key, value));
     if (checked && !_containsPair(p.index)) return null;
     return p;
   }
@@ -103,8 +108,8 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   bool _containsPair(Pair pair) => _effectiveInterval.containsPoint(pair);
 
   KeyValueInterval get _effectiveInterval {
-    return KeyValueInterval.fromPairs(ordering.indexFromMapEntry(entries.first),
-        ordering.indexFromMapEntry(entries.last));
+    return KeyValueInterval.fromPairs(
+        _sortedEntries.first.index, _sortedEntries.last.index);
   }
 
   @override
@@ -124,9 +129,10 @@ class FilteredMapView<K extends Comparable, V> extends MapBase<K, V>
   @override
   Iterable<V> get values => entries.map((e) => e.value);
 
-  MapEntry<Object?, Iterable<MapEntry<K, V>>>? _entriesCache;
+  MapEntry<Object?, Iterable<_MapEntryWithIndex<K, V>>>? _entriesCache;
+
   @override
-  Iterable<MapEntry<K, V>> get entries {
+  Iterable<_MapEntryWithIndex<K, V>> get _sortedEntries {
     if (_entriesCache == null ||
         _entriesCache!.key != _baseMap._sortedEntries) {
       _entriesCache = MapEntry(

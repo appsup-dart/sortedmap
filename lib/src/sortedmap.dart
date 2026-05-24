@@ -4,7 +4,7 @@
 part of sortedmap;
 
 /// A [Map] of objects that can be ordered relative to each other.
-abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
+abstract mixin class SortedMap<K extends Comparable, V> implements Map<K, V> {
   /// Creates a [SortedMap] instance with an optional ordering.
   factory SortedMap([Ordering ordering = const Ordering.byKey()]) =>
       _SortedMap._(ordering, null, null);
@@ -117,8 +117,9 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
           reversed: reversed))
         ..addAll(this);
 
-  _MapEntryWithIndex<K, V>? _entryForKey(K? key) =>
-      containsKey(key) ? ordering.mapEntry(key!, this[key] as V) : null;
+  _MapEntryWithIndex<K, V>? _entryForKey(K? key) => containsKey(key)
+      ? ordering.mapEntry(MapEntry(key!, this[key] as V))
+      : null;
 
   @override
   void forEach(void Function(K key, V value) action) {
@@ -128,45 +129,43 @@ abstract class SortedMap<K extends Comparable, V> implements Map<K, V> {
   }
 }
 
-class _MapEntryWithIndex<K extends Comparable, V> implements MapEntry<K, V> {
-  final K? _key;
-
-  final V? _value;
+class _MapEntryWithIndex<K extends Comparable, V> {
+  final MapEntry<K, V>? _entry;
 
   final Pair index;
 
+  K get key => _entry!.key;
+  V get value => _entry!.value;
+
   _MapEntryWithIndex.indexOnly(Pair pair)
-      : _key = null,
-        _value = null,
+      : _entry = null,
         index = pair;
 
-  _MapEntryWithIndex(K key, V value, this.index)
-      : _key = key,
-        _value = value;
-
-  @override
-  V get value => _value as V;
-
-  @override
-  K get key => _key as K;
+  _MapEntryWithIndex(this._entry, this.index);
 }
 
 extension _OrderingX on Ordering {
-  _MapEntryWithIndex<K, V> mapEntry<K extends Comparable, V>(K key, V value) =>
-      _MapEntryWithIndex(key, value, mapKeyValue(key, value));
+  _MapEntryWithIndex<K, V> mapEntry<K extends Comparable, V>(
+          MapEntry<K, V> entry) =>
+      _MapEntryWithIndex(entry, mapKeyValue(entry.key, entry.value));
+}
 
-  Pair indexFromMapEntry<K extends Comparable, V>(MapEntry<K, V> entry) =>
-      entry is _MapEntryWithIndex<K, V>
-          ? entry.index
-          : mapKeyValue(entry.key, entry.value);
+abstract mixin class _SortedMapMixin<K extends Comparable, V>
+    implements SortedMap<K, V> {
+  Iterable<_MapEntryWithIndex<K, V>> get _sortedEntries;
+
+  @override
+  Iterable<MapEntry<K, V>> get entries => _sortedEntries.map((e) => e._entry!);
 }
 
 class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
-    with SortedMap<K, V> {
+    with SortedMap<K, V>, _SortedMapMixin<K, V> {
   @override
   final Ordering ordering;
 
+  @override
   final AvlTreeSet<_MapEntryWithIndex<K, V>> _sortedEntries;
+
   final TreeMap<K, V> _map;
 
   static int _compare(_MapEntryWithIndex a, _MapEntryWithIndex b) =>
@@ -179,9 +178,6 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   @override
   bool containsKey(Object? key) => _map.containsKey(key);
-
-  @override
-  Iterable<MapEntry<K, V>> get entries => _sortedEntries;
 
   @override
   SortedMap<K, V> clone() => _SortedMap<K, V>._(
@@ -211,11 +207,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     }
     if (this is! FilteredMap) {
       var entries = other.entries;
-      if (entries is! Iterable<_MapEntryWithIndex<K, V>>) {
-        entries = entries.map<_MapEntryWithIndex<K, V>>(
-            (e) => ordering.mapEntry(e.key, e.value));
-      }
-      _sortedEntries.addAll(entries);
+      _sortedEntries.addAll(entries.map((e) => ordering.mapEntry(e)));
       _map.addAll(other);
       return;
     }
@@ -234,7 +226,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 
   void _addEntry(K key, V value) {
     _map[key] = value;
-    _sortedEntries.add(ordering.mapEntry(key, value));
+    _sortedEntries.add(ordering.mapEntry(MapEntry(key, value)));
   }
 
   @override
@@ -283,7 +275,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
     return it.current.key;
   }
 
-  Iterable<MapEntry<K, V>> subentries(
+  Iterable<_MapEntryWithIndex<K, V>> subentries(
       {required Pair start,
       required Pair end,
       int? limit,
@@ -310,7 +302,7 @@ class _SortedMap<K extends Comparable, V> extends MapBase<K, V>
 }
 
 /// An unmodifiable sorted map.
-abstract class UnmodifiableSortedMap<K extends Comparable, V>
+abstract mixin class UnmodifiableSortedMap<K extends Comparable, V>
     implements SortedMap<K, V> {
   @override
   void operator []=(K key, V value) =>
