@@ -202,4 +202,91 @@ Future<void> main() async {
       qSet.last;
     });
   });
+
+  group('operator []=', () {
+    group('with order by value', () {
+      late SortedMap sourceMap, map;
+      setUp(() {
+        sourceMap = SortedMap(const Ordering.byValue())..addAll(data);
+      });
+
+      setUpEach(() {
+        map = sourceMap.clone();
+      });
+
+      benchmark('of SortedMap, replacing existing value', () {
+        map['key${n ~/ 2}'] = Object().hashCode;
+      });
+
+      benchmark('of SortedMap, replacing existing value with same value', () {
+        map['key${n ~/ 2}'] = (n ~/ 2).hashCode;
+      });
+
+      benchmark('of SortedMap, adding new value', () {
+        map['key$n'] = Object().hashCode;
+      });
+    });
+
+    group('with order by mapped value', () {
+      late SortedMap sourceMap, map;
+      late Map<String, dynamic> value;
+      setUp(() {
+        sourceMap = SortedMap(Ordering.byMappedValue((v) => v['order']))
+          ..addAll({
+            for (var k in data.keys) k: {'value': data[k]!, 'order': data[k]!}
+          });
+        value = sourceMap['key${n ~/ 2}']!;
+      });
+
+      setUpEach(() {
+        map = sourceMap.clone();
+      });
+
+      benchmark('of SortedMap, replacing existing value', () {
+        map['key${n ~/ 2}'] = {
+          'value': Object().hashCode,
+          'order': Object().hashCode
+        };
+      });
+
+      benchmark('of SortedMap, replacing existing value with same value', () {
+        map['key${n ~/ 2}'] = value;
+      });
+
+      benchmark('of SortedMap, replacing existing value with same order value',
+          () {
+        map['key${n ~/ 2}'] = {
+          'value': Object().hashCode,
+          'order': (n ~/ 2).hashCode
+        };
+      });
+
+      benchmark('of SortedMap, adding new value', () {
+        map['key$n'] = {'value': Object().hashCode, 'order': Object().hashCode};
+      });
+    });
+
+    group('with order by key', () {
+      late SortedMap sourceMap, map;
+      setUp(() {
+        sourceMap = SortedMap(const Ordering.byKey())..addAll(data);
+      });
+
+      setUpEach(() {
+        map = sourceMap.clone();
+      });
+
+      benchmark('of SortedMap, replacing existing value', () {
+        map['key${n ~/ 2}'] = Object().hashCode;
+      });
+
+      benchmark('of SortedMap, replacing existing value with same value', () {
+        map['key${n ~/ 2}'] = (n ~/ 2).hashCode;
+      });
+
+      benchmark('of SortedMap, adding new value', () {
+        map['key$n'] = Object().hashCode;
+      });
+    });
+  });
 }
