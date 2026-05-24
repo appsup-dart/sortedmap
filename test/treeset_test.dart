@@ -358,65 +358,132 @@ void main() {
   });
 
   group('TreeSetView', () {
-    late TreeSet set1, set2;
+    late TreeSet set1;
+    late TreeSetView from0To10Ex, startAt0Take5, endAt10Take5;
 
     setUp(() {
       set1 = TreeSet()..addAll(Iterable.generate(30, (i) => i - 10));
-      set2 = TreeSetView(
+      from0To10Ex = TreeSetView(
           baseMap: set1 as AvlTreeSet,
           startAt: 0,
           startInclusive: true,
           endAt: 10,
           endInclusive: false);
+      startAt0Take5 = TreeSetView(
+          baseMap: set1 as AvlTreeSet,
+          startAt: 0,
+          startInclusive: true,
+          endAt: 10,
+          endInclusive: false,
+          limit: 5,
+          limitFromStart: true);
+      endAt10Take5 = TreeSetView(
+          baseMap: set1 as AvlTreeSet,
+          startAt: 0,
+          startInclusive: true,
+          endAt: 10,
+          endInclusive: false,
+          limit: 5,
+          limitFromStart: false);
     });
     group('iterators', () {
       group('iterator', () {
-        late BidirectionalIterator it;
+        late BidirectionalIterator itFrom0To10Ex,
+            itStartAt0Take5,
+            itEndAt10Take5;
 
         setUp(() {
-          it = set2.iterator;
+          itFrom0To10Ex = from0To10Ex.iterator;
+          itStartAt0Take5 = startAt0Take5.iterator;
+          itEndAt10Take5 = endAt10Take5.iterator;
         });
 
         test('current should throw when not moved yet', () {
-          expect(() => it.current, throwsStateError);
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('moveNext should iterate over all elements', () {
           var l = <int>[];
-          while (it.moveNext()) {
-            l.add(it.current);
+          while (itFrom0To10Ex.moveNext()) {
+            l.add(itFrom0To10Ex.current);
           }
           expect(l, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          l.clear();
+          while (itStartAt0Take5.moveNext()) {
+            l.add(itStartAt0Take5.current);
+          }
+          expect(l, [0, 1, 2, 3, 4]);
+          l.clear();
+          while (itEndAt10Take5.moveNext()) {
+            l.add(itEndAt10Take5.current);
+          }
+          expect(l, [5, 6, 7, 8, 9]);
         });
 
         test('movePrevious should iterate over all elements', () {
-          while (it.moveNext()) {}
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itEndAt10Take5.moveNext()) {}
 
           var l = <int>[];
-          while (it.movePrevious()) {
-            l.add(it.current);
+          while (itFrom0To10Ex.movePrevious()) {
+            l.add(itFrom0To10Ex.current);
           }
           expect(l, [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+          l.clear();
+          while (itStartAt0Take5.movePrevious()) {
+            l.add(itStartAt0Take5.current);
+          }
+          expect(l, [4, 3, 2, 1, 0]);
+          l.clear();
+          while (itEndAt10Take5.movePrevious()) {
+            l.add(itEndAt10Take5.current);
+          }
+          expect(l, [9, 8, 7, 6, 5]);
         });
 
         test('current should throw when moved past end', () {
-          while (it.moveNext()) {}
-          expect(() => it.current, throwsStateError);
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itEndAt10Take5.moveNext()) {}
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('current should throw when moved past begin', () {
-          while (it.moveNext()) {}
-          while (it.movePrevious()) {}
-          expect(() => it.current, throwsStateError);
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itFrom0To10Ex.movePrevious()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itStartAt0Take5.movePrevious()) {}
+          while (itEndAt10Take5.moveNext()) {}
+          while (itEndAt10Take5.movePrevious()) {}
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('moveNext/Previous should throw when concurrently changed', () {
-          it.moveNext();
+          itFrom0To10Ex.moveNext();
+          itStartAt0Take5.moveNext();
+          itEndAt10Take5.moveNext();
 
           set1.add(0.5);
 
-          expect(() => it.moveNext(), throwsConcurrentModificationError);
-          expect(() => it.movePrevious(), throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.movePrevious(),
+              throwsConcurrentModificationError);
         });
 
         test(
@@ -424,58 +491,116 @@ void main() {
             () {
           set1.add(0.5);
 
-          expect(() => it.moveNext(), throwsConcurrentModificationError);
-          expect(() => it.movePrevious(), throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.movePrevious(),
+              throwsConcurrentModificationError);
         });
       });
 
       group('reverseIterator', () {
-        late BidirectionalIterator it;
+        late BidirectionalIterator itFrom0To10Ex,
+            itStartAt0Take5,
+            itEndAt10Take5;
 
         setUp(() {
-          it = set2.reverseIterator;
+          itFrom0To10Ex = from0To10Ex.reverseIterator;
+          itStartAt0Take5 = startAt0Take5.reverseIterator;
+          itEndAt10Take5 = endAt10Take5.reverseIterator;
         });
 
         test('current should throw when not moved yet', () {
-          expect(() => it.current, throwsStateError);
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('moveNext should iterate over all elements', () {
           var l = <int>[];
-          while (it.moveNext()) {
-            l.add(it.current);
+          while (itFrom0To10Ex.moveNext()) {
+            l.add(itFrom0To10Ex.current);
           }
           expect(l, [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
+          l.clear();
+          while (itStartAt0Take5.moveNext()) {
+            l.add(itStartAt0Take5.current);
+          }
+          expect(l, [4, 3, 2, 1, 0]);
+          l.clear();
+          while (itEndAt10Take5.moveNext()) {
+            l.add(itEndAt10Take5.current);
+          }
+          expect(l, [9, 8, 7, 6, 5]);
         });
 
         test('movePrevious should iterate over all elements', () {
-          while (it.moveNext()) {}
-
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itEndAt10Take5.moveNext()) {}
           var l = <int>[];
-          while (it.movePrevious()) {
-            l.add(it.current);
+          while (itFrom0To10Ex.movePrevious()) {
+            l.add(itFrom0To10Ex.current);
           }
           expect(l, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+          l.clear();
+          while (itStartAt0Take5.movePrevious()) {
+            l.add(itStartAt0Take5.current);
+          }
+          expect(l, [0, 1, 2, 3, 4]);
+          l.clear();
+          while (itEndAt10Take5.movePrevious()) {
+            l.add(itEndAt10Take5.current);
+          }
+          expect(l, [5, 6, 7, 8, 9]);
         });
 
         test('current should throw when moved past end', () {
-          while (it.moveNext()) {}
-          expect(() => it.current, throwsStateError);
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itEndAt10Take5.moveNext()) {}
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('current should throw when moved past begin', () {
-          while (it.moveNext()) {}
-          while (it.movePrevious()) {}
-          expect(() => it.current, throwsStateError);
+          while (itFrom0To10Ex.moveNext()) {}
+          while (itFrom0To10Ex.movePrevious()) {}
+          while (itStartAt0Take5.moveNext()) {}
+          while (itStartAt0Take5.movePrevious()) {}
+          while (itEndAt10Take5.moveNext()) {}
+          while (itEndAt10Take5.movePrevious()) {}
+          expect(() => itFrom0To10Ex.current, throwsStateError);
+          expect(() => itStartAt0Take5.current, throwsStateError);
+          expect(() => itEndAt10Take5.current, throwsStateError);
         });
 
         test('moveNext/Previous should throw when concurrently changed', () {
-          it.moveNext();
-
+          itFrom0To10Ex.moveNext();
+          itStartAt0Take5.moveNext();
+          itEndAt10Take5.moveNext();
           set1.add(0.5);
 
-          expect(() => it.moveNext(), throwsConcurrentModificationError);
-          expect(() => it.movePrevious(), throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.movePrevious(),
+              throwsConcurrentModificationError);
         });
 
         test(
@@ -483,8 +608,18 @@ void main() {
             () {
           set1.add(0.5);
 
-          expect(() => it.moveNext(), throwsConcurrentModificationError);
-          expect(() => it.movePrevious(), throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itFrom0To10Ex.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.moveNext(),
+              throwsConcurrentModificationError);
+          expect(() => itStartAt0Take5.movePrevious(),
+              throwsConcurrentModificationError);
+          expect(() => itEndAt10Take5.movePrevious(),
+              throwsConcurrentModificationError);
         });
       });
 
@@ -492,17 +627,38 @@ void main() {
         group('moveNext', () {
           test('should iterate over all elements from that element inclusive',
               () {
-            var it = set2.fromIterator(5);
+            var itFrom0To10Ex = from0To10Ex.fromIterator(5);
             var l = <int>[];
-            while (it.moveNext()) {
-              l.add(it.current);
+            while (itFrom0To10Ex.moveNext()) {
+              l.add(itFrom0To10Ex.current);
+            }
+            expect(l, [5, 6, 7, 8, 9]);
+
+            var itStartAt0Take5 = startAt0Take5.fromIterator(3);
+            l = <int>[];
+            while (itStartAt0Take5.moveNext()) {
+              l.add(itStartAt0Take5.current);
+            }
+            expect(l, [3, 4]);
+
+            itStartAt0Take5 = startAt0Take5.fromIterator(5);
+            l = <int>[];
+            while (itStartAt0Take5.moveNext()) {
+              l.add(itStartAt0Take5.current);
+            }
+            expect(l, []);
+
+            var itEndAt10Take5 = endAt10Take5.fromIterator(1);
+            l = <int>[];
+            while (itEndAt10Take5.moveNext()) {
+              l.add(itEndAt10Take5.current);
             }
             expect(l, [5, 6, 7, 8, 9]);
           });
           test(
               'should iterate over all elements without that element when inclusive=false',
               () {
-            var it = set2.fromIterator(5, inclusive: false);
+            var it = from0To10Ex.fromIterator(5, inclusive: false);
             var l = <int>[];
             while (it.moveNext()) {
               l.add(it.current);
@@ -512,7 +668,7 @@ void main() {
           test(
               'should iterate over all elements without that element when not contains',
               () {
-            var it = set2.fromIterator(5.5);
+            var it = from0To10Ex.fromIterator(5.5);
             var l = <int>[];
             while (it.moveNext()) {
               l.add(it.current);
@@ -521,7 +677,7 @@ void main() {
           });
 
           test('should throw when concurrently changed', () {
-            var it = set2.fromIterator(5);
+            var it = from0To10Ex.fromIterator(5);
             it.moveNext();
 
             set1.add(0.5);
@@ -531,7 +687,7 @@ void main() {
 
           test('should throw when concurrently changed (before first move)',
               () {
-            var it = set2.fromIterator(0);
+            var it = from0To10Ex.fromIterator(0);
 
             set1.add(0.5);
 
@@ -539,23 +695,23 @@ void main() {
           });
 
           test('should position beyond end when initializing at 10', () {
-            var it = set2.fromIterator(10);
+            var it = from0To10Ex.fromIterator(10);
             expect(it.moveNext(), false);
             expect(it.movePrevious(), true);
             expect(it.current, 9);
 
-            it = set2.fromIterator(10);
+            it = from0To10Ex.fromIterator(10);
             expect(it.movePrevious(), true);
             expect(it.current, 9);
           });
 
           test('should position before begin when initializing at -1', () {
-            var it = set2.fromIterator(-1);
+            var it = from0To10Ex.fromIterator(-1);
             expect(it.movePrevious(), false);
             expect(it.moveNext(), true);
             expect(it.current, 0);
 
-            it = set2.fromIterator(-1);
+            it = from0To10Ex.fromIterator(-1);
             expect(it.moveNext(), true);
             expect(it.current, 0);
           });
@@ -563,7 +719,7 @@ void main() {
         group('movePrevious', () {
           test('should iterate over all elements from that element inclusive',
               () {
-            var it = set2.fromIterator(5);
+            var it = from0To10Ex.fromIterator(5);
             var l = <int>[];
             while (it.movePrevious()) {
               l.add(it.current);
@@ -573,7 +729,7 @@ void main() {
           test(
               'should iterate over all elements without that element when inclusive=false',
               () {
-            var it = set2.fromIterator(5, inclusive: false);
+            var it = from0To10Ex.fromIterator(5, inclusive: false);
             var l = <int>[];
             while (it.movePrevious()) {
               l.add(it.current);
@@ -583,7 +739,7 @@ void main() {
           test(
               'should iterate over all elements without that element when not contains',
               () {
-            var it = set2.fromIterator(4.5);
+            var it = from0To10Ex.fromIterator(4.5);
             var l = <int>[];
             while (it.movePrevious()) {
               l.add(it.current);
@@ -592,7 +748,7 @@ void main() {
           });
 
           test('should throw when concurrently changed', () {
-            var it = set2.fromIterator(5);
+            var it = from0To10Ex.fromIterator(5);
             it.movePrevious();
 
             set1.add(0.5);
@@ -602,7 +758,7 @@ void main() {
 
           test('should throw when concurrently changed (before first move)',
               () {
-            var it = set2.fromIterator(5);
+            var it = from0To10Ex.fromIterator(5);
 
             set1.add(0.5);
 
@@ -611,19 +767,19 @@ void main() {
         });
 
         test('current should throw when moved past end', () {
-          var it = set2.fromIterator(5);
+          var it = from0To10Ex.fromIterator(5);
           while (it.moveNext()) {}
           expect(() => it.current, throwsStateError);
         });
 
         test('current should throw when moved past begin', () {
-          var it = set2.fromIterator(5);
+          var it = from0To10Ex.fromIterator(5);
           while (it.movePrevious()) {}
           expect(() => it.current, throwsStateError);
         });
 
         test('movePrevious after reaching end should return last element', () {
-          var it = set2.fromIterator(9, inclusive: true);
+          var it = from0To10Ex.fromIterator(9, inclusive: true);
           expect(it.moveNext(), true);
           expect(it.current, 9);
           expect(it.moveNext(), false);
@@ -632,7 +788,7 @@ void main() {
         });
 
         test('moveNext after reaching begin should return first element', () {
-          var it = set2.fromIterator(0);
+          var it = from0To10Ex.fromIterator(0);
           expect(it.moveNext(), true);
           expect(it.current, 0);
           expect(it.movePrevious(), false);
@@ -645,7 +801,7 @@ void main() {
         test(
             'moveNext should iterate over all elements from that element inclusive',
             () {
-          var it = set2.fromIterator(5, reversed: true);
+          var it = from0To10Ex.fromIterator(5, reversed: true);
           var l = <int>[];
           while (it.moveNext()) {
             l.add(it.current);
@@ -656,7 +812,7 @@ void main() {
         test(
             'movePrevious should iterate over all elements from that element inclusive',
             () {
-          var it = set2.fromIterator(5, reversed: true);
+          var it = from0To10Ex.fromIterator(5, reversed: true);
           var l = <int>[];
           while (it.movePrevious()) {
             l.add(it.current);
@@ -667,34 +823,60 @@ void main() {
     });
 
     test('first', () {
-      expect(set2.first, 0);
+      expect(from0To10Ex.first, 0);
+      expect(startAt0Take5.first, 0);
+      expect(endAt10Take5.first, 5);
     });
 
     test('last', () {
-      expect(set2.last, 9);
+      expect(from0To10Ex.last, 9);
+      expect(startAt0Take5.last, 4);
+      expect(endAt10Take5.last, 9);
     });
 
     test('length', () {
-      expect(set2.length, 10);
+      expect(from0To10Ex.length, 10);
+
+      expect(startAt0Take5.length, 5);
+      expect(endAt10Take5.length, 5);
     });
 
     test('contains', () {
-      expect(set2.contains(5), true);
-      expect(set2.contains(10), false);
+      expect(from0To10Ex.contains(5), true);
+      expect(from0To10Ex.contains(10), false);
+      expect(startAt0Take5.contains(5), false);
+      expect(startAt0Take5.contains(10), false);
+      expect(endAt10Take5.contains(5), true);
+      expect(endAt10Take5.contains(10), false);
     });
 
     test('elementAt', () {
-      expect(set2.elementAt(5), 5);
+      expect(from0To10Ex.elementAt(5), 5);
+      expect(startAt0Take5.elementAt(4), 4);
+      expect(() => startAt0Take5.elementAt(5), throwsRangeError);
+      expect(endAt10Take5.elementAt(4), 9);
+      expect(() => endAt10Take5.elementAt(5), throwsRangeError);
     });
 
     test('lookup', () {
-      expect(set2.lookup(5), 5);
-      expect(set2.lookup(10), null);
+      expect(from0To10Ex.lookup(5), 5);
+      expect(from0To10Ex.lookup(10), null);
+      expect(startAt0Take5.lookup(5), null);
+      expect(startAt0Take5.lookup(10), null);
+      expect(endAt10Take5.lookup(5), 5);
+      expect(endAt10Take5.lookup(10), null);
     });
 
     test('indexOf', () {
-      expect(set2.indexOf(5), 5);
-      expect(set2.indexOf(10), -1);
+      expect(from0To10Ex.indexOf(5), 5);
+      expect(from0To10Ex.indexOf(10), -1);
+      expect(startAt0Take5.indexOf(5), -1);
+      expect(startAt0Take5.indexOf(10), -1);
+      expect(startAt0Take5.indexOf(4), 4);
+      expect(endAt10Take5.indexOf(5), 0);
+      expect(endAt10Take5.indexOf(10), -1);
+      expect(endAt10Take5.indexOf(9), 4);
+      expect(endAt10Take5.indexOf(4), -1);
     });
   });
 

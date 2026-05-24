@@ -81,10 +81,7 @@ abstract class _BaseTreeSet<V> extends SetMixin<V> implements TreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _avlTreeSet._root!
-        .elementAt(index + _first!.index, null)
-        .node
-        .object;
+    return _avlTreeSet._root!.elementAt(index + _first!.index).node.object;
   }
 
   @override
@@ -167,7 +164,7 @@ class _TreeSetViewCache<V> {
     if (view.limit != null && !view.limitFromStart) {
       var indexFromEnd = _endIndex! - v.index;
       if (indexFromEnd >= view.limit!) {
-        return node!.elementAt(_endIndex! - view.limit! + 1, v);
+        return node!.elementAt(_endIndex! - view.limit! + 1);
       }
     }
     return v;
@@ -190,7 +187,7 @@ class _TreeSetViewCache<V> {
     if (view.limit != null && view.limitFromStart) {
       var indexFromStart = v.index - _startIndex!;
       if (indexFromStart >= view.limit!) {
-        return node!.elementAt(_startIndex! + view.limit! - 1, v);
+        return node!.elementAt(_startIndex! + view.limit! - 1);
       }
     }
     return v;
@@ -272,7 +269,7 @@ class TreeSetView<V> extends _BaseTreeSet<V> {
     var c = _getCache();
     if (!limitFromStart && limit != null) {
       var indexFromEnd = c._endIndex! - p.index;
-      if (indexFromEnd < limit!) return -1;
+      if (indexFromEnd >= limit!) return -1;
     }
     var index = p.index - c._startIndex!;
     return limit == null || index < limit! ? index : -1;
@@ -348,7 +345,7 @@ class AvlTreeSet<V> extends _BaseTreeSet<V> {
       throw IndexError.withLength(index, length,
           indexable: this, name: 'index');
     }
-    return _root!.elementAt(index, null).node.object;
+    return _root!.elementAt(index).node.object;
   }
 
   @override
@@ -960,10 +957,10 @@ class AvlNode<V> {
     return this;
   }
 
-  _Path<V> elementAt(int index, _Path<V>? parent) {
+  _Path<V> elementAt(int index) {
     var x = this;
     var l = x.left?.length ?? 0;
-    var v = _Path(this, parent);
+    var v = _Path(this, null);
     while (index != l) {
       if (index < l) {
         x = x.left!;

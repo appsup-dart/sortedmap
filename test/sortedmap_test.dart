@@ -135,6 +135,92 @@ void main() {
       expect(filteredMap.completeInterval.end, Pair('z', 4));
     });
 
+    test('length', () {
+      var map = SortedMap(const Ordering.byValue());
+      map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
+
+      var filteredMap = map.filteredMap(start: Pair('a', 2), end: Pair('z', 4));
+      expect(filteredMap.length, 3);
+
+      filteredMap =
+          map.filteredMap(start: Pair('a', 2), end: Pair('z', 4), limit: 5);
+      expect(filteredMap.length, 3);
+
+      filteredMap =
+          map.filteredMap(start: Pair('a', 2), end: Pair('z', 4), limit: 2);
+      expect(filteredMap.length, 2);
+
+      filteredMap = map.filteredMap(
+          start: Pair('a', 2), end: Pair('z', 4), limit: 2, reversed: true);
+      expect(filteredMap.length, 2);
+
+      filteredMap = map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4));
+      expect(filteredMap.length, 3);
+
+      filteredMap =
+          map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4), limit: 5);
+      expect(filteredMap.length, 3);
+
+      filteredMap =
+          map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4), limit: 2);
+      expect(filteredMap.length, 2);
+
+      filteredMap = map.filteredMapView(
+          start: Pair('a', 2), end: Pair('z', 4), limit: 2, reversed: true);
+      expect(filteredMap.length, 2);
+    });
+
+    test('entries', () {
+      var map = SortedMap(const Ordering.byValue());
+      map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
+
+      var filteredMap = map.filteredMap(start: Pair('a', 2), end: Pair('z', 4));
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3, 4]);
+      expect(filteredMap.entries.length, 3);
+
+      filteredMap =
+          map.filteredMap(start: Pair('a', 2), end: Pair('z', 4), limit: 5);
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3, 4]);
+      expect(filteredMap.entries.length, 3);
+
+      filteredMap =
+          map.filteredMap(start: Pair('a', 2), end: Pair('z', 4), limit: 2);
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3]);
+      expect(filteredMap.entries.length, 2);
+
+      filteredMap = map.filteredMap(
+          start: Pair('a', 2), end: Pair('z', 4), limit: 2, reversed: true);
+      expect(filteredMap.entries.map((e) => e.key), ['a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [3, 4]);
+      expect(filteredMap.entries.length, 2);
+
+      filteredMap = map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4));
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3, 4]);
+      expect(filteredMap.entries.length, 3);
+
+      filteredMap =
+          map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4), limit: 5);
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3, 4]);
+      expect(filteredMap.entries.length, 3);
+
+      filteredMap =
+          map.filteredMapView(start: Pair('a', 2), end: Pair('z', 4), limit: 2);
+      expect(filteredMap.entries.map((e) => e.key), ['e', 'a']);
+      expect(filteredMap.entries.map((e) => e.value), [2, 3]);
+      expect(filteredMap.entries.length, 2);
+
+      filteredMap = map.filteredMapView(
+          start: Pair('a', 2), end: Pair('z', 4), limit: 2, reversed: true);
+      expect(filteredMap.entries.map((e) => e.key), ['a', 'c']);
+      expect(filteredMap.entries.map((e) => e.value), [3, 4]);
+      expect(filteredMap.entries.length, 2);
+    });
+
     test('isComplete', () {
       var map = SortedMap(const Ordering.byValue());
       map.addAll({'b': 1, 'e': 2, 'a': 3, 'c': 4, 'd': 5});
