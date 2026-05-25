@@ -1,3 +1,6 @@
+@Tags(['benchmark'])
+library;
+
 import 'dart:async';
 import 'dart:math';
 
