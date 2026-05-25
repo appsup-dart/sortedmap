@@ -6,10 +6,8 @@ homepage: https://github.com/appsup-dart/sortedmap
 environment:
   sdk: ^3.0.0
 
-dependencies:
-  quiver: ^3.0.0
-
 dev_dependencies:
   test: ^1.16.5
   benchmark_test: ^0.1.0
   lints: ^6.0.0
+  quiver: ^3.0.0

@@ -39,7 +39,7 @@ class Pair implements Comparable<Pair> {
         isMin = key == null || value == null;
 
   @override
-  int get hashCode => quiver.hash4(key, value, isMax, isMin);
+  int get hashCode => Object.hash(key, value, isMax, isMin);
 
   @override
   bool operator ==(Object other) =>

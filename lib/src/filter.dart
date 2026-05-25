@@ -35,7 +35,7 @@ class Filter<K extends Comparable, V> {
       this.validInterval = const KeyValueInterval()});
 
   @override
-  int get hashCode => quiver.hash4(ordering, limit, reversed, validInterval);
+  int get hashCode => Object.hash(ordering, limit, reversed, validInterval);
 
   @override
   bool operator ==(Object other) =>
@@ -94,7 +94,7 @@ class KeyValueInterval {
       containsPoint(other.start) && containsPoint(other.end);
 
   @override
-  int get hashCode => quiver.hash2(start, end);
+  int get hashCode => Object.hash(start, end);
 
   @override
   bool operator ==(Object other) =>
