@@ -1,3 +1,9 @@
+## 0.5.4+1
+
+ - **PERF**: improve speed of operator[]=. ([1fb141d3](https://github.com/appsup-dart/sortedmap/commit/1fb141d3a9f0b242f1dd74134eae727a942133ce))
+ - **FIX**: return value for AvlTreeSet.add inversed. ([af715a8a](https://github.com/appsup-dart/sortedmap/commit/af715a8ab229efbc38d70414ee118aeced4c18e9))
+ - **FIX**: bug on TreeSetView for limitFromStart = false. ([5a36a467](https://github.com/appsup-dart/sortedmap/commit/5a36a467dd0449ddac0ae7fac6770baf4c1a05a3))
+
 ## 0.5.4
 
 - Performance improvements
