@@ -1,3 +1,8 @@
+## 0.5.5
+
+ - **PERF**: improve speed of operator[]= of FilteredMap. ([14523195](https://github.com/appsup-dart/sortedmap/commit/14523195ea8a264c443b0634958d811a120bfc57))
+ - **FEAT**: add TreeMap and TreeSet available in public api. ([8b3d3216](https://github.com/appsup-dart/sortedmap/commit/8b3d32166ea8b9783f5144fa454ec35307bca6b1))
+
 ## 0.5.4+1
 
  - **PERF**: improve speed of operator[]=. ([1fb141d3](https://github.com/appsup-dart/sortedmap/commit/1fb141d3a9f0b242f1dd74134eae727a942133ce))
