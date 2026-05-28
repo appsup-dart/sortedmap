@@ -77,14 +77,31 @@
       }
       .benchmark-graphs {
         display: flex;
-        flex-direction: row;
-        justify-content: space-around;
+        flex-direction: column;
         align-items: center;
-        flex-wrap: wrap;
         width: 100%;
       }
+      .benchmark-chart-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: min(100%, 1000px);
+        margin: 24px auto;
+      }
+      .benchmark-chart-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0 0 12px;
+        text-align: center;
+      }
+      .benchmark-chart-container {
+        position: relative;
+        width: 100%;
+        height: 420px;
+      }
       .benchmark-chart {
-        max-width: 1000px;
+        width: 100% !important;
+        height: 100% !important;
       }
     </style>
   </head>
@@ -128,6 +145,14 @@
           return { baseName: name, compileType: 'jit' };
         }
 
+        function mergeAllEntries(data) {
+          const merged = [];
+          for (const suites of Object.values(data.entries)) {
+            merged.push(...suites);
+          }
+          return merged;
+        }
+
         function collectBenchesGrouped(entries) {
           const map = new Map();
           for (const entry of entries) {
@@ -151,6 +176,14 @@
           return map;
         }
 
+        function suiteTitle(data) {
+          const names = Object.keys(data.entries);
+          if (names.length === 1) {
+            return names[0];
+          }
+          return 'Benchmarks';
+        }
+
         function init() {
           const data = window.BENCHMARK_DATA;
 
@@ -167,10 +200,15 @@
             a.click();
           };
 
-          return Object.keys(data.entries).map((name) => ({
-            name,
-            dataSet: collectBenchesGrouped(data.entries[name]),
-          }));
+          // github-action-benchmark stores each `name` input as a separate suite
+          // (e.g. legacy "Benchmark" vs "Dart Benchmarks"). Merge them so history
+          // lines up on one chart per benchmark and compile type.
+          return [
+            {
+              name: suiteTitle(data),
+              dataSet: collectBenchesGrouped(mergeAllEntries(data)),
+            },
+          ];
         }
 
         function renderAllCharts(dataSets) {
@@ -187,9 +225,22 @@
           }
 
           function renderGroupedGraph(parent, baseName, seriesMap) {
+            const wrap = document.createElement('div');
+            wrap.className = 'benchmark-chart-wrap';
+            parent.appendChild(wrap);
+
+            const titleElem = document.createElement('h2');
+            titleElem.className = 'benchmark-chart-title';
+            titleElem.textContent = baseName;
+            wrap.appendChild(titleElem);
+
+            const chartContainer = document.createElement('div');
+            chartContainer.className = 'benchmark-chart-container';
+            wrap.appendChild(chartContainer);
+
             const canvas = document.createElement('canvas');
             canvas.className = 'benchmark-chart';
-            parent.appendChild(canvas);
+            chartContainer.appendChild(canvas);
 
             const commits = sortedCommits(seriesMap);
             const labels = commits.map((c) => c.commit.id.slice(0, 7));
@@ -223,6 +274,11 @@
             const unit = firstPoint ? firstPoint.bench.unit : '';
 
             const options = {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: {
+                display: true,
+              },
               scales: {
                 xAxes: [
                   {
