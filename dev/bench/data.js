@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1779984006094,
+  "lastUpdate": 1779986559772,
   "repoUrl": "https://github.com/appsup-dart/sortedmap",
   "entries": {
     "Benchmark": [
@@ -8220,6 +8220,1122 @@ window.BENCHMARK_DATA = {
             "range": "±0.46%",
             "unit": "ops/sec",
             "extra": "compile: wasm\nsamples: 472751\nmean latency: 4 microseconds"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "committer": {
+            "email": "rik.bellens@appsup.be",
+            "name": "rikbellens",
+            "username": "rbellens"
+          },
+          "distinct": true,
+          "id": "b854b4ff5c8b923db690452ea5f7707766710242",
+          "message": "chore: upgrade to benchmark_test 0.1.1+1",
+          "timestamp": "2026-05-28T15:31:12+02:00",
+          "tree_id": "09792036cdd2bacfda48d2bee5961223aaabf847",
+          "url": "https://github.com/appsup-dart/sortedmap/commit/b854b4ff5c8b923db690452ea5f7707766710242"
+        },
+        "date": 1779986558771,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "completeInterval of FilteredMap [jit]",
+            "value": 2502727,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5005454\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMapView [jit]",
+            "value": 1030387.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2060775\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "length of FilteredMap [jit]",
+            "value": 2536982,
+            "range": "±0.19%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5073964\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "length of FilteredMapView [jit]",
+            "value": 1077102,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2154204\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "length of TreeSet [jit]",
+            "value": 2877442.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5754885\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "length of quiver.TreeSet [jit]",
+            "value": 2912054.5,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5824109\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMap [jit]",
+            "value": 3065.779263893,
+            "range": "±0.52%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 6132\nmean latency: 326 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMapView [jit]",
+            "value": 6012.822621732659,
+            "range": "±0.20%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 12026\nmean latency: 166 microseconds"
+          },
+          {
+            "name": "forEach of TreeSet [jit]",
+            "value": 4603.854978568175,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 9208\nmean latency: 217 microseconds"
+          },
+          {
+            "name": "forEach of quiver.TreeSet [jit]",
+            "value": 5740.799072032479,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 11482\nmean latency: 174 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap [jit]",
+            "value": 161.06914005036526,
+            "range": "±1.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 323\nmean latency: 6209 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap, ordered by key [jit]",
+            "value": 109.44855917718671,
+            "range": "±0.61%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 219\nmean latency: 9137 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap [jit]",
+            "value": 2059482,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 4118964\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView [jit]",
+            "value": 431.0930481625346,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 863\nmean latency: 2320 microseconds"
+          },
+          {
+            "name": "addAll to empty FilteredMap [jit]",
+            "value": 2.10092684488689,
+            "range": "±9.82%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5\nmean latency: 475980 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet [jit]",
+            "value": 950.7461507777424,
+            "range": "±0.11%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 1902\nmean latency: 1052 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet from TreeSet [jit]",
+            "value": 2634546.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5269093\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "addAll to empty quiver.TreeSet [jit]",
+            "value": 554.6602705842671,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 1110\nmean latency: 1803 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSet [jit]",
+            "value": 2237570,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 4475140\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSetView [jit]",
+            "value": 1069917.5,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2139835\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "elementAt of quiver.TreeSet [jit]",
+            "value": 23702.739269868034,
+            "range": "±0.07%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 47406\nmean latency: 42 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSet [jit]",
+            "value": 1892027.0000000002,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 3784054\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSetView [jit]",
+            "value": 1778444,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 3556888\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "first of TreeSet [jit]",
+            "value": 2977267,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5954534\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of TreeSetView [jit]",
+            "value": 3408053.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 6816107\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of quiver.TreeSet [jit]",
+            "value": 3232769,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 6465538\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSet [jit]",
+            "value": 2826353,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5652706\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSetView [jit]",
+            "value": 3420931.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 6841863\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of quiver.TreeSet [jit]",
+            "value": 2966869.5,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 5933739\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value [jit]",
+            "value": 333943.8330280835,
+            "range": "±0.32%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 667888\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value with same value [jit]",
+            "value": 1144437.5,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2288875\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, adding new value [jit]",
+            "value": 471907.00000000006,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 943814\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value [jit]",
+            "value": 325219.1747808252,
+            "range": "±0.34%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 650439\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same value [jit]",
+            "value": 1060065.5,
+            "range": "±0.34%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2120131\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same order value [jit]",
+            "value": 502770.5,
+            "range": "±0.40%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 1005541\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, adding new value [jit]",
+            "value": 431231.78438410786,
+            "range": "±0.43%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 862464\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value [jit]",
+            "value": 498269.2508653745,
+            "range": "±0.24%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 996539\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value with same value [jit]",
+            "value": 1136317,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 2272634\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, adding new value [jit]",
+            "value": 508922.5,
+            "range": "±0.21%",
+            "unit": "ops/sec",
+            "extra": "compile: jit\nsamples: 1017845\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMap [aot]",
+            "value": 2934926.5,
+            "range": "±0.55%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 5869853\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMapView [aot]",
+            "value": 1167194.5,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2334389\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "length of FilteredMap [aot]",
+            "value": 2797420.5,
+            "range": "±0.39%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 5594841\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "length of FilteredMapView [aot]",
+            "value": 1129506,
+            "range": "±0.23%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2259012\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "length of TreeSet [aot]",
+            "value": 3379426.9999999995,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 6758854\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "length of quiver.TreeSet [aot]",
+            "value": 3385808.5,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 6771617\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMap [aot]",
+            "value": 3233.762318469592,
+            "range": "±0.26%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 6468\nmean latency: 309 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMapView [aot]",
+            "value": 6401.875163434313,
+            "range": "±0.16%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 12804\nmean latency: 156 microseconds"
+          },
+          {
+            "name": "forEach of TreeSet [aot]",
+            "value": 4721.405571888562,
+            "range": "±0.25%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 9443\nmean latency: 212 microseconds"
+          },
+          {
+            "name": "forEach of quiver.TreeSet [aot]",
+            "value": 7287.051846311451,
+            "range": "±0.10%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 14575\nmean latency: 137 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap [aot]",
+            "value": 128.32374733303809,
+            "range": "±0.39%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 257\nmean latency: 7793 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap, ordered by key [aot]",
+            "value": 84.9440643336363,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 170\nmean latency: 11772 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap [aot]",
+            "value": 2293058,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 4586116\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView [aot]",
+            "value": 352.43585667408536,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 705\nmean latency: 2837 microseconds"
+          },
+          {
+            "name": "addAll to empty FilteredMap [aot]",
+            "value": 2.2766731612563045,
+            "range": "±0.35%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 5\nmean latency: 439237 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet [aot]",
+            "value": 580.3607134287771,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 1161\nmean latency: 1723 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet from TreeSet [aot]",
+            "value": 2879206,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 5758412\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "addAll to empty quiver.TreeSet [aot]",
+            "value": 417.1235459997352,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 835\nmean latency: 2397 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSet [aot]",
+            "value": 2786704,
+            "range": "±0.15%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 5573408\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSetView [aot]",
+            "value": 1255830,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2511660\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "elementAt of quiver.TreeSet [aot]",
+            "value": 29192.854035729822,
+            "range": "±0.06%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 58386\nmean latency: 34 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSet [aot]",
+            "value": 1927462,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 3854924\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSetView [aot]",
+            "value": 1767288.5,
+            "range": "±0.13%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 3534577\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "first of TreeSet [aot]",
+            "value": 3713253.0000000005,
+            "range": "±0.16%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 7426506\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of TreeSetView [aot]",
+            "value": 3904646,
+            "range": "±0.18%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 7809292\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of quiver.TreeSet [aot]",
+            "value": 3677221.0000000005,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 7354442\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSet [aot]",
+            "value": 3523677,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 7047354\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSetView [aot]",
+            "value": 3906073.5,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 7812147\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of quiver.TreeSet [aot]",
+            "value": 3437510.5,
+            "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 6875021\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value [aot]",
+            "value": 304348.5,
+            "range": "±0.34%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 608697\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value with same value [aot]",
+            "value": 1086551.5,
+            "range": "±0.28%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2173103\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, adding new value [aot]",
+            "value": 411052.5,
+            "range": "±0.31%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 822105\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value [aot]",
+            "value": 289462.71053728944,
+            "range": "±0.48%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 578926\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same value [aot]",
+            "value": 1026859,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2053718\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same order value [aot]",
+            "value": 434645.7826771086,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 869292\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, adding new value [aot]",
+            "value": 394314.3028428486,
+            "range": "±0.53%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 788629\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value [aot]",
+            "value": 439471.5,
+            "range": "±0.43%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 878943\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value with same value [aot]",
+            "value": 1079198,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 2158396\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, adding new value [aot]",
+            "value": 453131.7734341133,
+            "range": "±0.35%",
+            "unit": "ops/sec",
+            "extra": "compile: aot\nsamples: 906264\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMap [js]",
+            "value": 310997,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 621994\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMapView [js]",
+            "value": 174189,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 348378\nmean latency: 6 microseconds"
+          },
+          {
+            "name": "length of FilteredMap [js]",
+            "value": 259319,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 518638\nmean latency: 4 microseconds"
+          },
+          {
+            "name": "length of FilteredMapView [js]",
+            "value": 163213,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 326426\nmean latency: 6 microseconds"
+          },
+          {
+            "name": "length of TreeSet [js]",
+            "value": 342960,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 685920\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "length of quiver.TreeSet [js]",
+            "value": 339748.5,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 679497\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMap [js]",
+            "value": 686.1569215392303,
+            "range": "±1.87%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 1373\nmean latency: 1457 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMapView [js]",
+            "value": 1303.5,
+            "range": "±2.17%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 2607\nmean latency: 767 microseconds"
+          },
+          {
+            "name": "forEach of TreeSet [js]",
+            "value": 2200,
+            "range": "±3.24%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 4400\nmean latency: 455 microseconds"
+          },
+          {
+            "name": "forEach of quiver.TreeSet [js]",
+            "value": 3588.9999999999995,
+            "range": "±3.72%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 7178\nmean latency: 279 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap [js]",
+            "value": 72,
+            "range": "±1.17%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 144\nmean latency: 13889 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap, ordered by key [js]",
+            "value": 61.84538653366583,
+            "range": "±1.20%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 124\nmean latency: 16169 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap [js]",
+            "value": 264632.5,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 529265\nmean latency: 4 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView [js]",
+            "value": 134.5962113659023,
+            "range": "±0.90%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 270\nmean latency: 7430 microseconds"
+          },
+          {
+            "name": "addAll to empty FilteredMap [js]",
+            "value": 0.829737802854298,
+            "range": "±0.66%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 5\nmean latency: 1205200 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet [js]",
+            "value": 567.216391804098,
+            "range": "±1.73%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 1135\nmean latency: 1763 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet from TreeSet [js]",
+            "value": 313700,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 627400\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "addAll to empty quiver.TreeSet [js]",
+            "value": 133.7325349301397,
+            "range": "±0.81%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 268\nmean latency: 7478 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSet [js]",
+            "value": 404363,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 808726\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSetView [js]",
+            "value": 223586,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 447172\nmean latency: 4 microseconds"
+          },
+          {
+            "name": "elementAt of quiver.TreeSet [js]",
+            "value": 11585,
+            "range": "±4.19%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 23170\nmean latency: 86 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSet [js]",
+            "value": 331557,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 663114\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSetView [js]",
+            "value": 298486,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 596972\nmean latency: 3 microseconds"
+          },
+          {
+            "name": "first of TreeSet [js]",
+            "value": 488507.99999999994,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 977016\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "first of TreeSetView [js]",
+            "value": 497769.5,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 995539\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "first of quiver.TreeSet [js]",
+            "value": 494271,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 988542\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "last of TreeSet [js]",
+            "value": 485197.5,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 970395\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "last of TreeSetView [js]",
+            "value": 500300,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 1000600\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "last of quiver.TreeSet [js]",
+            "value": 492721.5,
+            "range": "±4.38%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 985443\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value [js]",
+            "value": 45785,
+            "range": "±4.34%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 91570\nmean latency: 22 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value with same value [js]",
+            "value": 154027.5,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 308055\nmean latency: 6 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, adding new value [js]",
+            "value": 66423,
+            "range": "±4.35%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 132846\nmean latency: 15 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value [js]",
+            "value": 45502,
+            "range": "±4.35%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 91004\nmean latency: 22 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same value [js]",
+            "value": 153457.5,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 306915\nmean latency: 7 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same order value [js]",
+            "value": 64014,
+            "range": "±4.36%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 128028\nmean latency: 16 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, adding new value [js]",
+            "value": 63066.5,
+            "range": "±4.35%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 126133\nmean latency: 16 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value [js]",
+            "value": 65126.5,
+            "range": "±4.35%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 130253\nmean latency: 15 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value with same value [js]",
+            "value": 158809,
+            "range": "±4.37%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 317618\nmean latency: 6 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, adding new value [js]",
+            "value": 65733.5,
+            "range": "±4.35%",
+            "unit": "ops/sec",
+            "extra": "compile: js\nsamples: 131467\nmean latency: 15 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMap [wasm]",
+            "value": 1928375.4999999998,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 3856751\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "completeInterval of FilteredMapView [wasm]",
+            "value": 506656.7466716267,
+            "range": "±0.41%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1013314\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "length of FilteredMap [wasm]",
+            "value": 1919034.5000000002,
+            "range": "±0.43%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 3838069\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "length of FilteredMapView [wasm]",
+            "value": 501566,
+            "range": "±0.40%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1003132\nmean latency: 2 microseconds"
+          },
+          {
+            "name": "length of TreeSet [wasm]",
+            "value": 2371351.5,
+            "range": "±0.31%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 4742703\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "length of quiver.TreeSet [wasm]",
+            "value": 2410422,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 4820844\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMap [wasm]",
+            "value": 1926.8179157069656,
+            "range": "±0.38%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 3854\nmean latency: 519 microseconds"
+          },
+          {
+            "name": "forEach of FilteredMapView [wasm]",
+            "value": 3495.0945690299927,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6991\nmean latency: 286 microseconds"
+          },
+          {
+            "name": "forEach of TreeSet [wasm]",
+            "value": 3303.826549106172,
+            "range": "±0.39%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6608\nmean latency: 303 microseconds"
+          },
+          {
+            "name": "forEach of quiver.TreeSet [wasm]",
+            "value": 6598.10741260895,
+            "range": "±0.21%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 13197\nmean latency: 152 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap [wasm]",
+            "value": 62.82985674792661,
+            "range": "±1.92%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 126\nmean latency: 15916 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap, ordered by key [wasm]",
+            "value": 44.363847352475254,
+            "range": "±1.45%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 89\nmean latency: 22541 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from SortedMap [wasm]",
+            "value": 1033075,
+            "range": "±0.52%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 2066150\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "addAll to empty SortedMap from FilteredMapView [wasm]",
+            "value": 216.36401521643646,
+            "range": "±0.89%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 433\nmean latency: 4622 microseconds"
+          },
+          {
+            "name": "addAll to empty FilteredMap [wasm]",
+            "value": 1.3357626403218654,
+            "range": "±0.76%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 5\nmean latency: 748636 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet [wasm]",
+            "value": 370.10565242733867,
+            "range": "±0.44%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 741\nmean latency: 2702 microseconds"
+          },
+          {
+            "name": "addAll to empty TreeSet from TreeSet [wasm]",
+            "value": 2068809.5,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 4137619\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "addAll to empty quiver.TreeSet [wasm]",
+            "value": 292.54772122298925,
+            "range": "±0.70%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 586\nmean latency: 3418 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSet [wasm]",
+            "value": 2696750,
+            "range": "±0.43%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 5393500\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "elementAt of TreeSetView [wasm]",
+            "value": 707719.5,
+            "range": "±0.45%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1415439\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "elementAt of quiver.TreeSet [wasm]",
+            "value": 30955.95356606965,
+            "range": "±0.11%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 61912\nmean latency: 32 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSet [wasm]",
+            "value": 1813022.5,
+            "range": "±0.31%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 3626045\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "indexOf of TreeSetView [wasm]",
+            "value": 1476796.5,
+            "range": "±0.33%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 2953593\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "first of TreeSet [wasm]",
+            "value": 3367736,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6735472\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of TreeSetView [wasm]",
+            "value": 3651435.9999999995,
+            "range": "±0.28%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 7302872\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "first of quiver.TreeSet [wasm]",
+            "value": 3494368,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6988736\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSet [wasm]",
+            "value": 3387916.5,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6775833\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of TreeSetView [wasm]",
+            "value": 3622813.5,
+            "range": "±0.31%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 7245627\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "last of quiver.TreeSet [wasm]",
+            "value": 3360238.5,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 6720477\nmean latency: 0 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value [wasm]",
+            "value": 146228.1344296639,
+            "range": "±0.45%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 292457\nmean latency: 7 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, replacing existing value with same value [wasm]",
+            "value": 720120,
+            "range": "±0.41%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1440240\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by value of SortedMap, adding new value [wasm]",
+            "value": 205876,
+            "range": "±0.49%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 411752\nmean latency: 5 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value [wasm]",
+            "value": 141755.216489567,
+            "range": "±0.45%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 283511\nmean latency: 7 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same value [wasm]",
+            "value": 677092.6614536693,
+            "range": "±0.41%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1354186\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, replacing existing value with same order value [wasm]",
+            "value": 218892.1716617425,
+            "range": "±0.42%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 437785\nmean latency: 5 microseconds"
+          },
+          {
+            "name": "operator []= with order by mapped value of SortedMap, adding new value [wasm]",
+            "value": 198831.5,
+            "range": "±0.48%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 397663\nmean latency: 5 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value [wasm]",
+            "value": 239352.76064723934,
+            "range": "±0.53%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 478706\nmean latency: 4 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, replacing existing value with same value [wasm]",
+            "value": 722720.5,
+            "range": "±0.44%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 1445441\nmean latency: 1 microseconds"
+          },
+          {
+            "name": "operator []= with order by key of SortedMap, adding new value [wasm]",
+            "value": 233128.5,
+            "range": "±0.47%",
+            "unit": "ops/sec",
+            "extra": "compile: wasm\nsamples: 466257\nmean latency: 4 microseconds"
           }
         ]
       }
