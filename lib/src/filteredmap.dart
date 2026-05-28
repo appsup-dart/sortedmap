@@ -61,6 +61,13 @@ class _FilteredMap<K extends Comparable, V> extends _SortedMap<K, V>
 
     var entry = _entryForKey(key);
 
+    // If the value is the same, do not add it again. This improves performance
+    // in geneal, but when the operator== is expensive, this can be a performance
+    // bottleneck.
+    if (entry != null && entry.value == value) {
+      return;
+    }
+
     _map[key] = value;
 
     if (entry != null && entry.index != newEntry.index) {
