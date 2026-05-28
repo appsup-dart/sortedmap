@@ -16,6 +16,9 @@ import 'dart:collection';
 import 'src/treeset.dart';
 import 'src/treemap.dart';
 
+export 'src/treeset.dart' show TreeSet;
+export 'src/treemap.dart' show TreeMap;
+
 part 'src/filter.dart';
 part 'src/filteredmap.dart';
 part 'src/sortedmap.dart';
