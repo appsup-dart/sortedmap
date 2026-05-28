@@ -1,7 +1,6 @@
 @Tags(['benchmark'])
 library;
 
-import 'dart:async';
 import 'dart:math';
 
 import 'package:sortedmap/sortedmap.dart';
@@ -11,7 +10,7 @@ import 'package:quiver/collection.dart' as quiver;
 
 import 'package:benchmark_test/benchmark_test.dart';
 
-Future<void> main() async {
+void main() {
   var n = 10000;
 
   final data = {for (var i = 0; i < n; i++) 'key$i': i.hashCode};
@@ -33,7 +32,7 @@ Future<void> main() async {
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
     });
-    benchmark('of FilteredMap', () async {
+    benchmark('of FilteredMap', () {
       map.completeInterval;
     });
 
@@ -41,7 +40,7 @@ Future<void> main() async {
       view = map.filteredMapView(
           start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
-    benchmark('of FilteredMapView', () async {
+    benchmark('of FilteredMapView', () {
       view.completeInterval;
     });
   });
@@ -54,22 +53,22 @@ Future<void> main() async {
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
     });
-    benchmark('of FilteredMap', () async {
+    benchmark('of FilteredMap', () {
       map.length;
     });
     setUpEach(() {
       view = map.filteredMapView(
           start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
-    benchmark('of FilteredMapView', () async {
+    benchmark('of FilteredMapView', () {
       view.length;
     });
 
-    benchmark('of TreeSet', () async {
+    benchmark('of TreeSet', () {
       set.length;
     });
 
-    benchmark('of quiver.TreeSet', () async {
+    benchmark('of quiver.TreeSet', () {
       qSet.length;
     });
   });
@@ -82,24 +81,24 @@ Future<void> main() async {
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
     });
-    benchmark('of FilteredMap', () async {
+    benchmark('of FilteredMap', () {
       map.forEach((key, value) {});
     });
     setUpEach(() {
       view = map.filteredMapView(
           start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
-    benchmark('of FilteredMapView', () async {
+    benchmark('of FilteredMapView', () {
       view.forEach((key, value) {});
     });
 
     void noop(dynamic _) {}
 
-    benchmark('of TreeSet', () async {
+    benchmark('of TreeSet', () {
       set.forEach(noop);
     });
 
-    benchmark('of quiver.TreeSet', () async {
+    benchmark('of quiver.TreeSet', () {
       qSet.forEach(noop);
     });
   });
@@ -113,37 +112,37 @@ Future<void> main() async {
       view = map.filteredMapView(
           start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
     });
-    benchmark('to empty SortedMap', () async {
+    benchmark('to empty SortedMap', () {
       SortedMap(const Ordering.byValue()).addAll(data);
     });
 
-    benchmark('to empty SortedMap, ordered by key', () async {
+    benchmark('to empty SortedMap, ordered by key', () {
       SortedMap(const Ordering.byKey()).addAll(data);
     });
 
-    benchmark('to empty SortedMap from SortedMap', () async {
+    benchmark('to empty SortedMap from SortedMap', () {
       SortedMap(const Ordering.byValue()).addAll(map);
     });
 
-    benchmark('to empty SortedMap from FilteredMapView', () async {
+    benchmark('to empty SortedMap from FilteredMapView', () {
       SortedMap(const Ordering.byValue()).addAll(view);
     });
 
-    benchmark('to empty FilteredMap', () async {
+    benchmark('to empty FilteredMap', () {
       SortedMap(const Ordering.byValue())
           .filteredMap(start: Pair.min(), end: Pair.max(), limit: n ~/ 3)
           .addAll(data);
     });
 
-    benchmark('to empty TreeSet', () async {
+    benchmark('to empty TreeSet', () {
       TreeSet().addAll(values);
     });
 
-    benchmark('to empty TreeSet from TreeSet', () async {
+    benchmark('to empty TreeSet from TreeSet', () {
       TreeSet().addAll(set);
     });
 
-    benchmark('to empty quiver.TreeSet', () async {
+    benchmark('to empty quiver.TreeSet', () {
       quiver.TreeSet().addAll(values);
     });
   });
