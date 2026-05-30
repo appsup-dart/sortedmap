@@ -76,10 +76,12 @@ void main() {
   group('forEach', () {
     late FilteredMap map;
     late FilteredMapView view;
+    late TreeMap<String, int> treeMap;
     setUpAll(() {
       map = SortedMap(const Ordering.byValue()).filteredMap(
           start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
       map.addAll(data);
+      treeMap = TreeMap<String, int>.from(data);
     });
     benchmark('of FilteredMap', () {
       map.forEach((key, value) {});
@@ -90,6 +92,10 @@ void main() {
     });
     benchmark('of FilteredMapView', () {
       view.forEach((key, value) {});
+    });
+
+    benchmark('of TreeMap', () {
+      treeMap.forEach((key, value) {});
     });
 
     void noop(dynamic _) {}
@@ -300,6 +306,64 @@ void main() {
       benchmark('of SortedMap, adding new value', () {
         map['key$n'] = newValue;
       });
+    });
+  });
+
+  group('entries', () {
+    late FilteredMap map;
+    late FilteredMapView view;
+    late TreeMap<String, int> treeMap;
+    setUpAll(() {
+      map = SortedMap(const Ordering.byValue()).filteredMap(
+          start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
+      map.addAll(data);
+      treeMap = TreeMap<String, int>.from(data);
+    });
+
+    void noop(dynamic _) {}
+
+    benchmark('of FilteredMap', () {
+      map.entries.forEach(noop);
+    });
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
+    });
+    benchmark('of FilteredMapView', () {
+      view.entries.forEach(noop);
+    });
+
+    benchmark('of TreeMap', () {
+      treeMap.entries.forEach(noop);
+    });
+  });
+
+  group('values', () {
+    late FilteredMap map;
+    late FilteredMapView view;
+    late TreeMap<String, int> treeMap;
+    setUpAll(() {
+      map = SortedMap(const Ordering.byValue()).filteredMap(
+          start: Pair.min(), end: Pair.max(), limit: n, reversed: true);
+      map.addAll(data);
+      treeMap = TreeMap<String, int>.from(data);
+    });
+
+    void noop(dynamic _) {}
+
+    benchmark('of FilteredMap', () {
+      map.values.forEach(noop);
+    });
+    setUpEach(() {
+      view = map.filteredMapView(
+          start: Pair.min(), end: Pair.max(), limit: n ~/ 2, reversed: true);
+    });
+    benchmark('of FilteredMapView', () {
+      view.values.forEach(noop);
+    });
+
+    benchmark('of TreeMap', () {
+      treeMap.values.forEach(noop);
     });
   });
 }
